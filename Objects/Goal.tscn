@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cx3ycayrp8gyl"]
+
+[ext_resource type="Texture2D" uid="uid://bk181mjj4wy81" path="res://Sprites/Portal.png" id="1_8p28r"]
+[ext_resource type="Script" path="res://Objects/Goal.gd" id="1_cyxw5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k4s8o"]
+size = Vector2(80, 80)
+
+[node name="Goal" type="Area2D"]
+script = ExtResource("1_cyxw5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.666667)
+texture = ExtResource("1_8p28r")
+
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_k4s8o")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

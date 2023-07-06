@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://csir8nlaqwuy6"]
+
+[ext_resource type="Texture2D" uid="uid://c5tjbqj0r63ln" path="res://icon.svg" id="1_b3whw"]
+[ext_resource type="Script" path="res://Player/Player TopDown.gd" id="1_h6yvt"]
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 4294967293
+collision_mask = 4294967293
+motion_mode = 1
+script = ExtResource("1_h6yvt")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_b3whw")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -12, -15, -14, -14, -15, -12, -16, 12, -16, 14, -15, 15, -14, 16, -12, 16, 12, 15, 14, 14, 15, 12, 16, -12, 16, -14, 15, -15, 14, -16, 12)

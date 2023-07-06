@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs5pnnv5k17ao"]
+
+[ext_resource type="Script" path="res://Objects/ScoreTile.gd" id="1_f6gdm"]
+
+[node name="ScoreTile" type="CharacterBody2D"]
+collision_layer = 4294967295
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("1_f6gdm")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -19, -14, -20, 14, -20, 16, -19, 19, -16, 20, -14, 20, 14, 19, 16, 16, 19, 14, 20, -14, 20, -16, 19, -19, 16, -20, 14, -20, -14, -19, -16)
+
+[node name="Ray1" type="RayCast2D" parent="."]
+target_position = Vector2(30, 0)
+collision_mask = 3
+
+[node name="Ray2" type="RayCast2D" parent="."]
+target_position = Vector2(0, -30)
+collision_mask = 3
+
+[node name="Ray3" type="RayCast2D" parent="."]
+target_position = Vector2(-30, 0)
+collision_mask = 3
+
+[node name="Ray4" type="RayCast2D" parent="."]
+target_position = Vector2(0, 30)
+collision_mask = 3

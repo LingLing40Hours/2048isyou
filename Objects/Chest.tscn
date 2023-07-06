@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bry55pam71c18"]
+
+[node name="Chest" type="StaticBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]

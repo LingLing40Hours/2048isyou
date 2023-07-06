@@ -1,0 +1,64 @@
+[gd_scene load_steps=8 format=3 uid="uid://cpvd85brlalf7"]
+
+[ext_resource type="Script" path="res://Levels/Level 0.gd" id="1_qtly1"]
+[ext_resource type="Texture2D" uid="uid://cbyh4r4eh3h03" path="res://Sprites/Start 1.png" id="2_bponi"]
+[ext_resource type="Texture2D" uid="uid://di128fkqi754d" path="res://Sprites/Start 2.png" id="3_jp5n5"]
+[ext_resource type="Texture2D" uid="uid://5q3f5bti6xcw" path="res://Sprites/Start 3.png" id="4_rfaf6"]
+[ext_resource type="BitMap" uid="uid://c3aqxnolm8do4" path="res://Sprites/Start Mask.png" id="5_rpmr7"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_b4r7t"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_r7d0n"]
+events = [SubResource("InputEventKey_b4r7t")]
+
+[node name="Level 0" type="Node2D"]
+script = ExtResource("1_qtly1")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.537255, 0.396078, 0.741176, 1)
+
+[node name="GUI" type="Control" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/GUI"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/GUI/HBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Background/GUI/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 840)
+layout_mode = 2
+
+[node name="Start Button" type="TextureButton" parent="Background/GUI/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+keep_pressed_outside = true
+shortcut = SubResource("Shortcut_r7d0n")
+texture_normal = ExtResource("2_bponi")
+texture_pressed = ExtResource("4_rfaf6")
+texture_hover = ExtResource("3_jp5n5")
+texture_disabled = ExtResource("4_rfaf6")
+texture_focused = ExtResource("4_rfaf6")
+texture_click_mask = ExtResource("5_rpmr7")
+
+[node name="Control" type="Control" parent="Background/GUI/HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[connection signal="pressed" from="Background/GUI/HBoxContainer/VBoxContainer/Start Button" to="." method="_on_start_button_pressed"]
