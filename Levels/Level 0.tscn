@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://cpvd85brlalf7"]
+[gd_scene load_steps=9 format=3 uid="uid://cpvd85brlalf7"]
 
 [ext_resource type="Script" path="res://Levels/Level 0.gd" id="1_qtly1"]
 [ext_resource type="Texture2D" uid="uid://cbyh4r4eh3h03" path="res://Sprites/Start 1.png" id="2_bponi"]
 [ext_resource type="Texture2D" uid="uid://di128fkqi754d" path="res://Sprites/Start 2.png" id="3_jp5n5"]
 [ext_resource type="Texture2D" uid="uid://5q3f5bti6xcw" path="res://Sprites/Start 3.png" id="4_rfaf6"]
 [ext_resource type="BitMap" uid="uid://c3aqxnolm8do4" path="res://Sprites/Start Mask.png" id="5_rpmr7"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="6_3v7e8"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_b4r7t"]
 device = -1
@@ -22,31 +23,24 @@ offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.537255, 0.396078, 0.741176, 1)
 
-[node name="GUI" type="Control" parent="Background"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Background/GUI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Background"]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -484.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Background/GUI/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/HBoxContainer"]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Background/GUI/HBoxContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="Background/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 840)
 layout_mode = 2
 
-[node name="Start Button" type="TextureButton" parent="Background/GUI/HBoxContainer/VBoxContainer"]
+[node name="Start Button" type="TextureButton" parent="Background/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 keep_pressed_outside = true
 shortcut = SubResource("Shortcut_r7d0n")
@@ -57,8 +51,24 @@ texture_disabled = ExtResource("4_rfaf6")
 texture_focused = ExtResource("4_rfaf6")
 texture_click_mask = ExtResource("5_rpmr7")
 
-[node name="Control" type="Control" parent="Background/GUI/HBoxContainer"]
+[node name="Control" type="Control" parent="Background/HBoxContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
-[connection signal="pressed" from="Background/GUI/HBoxContainer/VBoxContainer/Start Button" to="." method="_on_start_button_pressed"]
+[node name="LevelName" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_3v7e8")
+text = "Hello World"
+
+[connection signal="pressed" from="Background/HBoxContainer/VBoxContainer/Start Button" to="." method="_on_start_button_pressed"]

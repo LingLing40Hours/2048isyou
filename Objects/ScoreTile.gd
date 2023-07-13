@@ -2,6 +2,8 @@ extends CharacterBody2D
 class_name ScoreTile
 
 @onready var GV:Node = $"/root/GV";
+@onready var game:Node2D = $"/root/Game";
+@onready var game_audio:Node2D = game.get_node("Audio");
 @export var power:int = 1;
 enum States {IDLE, SLIDING, MERGING, COMBINING};
 var state:int = States.IDLE;
@@ -26,9 +28,12 @@ var partner:ScoreTile;
 
 func _ready():
 	#add sprite
-	img.texture = load("res://Sprites/2_"+str(power)+".png");
+	update_texture(img);
 	add_child(img);
 	add_child(new_img);
+
+func update_texture(s:Sprite2D):
+	s.texture = load("res://Sprites/2_"+str(power)+".png");
 	
 func _physics_process(delta):
 	match state:
@@ -99,12 +104,14 @@ func slide(slide_dir:Vector2):
 		if collider is ScoreTile:
 			if collider.power == power: #merge
 				state = States.MERGING;
+				game_audio.get_node("Combine").play();
 				partner = collider;
 				img.z_index -= 1;
 			else:
 				return;
 	else:
 		state = States.SLIDING;
+		game_audio.get_node("Slide").play();
 	
 	#find slide parameters
 	slide_distance = 0;
@@ -118,7 +125,7 @@ func slide(slide_dir:Vector2):
 func levelup():
 	state = States.COMBINING;
 	power += 1;
-	new_img.texture = load("res://Sprites/2_"+str(power)+".png");
+	update_texture(new_img);
 	new_img.modulate.a = 0;
 	new_img.scale = Vector2.ONE;
 	duang_curr_angle = duang_start_angle;

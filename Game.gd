@@ -2,7 +2,9 @@ extends Node2D
 
 @onready var GV:Node = $"/root/GV";
 @onready var current_level:Node2D;
+@onready var fader:AnimationPlayer = $"CanvasLayer/AnimationPlayer";
 var levels = [];
+var next_level_index:int;
 
 func _ready():
 	#load levels
@@ -23,3 +25,14 @@ func change_level(n):
 	current_level.queue_free();
 	call_deferred("add_level", n);
 	GV.current_level_index = n;
+
+func change_level_faded(n):
+	if (n >= GV.LEVEL_COUNT):
+		return;
+	next_level_index = n;
+	fader.play("fade_in_black");
+
+func _on_animation_player_animation_finished(anim_name):
+	if anim_name == "fade_in_black":
+		change_level(next_level_index);
+		fader.play("fade_out_black");

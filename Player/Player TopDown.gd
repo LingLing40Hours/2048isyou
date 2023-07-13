@@ -38,6 +38,6 @@ func _physics_process(_delta):
 
 func die():
 	#play an animation
-	game.change_level(GV.current_level_index);
-	#game.call_deferred("change_level", GV.current_level_index);
+	game.change_level_faded(GV.current_level_index);
+	#game.call_deferred("change_level_faded", GV.current_level_index);
 	

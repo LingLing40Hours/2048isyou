@@ -35,11 +35,9 @@ vy = -180.0
 
 [node name="Score Tile" parent="." instance=ExtResource("5_ecrt2")]
 position = Vector2(460, 1020)
-motion_mode = 1
 
 [node name="Score Tile2" parent="." instance=ExtResource("5_ecrt2")]
 position = Vector2(460, 980)
-motion_mode = 1
 
 [node name="Goal" parent="." instance=ExtResource("6_cexq0")]
 position = Vector2(1200, 560)
