@@ -3,16 +3,11 @@ class_name ScoreTile
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
-@onready var game_audio:Node2D = game.get_node("Audio");
 @export var power:int = 1;
-enum States {IDLE, SLIDING, MERGING, COMBINING};
-var state:int = States.IDLE;
 
 var slide_speed:float = 360;
 var slide_distance:float = 0;
 var slide_target:Vector2;
-
-var combined:bool = false;
 
 var img:Sprite2D = Sprite2D.new();
 var new_img:Sprite2D = Sprite2D.new();
@@ -31,58 +26,16 @@ func _ready():
 	update_texture(img);
 	add_child(img);
 	add_child(new_img);
+	
+	#set initial state
+	$FSM.setState($FSM.states["idle"]);
 
 func update_texture(s:Sprite2D):
 	s.texture = load("res://Sprites/2_"+str(power)+".png");
-	
-func _physics_process(delta):
-	match state:
-		States.IDLE:
-			pass;
-			
-		States.SLIDING:
-			#sliding into empty space
-			slide_distance += slide_speed * delta;
-			if slide_distance >= GV.TILE_WIDTH:
-				position = slide_target;
-				state = States.IDLE;
-				#re-enable collisions
-				for i in range(2, 33):
-					set_collision_layer_value(i, true);
-			else:
-				move_and_collide(velocity * delta);
-				
-		States.MERGING:
-			#sliding into partner
-			slide_distance += slide_speed * delta;
-			if slide_distance >= GV.TILE_WIDTH:
-				queue_free(); #done sliding
-			else:
-				if slide_distance >= GV.TILE_WIDTH/2.4 and not combined:
-					partner.levelup();
-					combined = true;
-				move_and_collide(velocity * delta);
-			
-		States.COMBINING:
-			#fade out img, fade in new img, do scaling animation
-			var changed:bool = false;
-			if new_img.modulate.a < 1:
-				img.modulate.a = max(0, img.modulate.a-fade_speed);
-				new_img.modulate.a = min(1, new_img.modulate.a+fade_speed);
-				changed = true;
-			if new_img.modulate.a >= duang_modulate and duang_curr_angle < duang_end_angle: #do duang
-				img.scale = Vector2.ONE * duang_factor * sin(duang_curr_angle);
-				new_img.scale = img.scale;
-				duang_curr_angle += duang_speed;
-				changed = true;
-			if not changed:
-				swap(img, new_img);
-				img.scale = Vector2.ONE;
-				state = States.IDLE;
 
 #norm in direction of tile
 func slide(slide_dir:Vector2):
-	if state != States.IDLE:
+	if get_state() != "idle":
 		return;
 		
 	#find ray in slide direction
@@ -103,15 +56,15 @@ func slide(slide_dir:Vector2):
 			return;
 		if collider is ScoreTile:
 			if collider.power == power: #merge
-				state = States.MERGING;
-				game_audio.get_node("Combine").play();
+				change_state("merging1");
+				game.get_node("Audio").get_node("Combine").play();
 				partner = collider;
 				img.z_index -= 1;
 			else:
 				return;
 	else:
-		state = States.SLIDING;
-		game_audio.get_node("Slide").play();
+		change_state("sliding");
+		game.get_node("Audio").get_node("Slide").play();
 	
 	#find slide parameters
 	slide_distance = 0;
@@ -123,7 +76,7 @@ func slide(slide_dir:Vector2):
 		set_collision_layer_value(i, false);
 		
 func levelup():
-	state = States.COMBINING;
+	change_state("combining");
 	power += 1;
 	update_texture(new_img);
 	new_img.modulate.a = 0;
@@ -135,3 +88,8 @@ func swap(a:Sprite2D, b:Sprite2D):
 	a = b;
 	b = temp;
 	
+func get_state() -> String:
+	return $FSM.curState.name;
+
+func change_state(s:String):
+	$FSM.setState($FSM.states[s]);
