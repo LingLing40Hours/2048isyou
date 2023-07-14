@@ -1,18 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bs5pnnv5k17ao"]
+[gd_scene load_steps=2 format=3 uid="uid://bs5pnnv5k17ao"]
 
-[ext_resource type="Script" path="res://Objects/ScoreTile.gd" id="1_f6gdm"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/idle.gd" id="2_hbf0f"]
-[ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="2_jyfqv"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/sliding.gd" id="3_1wx82"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/merging1.gd" id="4_2s684"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/combining.gd" id="5_3irdi"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/merging2.gd" id="5_dgk4b"]
+[ext_resource type="Script" path="res://Objects/ScoreTile_Old.gd" id="1_df1ih"]
 
 [node name="ScoreTile" type="CharacterBody2D"]
 collision_layer = 4294967295
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("1_f6gdm")
+script = ExtResource("1_df1ih")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-16, -19, -14, -20, 14, -20, 16, -19, 19, -16, 20, -14, 20, 14, 19, 16, 16, 19, 14, 20, -14, 20, -16, 19, -19, 16, -20, 14, -20, -14, -19, -16)
@@ -32,21 +26,3 @@ collision_mask = 3
 [node name="Ray4" type="RayCast2D" parent="."]
 target_position = Vector2(0, 30)
 collision_mask = 3
-
-[node name="FSM" type="Node" parent="."]
-script = ExtResource("2_jyfqv")
-
-[node name="idle" type="Node2D" parent="FSM"]
-script = ExtResource("2_hbf0f")
-
-[node name="sliding" type="Node2D" parent="FSM"]
-script = ExtResource("3_1wx82")
-
-[node name="merging1" type="Node2D" parent="FSM"]
-script = ExtResource("4_2s684")
-
-[node name="merging2" type="Node2D" parent="FSM"]
-script = ExtResource("5_dgk4b")
-
-[node name="combining" type="Node2D" parent="FSM"]
-script = ExtResource("5_3irdi")

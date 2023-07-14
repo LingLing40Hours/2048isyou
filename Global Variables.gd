@@ -1,7 +1,7 @@
 extends Node
 
 var LEVEL_COUNT:int = 6;
-var current_level_index:int = 1;
+var current_level_index:int = 4;
 var level_scores = [];
 
 var PLAYER_MU:float = 0.16; #coefficient of friction

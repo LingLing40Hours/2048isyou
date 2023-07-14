@@ -33,12 +33,14 @@ position = Vector2(720, 1120)
 vx = 0.0
 vy = -180.0
 
-[node name="Score Tile" parent="." instance=ExtResource("5_ecrt2")]
-position = Vector2(460, 1020)
-
-[node name="Score Tile2" parent="." instance=ExtResource("5_ecrt2")]
-position = Vector2(460, 980)
-
 [node name="Goal" parent="." instance=ExtResource("6_cexq0")]
 position = Vector2(1200, 560)
 to_level = 2
+
+[node name="ScoreTiles" type="Node2D" parent="."]
+
+[node name="Score Tile" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
+position = Vector2(460, 1020)
+
+[node name="Score Tile2" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
+position = Vector2(460, 980)

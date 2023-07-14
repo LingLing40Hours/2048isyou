@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://csir8nlaqwuy6"]
+[gd_scene load_steps=4 format=3 uid="uid://csir8nlaqwuy6"]
 
 [ext_resource type="Texture2D" uid="uid://c5tjbqj0r63ln" path="res://icon.svg" id="1_b3whw"]
 [ext_resource type="Script" path="res://Player/Player TopDown.gd" id="1_h6yvt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6covc"]
+size = Vector2(192, 192)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 4294967293
@@ -15,3 +18,11 @@ texture = ExtResource("1_b3whw")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-16, -12, -15, -14, -14, -15, -12, -16, 12, -16, 14, -15, 15, -14, 16, -12, 16, 12, 15, 14, 14, 15, 12, 16, -12, 16, -14, 15, -15, 14, -16, 12)
+
+[node name="PhysicsEnabler" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsEnabler"]
+shape = SubResource("RectangleShape2D_6covc")
+
+[connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
+[connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]
