@@ -21,7 +21,7 @@ extends Node
 				position = slide_target;
 				state = States.IDLE;
 				#re-enable collisions
-				for i in range(2, 33):
+				for i in range(1, 33):
 					set_collision_layer_value(i, true);
 			else:
 				position += slide_step;

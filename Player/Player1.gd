@@ -34,7 +34,7 @@ func _physics_process(_delta):
 			
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
-				collider.slide(slide_dir);
+				collider.slide(slide_dir, true);
 
 func die():
 	#play an animation
@@ -45,11 +45,17 @@ func die():
 
 func _on_physics_enabler_body_entered(body):
 	if body is ScoreTile:
+		body.set_process(true);
 		body.set_physics_process(true);
+		for i in range(1, 5):
+			body.get_node("Ray"+str(i)).enabled = true;
 		#body.process_mode = Node.PROCESS_MODE_INHERIT;
 
 
 func _on_physics_enabler_body_exited(body):
 	if body is ScoreTile:
+		body.set_process(false);
 		body.set_physics_process(false);
+		for i in range(1, 5):
+			body.get_node("Ray"+str(i)).enabled = false;
 		#body.process_mode = Node.PROCESS_MODE_DISABLED;

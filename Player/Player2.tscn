@@ -1,0 +1,68 @@
+[gd_scene load_steps=8 format=3 uid="uid://dtpcbqlatx44u"]
+
+[ext_resource type="Script" path="res://Player/Player2.gd" id="1_0tyd7"]
+[ext_resource type="Texture2D" uid="uid://1eyy4hsppevg" path="res://Sprites/2_0_dark.png" id="2_jff4t"]
+[ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="3_xmhy7"]
+[ext_resource type="Script" path="res://Player/Player2 States/idle.gd" id="4_7n8t2"]
+[ext_resource type="Script" path="res://Player/Player2 States/sliding.gd" id="5_nh5y0"]
+[ext_resource type="Script" path="res://Player/Player2 States/merging.gd" id="6_gk4f7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qrr8t"]
+size = Vector2(224, 224)
+
+[node name="Player2" type="CharacterBody2D" groups=["player"]]
+collision_layer = 4294967293
+collision_mask = 4294967293
+motion_mode = 1
+script = ExtResource("1_0tyd7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(20, 20)
+texture = ExtResource("2_jff4t")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(20, 20)
+polygon = PackedVector2Array(-16, -18, -14, -19, 14, -19, 16, -18, 18, -16, 19, -14, 19, 14, 18, 16, 16, 18, 14, 19, -14, 19, -16, 18, -18, 16, -19, 14, -19, -14, -18, -16)
+
+[node name="FSM" type="Node" parent="."]
+script = ExtResource("3_xmhy7")
+
+[node name="slide" type="Node2D" parent="FSM"]
+
+[node name="snap_idle" type="Node2D" parent="FSM"]
+script = ExtResource("4_7n8t2")
+
+[node name="snap_sliding" type="Node2D" parent="FSM"]
+script = ExtResource("5_nh5y0")
+
+[node name="snap_merging" type="Node2D" parent="FSM"]
+script = ExtResource("6_gk4f7")
+
+[node name="PhysicsEnabler" type="Area2D" parent="."]
+position = Vector2(20, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsEnabler"]
+shape = SubResource("RectangleShape2D_qrr8t")
+
+[node name="Ray1" type="RayCast2D" parent="."]
+position = Vector2(20, 20)
+target_position = Vector2(30, 0)
+collision_mask = 3
+
+[node name="Ray2" type="RayCast2D" parent="."]
+position = Vector2(20, 20)
+target_position = Vector2(0, -30)
+collision_mask = 3
+
+[node name="Ray3" type="RayCast2D" parent="."]
+position = Vector2(20, 20)
+target_position = Vector2(-30, 0)
+collision_mask = 3
+
+[node name="Ray4" type="RayCast2D" parent="."]
+position = Vector2(20, 20)
+target_position = Vector2(0, 30)
+collision_mask = 3
+
+[connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
+[connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]

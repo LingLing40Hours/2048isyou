@@ -1,7 +1,4 @@
-extends Node2D
-
-@onready var GV:Node = $"/root/GV";
-@onready var game:Node2D = $"/root/Game";
+extends Level
 
 
 func _input(event):

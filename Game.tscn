@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cy3daaugnn180"]
+[gd_scene load_steps=9 format=3 uid="uid://cy3daaugnn180"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_s0cd0"]
 [ext_resource type="AudioStream" uid="uid://bd85mhurlir6i" path="res://Audio/Tap 1.wav" id="2_ir48s"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
 [ext_resource type="AudioStream" uid="uid://bj8mylcl4px1v" path="res://Audio/Coin 7.wav" id="2_yhtgc"]
 
 [sub_resource type="Animation" id="Animation_o2tpm"]
@@ -59,18 +60,45 @@ _data = {
 [node name="Game" type="Node2D"]
 script = ExtResource("1_s0cd0")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="Overlay" type="CanvasLayer" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="ColorRect" type="ColorRect" parent="Overlay"]
 offset_right = 1600.0
 offset_bottom = 1200.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Overlay"]
 libraries = {
 "": SubResource("AnimationLibrary_0qn34")
 }
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI"]
+layout_direction = 3
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 8.0
+grow_vertical = 2
+theme = ExtResource("2_jtwee")
+
+[node name="Control" type="Control" parent="GUI/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+
+[node name="RightSideBar" type="VBoxContainer" parent="GUI/HBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("2_jtwee")
+
+[node name="Control" type="Control" parent="GUI/HBoxContainer/RightSideBar"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="MoveMode" type="Label" parent="GUI/HBoxContainer/RightSideBar"]
+layout_mode = 2
+theme = ExtResource("2_jtwee")
 
 [node name="Audio" type="Node2D" parent="."]
 
@@ -82,4 +110,4 @@ volume_db = -2.0
 stream = ExtResource("2_ir48s")
 volume_db = -2.0
 
-[connection signal="animation_finished" from="CanvasLayer/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="Overlay/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
