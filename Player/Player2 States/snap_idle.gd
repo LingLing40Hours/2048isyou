@@ -11,9 +11,9 @@ func enter():
 func inPhysicsProcess(delta):
 	#releasing a key should not induce slide
 	#set slide direction
-	if actor.focus == -1:
+	if GV.focus_dir == -1:
 		actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
-	elif actor.focus == 1:
+	elif GV.focus_dir == 1:
 		actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
 	
 	#get ray

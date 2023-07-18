@@ -12,10 +12,10 @@ func _physics_process(_delta):
 	var hdir = Input.get_axis("ui_left", "ui_right")
 	var vdir = Input.get_axis("ui_up", "ui_down");
 	var dir:Vector2 = Vector2(hdir, vdir);
-	velocity += dir * GV.PLAYER_SPEED;
+	velocity += dir * GV.PLAYER_SLIDE_SPEED;
 
 	#clamping
-	if velocity.length() < GV.PLAYER_SPEED_MIN:
+	if velocity.length() < GV.PLAYER_SLIDE_SPEED_MIN:
 		velocity = Vector2.ZERO;
 	
 	move_and_slide()

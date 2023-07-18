@@ -53,9 +53,7 @@ func _physics_process(delta):
 			if slide_distance >= GV.TILE_WIDTH:
 				position = slide_target;
 				state = States.IDLE;
-				#re-enable collisions
-				for i in range(1, 33):
-					set_collision_layer_value(i, true);
+				set_collision(true, true);
 			else:
 				move_and_collide(velocity * delta);
 				
@@ -126,10 +124,7 @@ func slide(slide_dir:Vector2, collide_with_player:bool) -> bool:
 	slide_target = position + slide_dir * GV.TILE_WIDTH;
 	
 	#while sliding, disable collision with non-player objects
-	if not collide_with_player:
-		set_collision_layer_value(1, false);
-	for i in range(2, 33):
-		set_collision_layer_value(i, false);
+	disable_collision(collide_with_player);
 	
 	return true;
 
@@ -145,5 +140,9 @@ func swap(a:Sprite2D, b:Sprite2D):
 	var temp := a;
 	a = b;
 	b = temp;
-	
-#banter after player dies
+
+func set_collision(state, layer_one):
+	if layer_one:
+		set_collision_layer_value(1, state);
+	for i in range(3, 33):
+		set_collision_layer_value(i, state);

@@ -2,9 +2,14 @@ extends Node2D
 
 @onready var GV:Node = $"/root/GV";
 @onready var current_level:Node2D;
+
 @onready var fader:AnimationPlayer = $"Overlay/AnimationPlayer";
 @onready var right_sidebar:VBoxContainer = $"GUI/HBoxContainer/RightSideBar";
 @onready var mode_label:Label = right_sidebar.get_node("MoveMode");
+
+@onready var combine_sound = $"Audio/Combine";
+@onready var slide_sound = $"Audio/Slide";
+
 var levels = [];
 var next_level_index:int;
 

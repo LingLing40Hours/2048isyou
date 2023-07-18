@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://Player/Player2.gd" id="1_0tyd7"]
 [ext_resource type="Texture2D" uid="uid://1eyy4hsppevg" path="res://Sprites/2_0_dark.png" id="2_jff4t"]
 [ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="3_xmhy7"]
-[ext_resource type="Script" path="res://Player/Player2 States/idle.gd" id="4_7n8t2"]
-[ext_resource type="Script" path="res://Player/Player2 States/sliding.gd" id="5_nh5y0"]
-[ext_resource type="Script" path="res://Player/Player2 States/merging.gd" id="6_gk4f7"]
+[ext_resource type="Script" path="res://Player/Player2 States/snap_idle.gd" id="4_4p73p"]
+[ext_resource type="Script" path="res://Player/Player2 States/snap_sliding.gd" id="5_atcle"]
+[ext_resource type="Script" path="res://Player/Player2 States/snap_merging.gd" id="6_r66q3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qrr8t"]
 size = Vector2(224, 224)
@@ -30,13 +30,13 @@ script = ExtResource("3_xmhy7")
 [node name="slide" type="Node2D" parent="FSM"]
 
 [node name="snap_idle" type="Node2D" parent="FSM"]
-script = ExtResource("4_7n8t2")
+script = ExtResource("4_4p73p")
 
 [node name="snap_sliding" type="Node2D" parent="FSM"]
-script = ExtResource("5_nh5y0")
+script = ExtResource("5_atcle")
 
 [node name="snap_merging" type="Node2D" parent="FSM"]
-script = ExtResource("6_gk4f7")
+script = ExtResource("6_r66q3")
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
 position = Vector2(20, 20)

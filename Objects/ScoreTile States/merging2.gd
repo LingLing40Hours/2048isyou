@@ -1,10 +1,24 @@
 extends State
 
+var slide_speed:float;
+var slide_distance:float = 0;
+var slide_target:Vector2;
+
+
+func enter():
+	#do the thing
+	actor.partner.levelup();
+	
+	#get slide parameters
+	var prev_state:Node2D = get_parent().prevState;
+	slide_speed = prev_state.slide_speed;
+	slide_distance = prev_state.slide_distance;
+	slide_target = prev_state.slide_target;
 
 func inPhysicsProcess(delta):
 	#sliding into partner
-	actor.slide_distance += actor.slide_speed * delta;
-	if actor.slide_distance >= GV.TILE_WIDTH:
+	slide_distance += slide_speed * delta;
+	if slide_distance >= GV.TILE_WIDTH:
 		actor.queue_free(); #done sliding
 	else:
 		actor.move_and_collide(actor.velocity * delta);

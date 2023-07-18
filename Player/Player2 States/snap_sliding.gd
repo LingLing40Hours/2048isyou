@@ -1,6 +1,5 @@
 extends State
 
-const SLIDE_SPEED = 150;
 var target:Vector2;
 var target_t:Vector2;
 var target_distance:float;
@@ -27,13 +26,13 @@ func enter():
 	print("target distance: ", target_distance);
 	
 	#set slide velocity
-	actor.velocity = SLIDE_SPEED * actor.slide_dir;
+	actor.velocity = GV.PLAYER_SNAP_SPEED * actor.slide_dir;
 	
 	#sound
 	actor.game_audio.get_node("Slide").play();
 
 func inPhysicsProcess(delta):
-	slide_distance += SLIDE_SPEED * delta;
+	slide_distance += GV.PLAYER_SNAP_SPEED * delta;
 	if slide_distance < target_distance:
 		var collision = actor.move_and_collide(actor.velocity * delta);
 		if collision and (target - actor.position).length() > actor.safe_margin and collision.get_normal() == -actor.slide_dir:

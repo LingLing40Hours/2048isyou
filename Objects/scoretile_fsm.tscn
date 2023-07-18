@@ -1,16 +1,25 @@
-[gd_scene load_steps=7 format=3 uid="uid://b5xshtev3l7ey"]
+[gd_scene load_steps=10 format=3 uid="uid://b5xshtev3l7ey"]
 
 [ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="1_jrp3e"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/idle.gd" id="2_o6oeu"]
+[ext_resource type="Script" path="res://Objects/ScoreTile States/slide.gd" id="2_xe2lt"]
+[ext_resource type="Script" path="res://Objects/ScoreTile States/snap.gd" id="3_6hfip"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/sliding.gd" id="3_tod5h"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/merging1.gd" id="4_touaw"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/merging2.gd" id="5_8qdpd"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/combining.gd" id="6_4357s"]
+[ext_resource type="Script" path="res://Objects/ScoreTile States/splitting.gd" id="9_m7i80"]
 
 [node name="FSM" type="Node"]
 script = ExtResource("1_jrp3e")
 
-[node name="idle" type="Node2D" parent="."]
+[node name="slide" type="Node2D" parent="."]
+script = ExtResource("2_xe2lt")
+
+[node name="snap" type="Node2D" parent="."]
+script = ExtResource("3_6hfip")
+
+[node name="tile" type="Node2D" parent="."]
 script = ExtResource("2_o6oeu")
 
 [node name="sliding" type="Node2D" parent="."]
@@ -24,3 +33,6 @@ script = ExtResource("5_8qdpd")
 
 [node name="combining" type="Node2D" parent="."]
 script = ExtResource("6_4357s")
+
+[node name="splitting" type="Node2D" parent="."]
+script = ExtResource("9_m7i80")

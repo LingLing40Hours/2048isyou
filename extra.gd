@@ -20,9 +20,7 @@ extends Node
 			if slide_distance >= GV.TILE_WIDTH:
 				position = slide_target;
 				state = States.IDLE;
-				#re-enable collisions
-				for i in range(1, 33):
-					set_collision_layer_value(i, true);
+				actor.enable_collision();
 			else:
 				position += slide_step;
 				
@@ -70,3 +68,69 @@ extends Node
 					collider.slide(Vector2(0, 1));
 				elif dir.y < 0:
 					collider.slide(Vector2(0, -1));'''
+
+'''
+		if collider.is_in_group("wall"):
+			if actor.is_player:
+				var pos = collider.local_to_map(actor.position + ray.position + ray.target_position);
+				var id = collider.get_cell_source_id(0, pos);
+				obstructed = false if id == 1 else true;
+			else:
+				return true;
+'''
+
+
+
+'''
+func slide(slide_dir:Vector2, collide_with_player:bool) -> bool:
+	if get_state() != "tile" and get_state() != "snap":
+		return false;
+		
+	#find ray in slide direction
+	var ray:RayCast2D;
+	if slide_dir == Vector2(1, 0):
+		ray = $Ray1;
+	elif slide_dir == Vector2(0, -1):
+		ray = $Ray2;
+	elif slide_dir == Vector2(-1, 0):
+		ray = $Ray3;
+	else:
+		ray = $Ray4;
+	
+	#determine whether to slide or merge or, if obstructed, idle
+	if ray.is_colliding():
+		var collider := ray.get_collider();
+		if collider.is_in_group("wall"): #obstructed
+			return false;
+		if collider is ScoreTile:
+			if collider.power == power: #merge
+				change_state("merging1");
+				game.combine_sound.play();
+				partner = collider;
+				img.z_index -= 1;
+			else:
+				return false;
+	else:
+		change_state("sliding");
+		game.slide_sound.play();
+	
+	#find slide parameters
+	slide_distance = 0;
+	velocity = slide_dir * slide_speed;
+	slide_target = position + slide_dir * GV.TILE_WIDTH;
+	
+	#while sliding, disable collision with (non-player?) objects
+	disable_collision(collide_with_player);
+	
+	return true;
+'''
+
+'''
+func levelup():
+	change_state("combining");
+	power += 1;
+	update_texture(new_img);
+	new_img.modulate.a = 0;
+	new_img.scale = Vector2.ONE;
+	duang_curr_angle = duang_start_angle;
+'''
