@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bb2s8wq50gg5v"]
+[gd_scene load_steps=5 format=3 uid="uid://efow160t57a4"]
 
 [ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal.tscn" id="1_pu6q5"]
 [ext_resource type="Script" path="res://Levels/Level 6.gd" id="1_t8gj1"]
@@ -23,10 +23,6 @@ position = Vector2(1520, 80)
 
 [node name="ScoreTiles" type="Node2D" parent="."]
 
-[node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_x480x")]
-position = Vector2(180, 620)
-power = 0
-
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_x480x")]
 position = Vector2(220, 580)
 
@@ -34,6 +30,3 @@ position = Vector2(220, 580)
 position = Vector2(300, 580)
 is_player = true
 power = 0
-
-[node name="ScoreTile3" parent="ScoreTiles" instance=ExtResource("5_x480x")]
-position = Vector2(220, 620)

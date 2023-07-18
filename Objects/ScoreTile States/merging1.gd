@@ -16,7 +16,10 @@ func enter():
 	
 	#disable collision when sliding
 	var collide_with_player:bool = actor.is_player or not GV.player_snap;
-	actor.set_collision(false, !collide_with_player);
+	actor.set_layers(false, !collide_with_player);
+	
+	#set z_index
+	actor.img.z_index -= 1;
 	
 	#play sound
 	game.combine_sound.play();

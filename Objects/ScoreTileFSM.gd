@@ -16,8 +16,11 @@ var partner:ScoreTile;
 
 
 func _ready():
-	#turn off physics
-	if not is_player:
+	if is_player:
+		player_settings();
+	else:
+		#turn off physics
+		print("PHYSICS OFF");
 		set_physics(false);
 	
 	#add sprite
@@ -34,8 +37,12 @@ func _ready():
 			initial_state = "slide";
 	$FSM.setState($FSM.states[initial_state]);
 
+func _physics_process(delta):
+	if not is_player:
+		#print(get_state());
+		pass;
 
-func slide(dir:Vector2, collide_with_player:bool) -> bool:
+func slide(dir:Vector2) -> bool:
 	if get_state() != "tile" and get_state() != "snap":
 		return false;
 		
@@ -51,22 +58,24 @@ func slide(dir:Vector2, collide_with_player:bool) -> bool:
 		ray = $Ray4;
 	
 	#determine whether to slide or merge or, if obstructed, idle
+	var next_state:String;
 	if ray.is_colliding():
 		var collider := ray.get_collider();
 		if collider.is_in_group("wall"): #obstructed
 			return false;
 		if collider is ScoreTile:
 			if collider.power == power: #merge
-				change_state("merging1");
-				game.combine_sound.play();
 				partner = collider;
-				img.z_index -= 1;
+				next_state = "merging1";
+			elif is_player and collider.slide(dir): #try to slide collider
+				next_state = "sliding";
 			else:
 				return false;
 	else:
-		slide_dir = dir;
-		change_state("sliding");
+		next_state = "sliding";
 	
+	slide_dir = dir;
+	change_state(next_state);
 	return true;
 
 func levelup():
@@ -85,11 +94,13 @@ func change_state(s:String):
 
 
 func _on_physics_enabler_body_entered(body):
-	if body is ScoreTile:
+	if body != self and body is ScoreTile:
+		print("PHYSICS ON");
 		body.set_physics(true);
 
 func _on_physics_enabler_body_exited(body):
-	if body is ScoreTile:
+	if body != self and body is ScoreTile:
+		print("PHYSICS OFF EXIT");
 		body.set_physics(false);
 
 func die():
@@ -97,11 +108,16 @@ func die():
 	game.change_level_faded(GV.current_level_index);
 
 
-func set_collision(state, layer_one):
+func set_layers(state, layer_one):
 	if layer_one:
 		set_collision_layer_value(1, state);
 	for i in range(3, 33):
 		set_collision_layer_value(i, state);
+
+func set_masks(state):
+	set_collision_mask_value(1, state);
+	for i in range(3, 33):
+		set_collision_mask_value(i, state);
 
 func set_physics(state):
 	$FSM.set_process(state);
@@ -114,3 +130,21 @@ func update_texture(s:Sprite2D, power, dark):
 		s.texture = load("res://Sprites/2_"+str(power)+"_dark.png");
 	else:
 		s.texture = load("res://Sprites/2_"+str(power)+".png");
+
+#doesn't set layers or physics
+func player_settings():
+	#add group
+	add_to_group("player");
+	
+	#init collision masks
+	set_masks(true);
+	
+	#init PhysicsEnabler
+	$PhysicsEnabler.monitoring = true;
+
+	#disable rays' mask 2
+	for i in range(1, 5):
+		get_node("Ray"+str(i)).set_collision_mask_value(2, false);
+	
+	#reduce collider size
+	$CollisionPolygon2D.scale = 0.95 * Vector2.ONE;

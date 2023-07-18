@@ -29,12 +29,10 @@ func _ready():
 
 func _physics_process(delta):
 	#releasing direction key loses focus
-	if	focus_dir and (\
-		Input.is_action_just_released("ui_left") or\
-		Input.is_action_just_released("ui_right") or\
-		Input.is_action_just_released("ui_up") or\
-		Input.is_action_just_released("ui_down")):
-			focus_dir = 0;
+	if focus_dir == -1 and (Input.is_action_just_released("ui_left") or Input.is_action_just_released("ui_right")):
+		focus_dir = 0;
+	elif focus_dir == 1 and (Input.is_action_just_released("ui_up") or Input.is_action_just_released("ui_down")):
+		focus_dir = 0;
 	
 	#pressing direction key sets focus
 	if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):

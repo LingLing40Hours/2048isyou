@@ -20,6 +20,7 @@ texture = ExtResource("1_b3whw")
 polygon = PackedVector2Array(-16, -12, -15, -14, -14, -15, -12, -16, 12, -16, 14, -15, 15, -14, 16, -12, 16, 12, 15, 14, 14, 15, 12, 16, -12, 16, -14, 15, -15, 14, -16, 12)
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsEnabler"]
 shape = SubResource("RectangleShape2D_6covc")

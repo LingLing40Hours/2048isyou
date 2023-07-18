@@ -20,7 +20,9 @@ extends Node
 			if slide_distance >= GV.TILE_WIDTH:
 				position = slide_target;
 				state = States.IDLE;
-				actor.enable_collision();
+				#re-enable collisions
+				for i in range(1, 33):
+					set_collision_layer_value(i, true);
 			else:
 				position += slide_step;
 				
@@ -133,4 +135,13 @@ func levelup():
 	new_img.modulate.a = 0;
 	new_img.scale = Vector2.ONE;
 	duang_curr_angle = duang_start_angle;
+'''
+
+'''
+	if	focus_dir and (\
+		Input.is_action_just_released("ui_left") or\
+		Input.is_action_just_released("ui_right") or\
+		Input.is_action_just_released("ui_up") or\
+		Input.is_action_just_released("ui_down")):
+			focus_dir = 0;
 '''

@@ -16,7 +16,7 @@ func enter():
 	
 	#disable collision when sliding
 	var collide_with_player:bool = actor.is_player or not GV.player_snap;
-	actor.set_collision(false, !collide_with_player);
+	actor.set_layers(false, !collide_with_player);
 	
 	#play sound
 	game.slide_sound.play();
@@ -26,7 +26,7 @@ func inPhysicsProcess(delta):
 	slide_distance += slide_speed * delta;
 	if slide_distance >= GV.TILE_WIDTH:
 		actor.position = slide_target;
-		actor.set_collision(true, true);
+		actor.set_layers(true, true);
 	else:
 		actor.move_and_collide(actor.velocity * delta);
 

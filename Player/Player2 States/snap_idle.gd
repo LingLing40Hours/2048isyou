@@ -39,7 +39,7 @@ func inPhysicsProcess(delta):
 				pass;
 			else:
 				#try to slide tile
-				obstructed = true if not collider.slide(actor.slide_dir, false) else false;
+				obstructed = not collider.slide(actor.slide_dir);
 	else:
 		obstructed = false;
 

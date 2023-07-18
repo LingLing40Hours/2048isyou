@@ -11,8 +11,12 @@ func inPhysicsProcess(delta):
 		actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
 	elif GV.focus_dir == 1:
 		actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
+	
+	if actor.slide_dir != Vector2.ZERO:
+		actor.slide(actor.slide_dir);
 
 
+'''
 func changeParentState():
 	if actor.slide_dir == Vector2.ZERO:
 		return null;
@@ -45,3 +49,4 @@ func next_state(dir:Vector2) -> Node2D:
 				return states.sliding if collider.slide(actor.slide_dir, false) else null;
 
 	return states.sliding;
+'''
