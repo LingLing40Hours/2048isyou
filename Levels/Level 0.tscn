@@ -19,6 +19,7 @@ events = [SubResource("InputEventKey_b4r7t")]
 script = ExtResource("1_qtly1")
 
 [node name="Background" type="ColorRect" parent="."]
+z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.537255, 0.396078, 0.741176, 1)

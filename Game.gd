@@ -22,11 +22,28 @@ func _ready():
 	#init mode label
 	change_move_mode(GV.player_snap);
 
+
+func _input(event):
+	if GV.current_level_index and event.is_action_pressed("change_move_mode"):
+		#change move mode if not in lv0
+		change_move_mode(not GV.player_snap);
+		
+		#update player(s) state
+		for player in current_level.players:
+			var state = player.get_state();
+			if state not in ["merging1", "merging2", "combining", "splitting"]:
+				var next_state = "snap" if GV.player_snap else "slide";
+				player.change_state(next_state);
+
+
 #defer this until previous level has been freed
 func add_level(n):
 	var level:Node2D = levels[n].instantiate();
-	add_child(level);
 	current_level = level;
+	add_child(level);
+	
+	#update right sidebar visibility
+	right_sidebar.visible = true if n else false;
 
 #update current level and current level index
 func change_level(n):
@@ -35,9 +52,6 @@ func change_level(n):
 	current_level.queue_free();
 	call_deferred("add_level", n);
 	GV.current_level_index = n;
-	
-	#update right sidebar visibility
-	right_sidebar.visible = true if n else false;
 
 func change_level_faded(n):
 	if (n >= GV.LEVEL_COUNT):
@@ -57,3 +71,4 @@ func change_move_mode(snap):
 	var s:String = "Mode: ";
 	s += "snap" if snap else "slide";
 	mode_label.text = s;
+

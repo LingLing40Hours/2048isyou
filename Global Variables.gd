@@ -13,9 +13,16 @@ var level_scores = [];
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
-const PLAYER_SNAP_SPEED:float = 150;
+const PLAYER_SPEED_RATIO:float = 5/12.0;
 const TILE_SLIDE_SPEED:float = 360;
 const COMBINE_MERGE_RATIO:float = 1/2.4;
+
+const DUANG_MODULATE:float = 0.2;
+const DUANG_START_ANGLE:float = 1;
+const DUANG_FACTOR:float = 1/sin(DUANG_START_ANGLE);
+const DUANG_END_ANGLE:float = PI - DUANG_START_ANGLE;
+const DUANG_SPEED:float = 0.07;
+const FADE_SPEED:float = 0.05;
 
 var player_snap:bool = true;
 var focus_dir:int = 0; #-1 for x, 1 for y, 0 for neither

@@ -22,14 +22,14 @@ func change_state(s:String):
 
 func _on_physics_enabler_body_entered(body):
 	if body is ScoreTile:
-		body.set_process(true);
-		body.set_physics_process(true);
+		body.get_node("FSM").set_process(true);
+		body.get_node("FSM").set_physics_process(true);
 		for i in range(1, 5):
 			body.get_node("Ray"+str(i)).enabled = true;
 
 func _on_physics_enabler_body_exited(body):
 	if body is ScoreTile:
-		body.set_process(false);
-		body.set_physics_process(false);
+		body.get_node("FSM").set_process(false);
+		body.get_node("FSM").set_physics_process(false);
 		for i in range(1, 5):
 			body.get_node("Ray"+str(i)).enabled = false;

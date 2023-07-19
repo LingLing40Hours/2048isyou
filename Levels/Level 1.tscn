@@ -11,6 +11,7 @@
 script = ExtResource("1_o5law")
 
 [node name="Background" type="ColorRect" parent="."]
+z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.662745, 0.407843, 0.25098, 1)

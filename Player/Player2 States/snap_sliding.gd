@@ -5,6 +5,7 @@ var target_t:Vector2;
 var target_distance:float;
 var slide_distance:float = 0;
 var slide_done:bool = false;
+var slide_speed:float;
 
 
 func enter():
@@ -26,13 +27,14 @@ func enter():
 	print("target distance: ", target_distance);
 	
 	#set slide velocity
-	actor.velocity = GV.PLAYER_SNAP_SPEED * actor.slide_dir;
+	slide_speed = GV.TILE_SLIDE_SPEED * GV.PLAYER_SPEED_RATIO;
+	actor.velocity = slide_speed * actor.slide_dir;
 	
 	#sound
 	actor.game_audio.get_node("Slide").play();
 
 func inPhysicsProcess(delta):
-	slide_distance += GV.PLAYER_SNAP_SPEED * delta;
+	slide_distance += slide_speed * delta;
 	if slide_distance < target_distance:
 		var collision = actor.move_and_collide(actor.velocity * delta);
 		if collision and (target - actor.position).length() > actor.safe_margin and collision.get_normal() == -actor.slide_dir:

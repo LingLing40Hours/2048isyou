@@ -9,17 +9,18 @@ var slide_target:Vector2;
 
 func enter():
 	#set slide parameters
-	slide_speed = GV.PLAYER_SLIDE_SPEED if actor.is_player else GV.TILE_SLIDE_SPEED;
+	slide_speed = GV.TILE_SLIDE_SPEED;
 	slide_distance = 0;
 	slide_target = actor.position + actor.slide_dir * GV.TILE_WIDTH;
 	actor.velocity = actor.slide_dir * slide_speed;
 	
-	#disable collision when sliding
-	var collide_with_player:bool = actor.is_player or not GV.player_snap;
-	actor.set_layers(false, !collide_with_player);
+	#disable collision when merging
+	actor.set_layers(false, actor.is_player or GV.player_snap);
+	if actor.is_player:
+		actor.set_masks(false);
 	
 	#set z_index
-	actor.img.z_index -= 1;
+	actor.img.z_index = -1;
 	
 	#play sound
 	game.combine_sound.play();

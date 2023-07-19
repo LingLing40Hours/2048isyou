@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://efow160t57a4"]
+[gd_scene load_steps=5 format=3 uid="uid://dbub7myxcsb4p"]
 
 [ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal.tscn" id="1_pu6q5"]
 [ext_resource type="Script" path="res://Levels/Level 6.gd" id="1_t8gj1"]
@@ -9,6 +9,7 @@
 script = ExtResource("1_t8gj1")
 
 [node name="Background" type="ColorRect" parent="."]
+z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.364706, 0.521569, 0.462745, 1)
@@ -25,6 +26,16 @@ position = Vector2(1520, 80)
 
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_x480x")]
 position = Vector2(220, 580)
+
+[node name="ScoreTile3" parent="ScoreTiles" instance=ExtResource("5_x480x")]
+position = Vector2(260, 660)
+
+[node name="ScoreTile5" parent="ScoreTiles" instance=ExtResource("5_x480x")]
+position = Vector2(260, 700)
+
+[node name="ScoreTile6" parent="ScoreTiles" instance=ExtResource("5_x480x")]
+position = Vector2(300, 700)
+power = 0
 
 [node name="ScoreTile4" parent="ScoreTiles" instance=ExtResource("5_x480x")]
 position = Vector2(300, 580)

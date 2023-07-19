@@ -18,7 +18,7 @@ func inPhysicsProcess(delta):
 	actor.move_and_slide()
 	#see baddie scripts for death detection
 	for index in actor.get_slide_collision_count():
-		var collision:CollisionObject2D = actor.get_slide_collision(index);
+		var collision:KinematicCollision2D = actor.get_slide_collision(index);
 		var collider = collision.get_collider();
 		if collider is ScoreTile:
 			#find slide direction

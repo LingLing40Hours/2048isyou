@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Levels/Level 4.gd" id="1_3c2uv"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_beq02"]
-[ext_resource type="PackedScene" uid="uid://dtpcbqlatx44u" path="res://Player/Player2.tscn" id="3_1vimq"]
+[ext_resource type="PackedScene" path="res://Player/Player2.tscn" id="3_1vimq"]
 [ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal.tscn" id="4_kdebt"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_3oau8"]
 
@@ -10,6 +10,7 @@
 script = ExtResource("1_3c2uv")
 
 [node name="Background" type="ColorRect" parent="."]
+z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.556863, 0.470588, 0.290196, 1)

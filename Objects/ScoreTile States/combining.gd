@@ -1,12 +1,8 @@
 extends State
 
-var fade_speed:float = 0.05;
-var duang_modulate:float = 0.2;
-var duang_start_angle:float = 1;
-var duang_factor:float = 1/sin(duang_start_angle);
 var duang_curr_angle:float;
-var duang_end_angle:float = PI - duang_start_angle;
-var duang_speed:float = 0.07;
+var duang_speed:float;
+var fade_speed:float;
 var changed:bool;
 
 
@@ -18,23 +14,26 @@ func enter():
 	actor.new_img.scale = Vector2.ONE;
 	
 	#set duang parameters
-	duang_curr_angle = duang_start_angle;
+	duang_curr_angle = GV.DUANG_START_ANGLE;
+	duang_speed = GV.DUANG_SPEED;
+	fade_speed = GV.FADE_SPEED;
+	
+	#set z_index
+	actor.img.z_index = 2;
+	actor.new_img.z_index = 1;
 
 func inPhysicsProcess(delta):
 	#fade out img, fade in new img, do scaling animation
 	changed = false;
 	if actor.new_img.modulate.a < 1:
 		actor.img.modulate.a = max(0, actor.img.modulate.a-fade_speed);
-		actor.new_img.modulate.a = min(1, actor.new_img.modulate.a+fade_speed);
+		actor.new_img.modulate.a = 1 - actor.img.modulate.a;
 		changed = true;
-	if actor.new_img.modulate.a >= duang_modulate and duang_curr_angle < duang_end_angle: #do duang
-		actor.img.scale = Vector2.ONE * duang_factor * sin(duang_curr_angle);
+	if actor.new_img.modulate.a >= GV.DUANG_MODULATE and duang_curr_angle < GV.DUANG_END_ANGLE: #do duang
+		actor.img.scale = Vector2.ONE * GV.DUANG_FACTOR * sin(duang_curr_angle);
 		actor.new_img.scale = actor.img.scale;
 		duang_curr_angle += duang_speed;
 		changed = true;
-	if not changed:
-		actor.swap(actor.img, actor.new_img);
-		actor.img.scale = Vector2.ONE;
 
 func changeParentState():
 	if not changed:
@@ -45,3 +44,12 @@ func changeParentState():
 		return states.tile;
 	return null;
 
+func exit():
+	actor.img.scale = Vector2.ONE;
+	actor.new_img.scale = Vector2.ONE;
+	actor.new_img.z_index = 0;
+
+	#swap
+	var temp = actor.img;
+	actor.img = actor.new_img;
+	actor.new_img = temp;

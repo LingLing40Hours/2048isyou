@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://x1olsxn7nkx1"]
+[gd_scene load_steps=8 format=3 uid="uid://ccbn5jdyqs2rc"]
 
 [ext_resource type="Script" path="res://Player/Player2.gd" id="1_0tyd7"]
-[ext_resource type="Texture2D" uid="uid://1eyy4hsppevg" path="res://Sprites/2_0_dark.png" id="2_jff4t"]
+[ext_resource type="Texture2D" path="res://Sprites/2_0_dark.png" id="2_jff4t"]
 [ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="3_xmhy7"]
 [ext_resource type="Script" path="res://Player/Player2 States/snap_idle.gd" id="4_4p73p"]
 [ext_resource type="Script" path="res://Player/Player2 States/snap_sliding.gd" id="5_atcle"]
@@ -11,8 +11,8 @@
 size = Vector2(224, 224)
 
 [node name="Player2" type="CharacterBody2D" groups=["player"]]
-collision_layer = 4294967293
-collision_mask = 4294967293
+collision_layer = 4294967289
+collision_mask = 4294967289
 motion_mode = 1
 script = ExtResource("1_0tyd7")
 
@@ -40,6 +40,8 @@ script = ExtResource("6_r66q3")
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
 position = Vector2(20, 20)
+collision_layer = 4
+collision_mask = 4
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsEnabler"]

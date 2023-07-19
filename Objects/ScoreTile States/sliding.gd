@@ -9,7 +9,9 @@ var slide_target:Vector2;
 
 func enter():
 	#set slide parameters
-	slide_speed = GV.PLAYER_SNAP_SPEED if actor.is_player else GV.TILE_SLIDE_SPEED;
+	slide_speed = GV.TILE_SLIDE_SPEED;
+	if actor.is_player:
+		slide_speed *= GV.PLAYER_SPEED_RATIO;
 	slide_distance = 0;
 	slide_target = actor.position + actor.slide_dir * GV.TILE_WIDTH;
 	actor.velocity = actor.slide_dir * slide_speed;
