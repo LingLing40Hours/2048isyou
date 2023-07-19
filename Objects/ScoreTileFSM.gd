@@ -12,7 +12,6 @@ var slide_dir:Vector2 = Vector2.ZERO;
 
 var img:Sprite2D = Sprite2D.new();
 var new_img:Sprite2D = Sprite2D.new();
-
 var partner:ScoreTile;
 
 
@@ -46,34 +45,42 @@ func _physics_process(delta):
 func slide(dir:Vector2) -> bool:
 	if get_state() != "tile" and get_state() != "snap":
 		return false;
-		
-	#find ray in slide direction
-	var ray:RayCast2D;
-	if dir == Vector2(1, 0):
-		ray = $Ray1;
-	elif dir == Vector2(0, -1):
-		ray = $Ray2;
-	elif dir == Vector2(-1, 0):
-		ray = $Ray3;
-	else:
-		ray = $Ray4;
 	
 	#determine whether to slide or merge or, if obstructed, idle
 	var next_state:String;
-	if ray.is_colliding():
-		var collider := ray.get_collider();
-		if collider.is_in_group("wall"): #obstructed
-			return false;
-		if collider is ScoreTile:
-			if collider.power == power: #merge
-				partner = collider;
-				next_state = "merging1";
-			elif is_player and collider.slide(dir): #try to slide collider
+	if is_player: #ignore ray if not aligned with tile grid
+		if dir.x:
+			if fmod(position.x, GV.TILE_WIDTH) != GV.TILE_WIDTH/2:
 				next_state = "sliding";
-			else:
+		elif fmod(position.y, GV.TILE_WIDTH) != GV.TILE_WIDTH/2:
+			next_state = "sliding";
+	
+	if not next_state:
+		#find ray in slide direction
+		var ray:RayCast2D;
+		if dir == Vector2(1, 0):
+			ray = $Ray1;
+		elif dir == Vector2(0, -1):
+			ray = $Ray2;
+		elif dir == Vector2(-1, 0):
+			ray = $Ray3;
+		else:
+			ray = $Ray4;
+		
+		if ray.is_colliding():
+			var collider := ray.get_collider();
+			if collider.is_in_group("wall"): #obstructed
 				return false;
-	else:
-		next_state = "sliding";
+			if collider is ScoreTile:
+				if collider.power == power: #merge
+					partner = collider;
+					next_state = "merging1";
+				elif is_player and collider.slide(dir): #try to slide collider
+					next_state = "sliding";
+				else:
+					return false;
+		else:
+			next_state = "sliding";
 	
 	slide_dir = dir;
 	change_state(next_state);
@@ -155,4 +162,4 @@ func player_settings():
 		get_node("Ray"+str(i)).set_collision_mask_value(2, false);
 	
 	#reduce collider size
-	$CollisionPolygon2D.scale = 0.98 * Vector2.ONE;
+	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;

@@ -10,6 +10,7 @@ var LEVEL_COUNT:int = 7;
 var current_level_index:int = 6;
 var level_scores = [];
 
+const PLAYER_COLLIDER_SCALE:float = 0.98;
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
@@ -46,3 +47,18 @@ func _physics_process(delta):
 		focus_dir = -1;
 	elif Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down"):
 		focus_dir = 1;
+
+func same_sign_inclusive(a, b) -> bool:
+	if a == 0:
+		return true;
+	if a > 0:
+		return b >= 0;
+	return b <= 0;
+
+func same_sign_exclusive(a, b) -> bool:
+	if a == 0:
+		return false;
+	if a > 0:
+		return b > 0;
+	return b < 0;
+		

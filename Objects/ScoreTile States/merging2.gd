@@ -1,5 +1,7 @@
 extends State
 
+@onready var game:Node2D = $"/root/Game";
+
 var slide_speed:float;
 var slide_distance:float = 0;
 var slide_target:Vector2;
@@ -20,6 +22,8 @@ func inPhysicsProcess(delta):
 	#sliding into partner
 	slide_distance += slide_speed * delta;
 	if slide_distance >= GV.TILE_WIDTH:
+		var index = game.current_level.players.rfind(actor);
+		game.current_level.players.remove_at(index);
 		actor.queue_free(); #done sliding
 	else:
 		actor.move_and_collide(actor.velocity * delta);

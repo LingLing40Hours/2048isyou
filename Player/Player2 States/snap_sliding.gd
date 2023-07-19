@@ -4,14 +4,15 @@ var target:Vector2;
 var target_t:Vector2;
 var target_distance:float;
 var slide_distance:float = 0;
-var slide_done:bool = false;
 var slide_speed:float;
+var slide_done:bool;
 
 
 func enter():
 	#reset stuff
 	slide_distance = 0;
 	slide_done = false;
+	slide_speed = GV.TILE_SLIDE_SPEED * GV.PLAYER_SPEED_RATIO;
 	
 	#find target in tile coords
 	var pos_t = actor.position/GV.TILE_WIDTH;
@@ -27,7 +28,6 @@ func enter():
 	print("target distance: ", target_distance);
 	
 	#set slide velocity
-	slide_speed = GV.TILE_SLIDE_SPEED * GV.PLAYER_SPEED_RATIO;
 	actor.velocity = slide_speed * actor.slide_dir;
 	
 	#sound
@@ -49,11 +49,3 @@ func changeParentState():
 	if slide_done:
 		return states.snap_idle;
 	return null;
-			
-func same_sign_inclusive(a, b):
-	if a == 0:
-		return true;
-	elif a > 0:
-		return true if b >= 0 else false;
-	else:
-		return true if b <= 0 else false;
