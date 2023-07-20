@@ -7,7 +7,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 7;
-var current_level_index:int = 6;
+var current_level_index:int = 2;
 var level_scores = [];
 
 const PLAYER_COLLIDER_SCALE:float = 0.98;

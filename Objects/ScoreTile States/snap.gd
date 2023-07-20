@@ -25,7 +25,7 @@ func inPhysicsProcess(_delta):
 		elif Input.is_action_pressed("split_down"):
 			actor.split(Vector2(0, 1));
 	
-	if next_state == null: #slide/merge
+	if next_state == null and not Input.is_action_pressed("cc"): #slide/merge
 		if GV.focus_dir == -1:
 			actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
 		elif GV.focus_dir == 1:
