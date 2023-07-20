@@ -67,4 +67,8 @@ func changeParentState():
 	return null;
 
 func exit():
+	#re-enable collisions
 	actor.set_layers(true, true);
+	if actor.splitted:
+		actor.splitted = false;
+		actor.set_masks(true);

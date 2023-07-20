@@ -8,15 +8,25 @@ extends CharacterBody2D
 @export var power:int = 1;
 @export var debug:bool = false;
 
-var slide_dir:Vector2 = Vector2.ZERO;
-
+var score_tile:PackedScene;
 var img:Sprite2D = Sprite2D.new();
 var new_img:Sprite2D = Sprite2D.new();
 var partner:ScoreTile;
 
+var slide_dir:Vector2 = Vector2.ZERO;
+var splitted:bool = false;
+
 
 func _ready():
+	#load score_tile
+	score_tile = load("res://Objects/ScoreTile.tscn");
+	
+	#settings
 	if is_player:
+		if splitted:
+			set_layers(false, true);
+		else:
+			set_masks(true);
 		player_settings();
 	else:
 		#turn off physics
@@ -43,19 +53,20 @@ func _physics_process(delta):
 
 
 func slide(dir:Vector2) -> bool:
-	if get_state() != "tile" and get_state() != "snap":
+	if get_state() not in ["tile", "snap"]:
 		return false;
 	
 	#determine whether to slide or merge or, if obstructed, idle
-	var next_state:String;
+	var next_state:Node2D;
+	var xaligned = true;
+	var yaligned = true;
 	if is_player: #ignore ray if not aligned with tile grid
-		if dir.x:
-			if fmod(position.x, GV.TILE_WIDTH) != GV.TILE_WIDTH/2:
-				next_state = "sliding";
-		elif fmod(position.y, GV.TILE_WIDTH) != GV.TILE_WIDTH/2:
-			next_state = "sliding";
+		xaligned = fmod(position.x, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+		yaligned = fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+		if (dir.x and not xaligned) or (dir.y and not yaligned):
+			next_state = $FSM.states.sliding;
 	
-	if not next_state:
+	if next_state == null:
 		#find ray in slide direction
 		var ray:RayCast2D;
 		if dir == Vector2(1, 0):
@@ -69,26 +80,33 @@ func slide(dir:Vector2) -> bool:
 		
 		if ray.is_colliding():
 			var collider := ray.get_collider();
+			
 			if collider.is_in_group("wall"): #obstructed
 				return false;
+				
 			if collider is ScoreTile:
+				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
+					return false;
 				if collider.power == power: #merge
 					partner = collider;
-					next_state = "merging1";
+					next_state = $FSM.states.merging1;
 				elif is_player and collider.slide(dir): #try to slide collider
-					next_state = "sliding";
+					next_state = $FSM.states.sliding;
 				else:
 					return false;
+			else:
+				next_state = $FSM.states.sliding;
 		else:
-			next_state = "sliding";
+			next_state = $FSM.states.sliding;
 	
 	slide_dir = dir;
-	change_state(next_state);
+	$FSM.curState.next_state = next_state;
 	return true;
 
 func levelup(to_player):
 	if to_player:
 		is_player = true;
+		set_masks(true);
 		player_settings();
 		set_physics(true);
 	change_state("combining");
@@ -143,16 +161,14 @@ func update_texture(s:Sprite2D, power, dark):
 	else:
 		s.texture = load("res://Sprites/2_"+str(power)+".png");
 
-#doesn't set layers or physics
+#doesn't affect layers or masks or physics
 func player_settings():
 	#add to player list
+	#print("add index: ", game.current_level.players.size());
 	game.current_level.players.push_back(self);
 		
 	#add group
 	add_to_group("player");
-	
-	#init collision masks
-	set_masks(true);
 	
 	#init PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
@@ -163,3 +179,61 @@ func player_settings():
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
+
+#doesn't affect layers or masks or physics
+func tile_settings():
+	#remove from player list
+	var index = game.current_level.players.rfind(self);
+	#print("remove index: ", index);
+	game.current_level.players.remove_at(index);
+		
+	#remove group
+	remove_from_group("player");
+	
+	#disable PhysicsEnabler
+	$PhysicsEnabler.monitoring = false;
+	
+	#enable rays' mask 2
+	for i in range(1, 5):
+		get_node("Ray"+str(i)).set_collision_mask_value(2, true);
+	
+	#reset collider size
+	$CollisionPolygon2D.scale = Vector2.ONE;
+
+
+func split(dir:Vector2) -> bool:
+	if power == 0:
+		return false;
+	if get_state() != "snap":
+		return false;
+	
+	if fmod(position.x, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not xaligned
+		return false;
+	if fmod(position.y, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not yaligned
+		return false;
+	
+	#get ray in direction
+	var ray:RayCast2D;
+	if dir == Vector2(1, 0):
+		ray = $Ray1;
+	elif dir == Vector2(0, -1):
+		ray = $Ray2;
+	elif dir == Vector2(-1, 0):
+		ray = $Ray3;
+	else:
+		ray = $Ray4;
+	
+	if ray.is_colliding():
+		var collider := ray.get_collider();
+
+		if collider.is_in_group("wall"): #obstructed
+			return false;
+			
+		if collider is ScoreTile:
+			#return false;
+			if collider.power != power - 1 and not collider.slide(dir): #can't merge or push
+				return false;
+	
+	slide_dir = dir;
+	$FSM.curState.next_state = $FSM.states.splitting;
+	return true;

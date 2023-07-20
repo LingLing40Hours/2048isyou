@@ -23,7 +23,14 @@ const DUANG_START_ANGLE:float = 1;
 const DUANG_FACTOR:float = 1/sin(DUANG_START_ANGLE);
 const DUANG_END_ANGLE:float = PI - DUANG_START_ANGLE;
 const DUANG_SPEED:float = 0.07;
-const FADE_SPEED:float = 0.05;
+const DUANG_FADE_SPEED:float = 0.05;
+
+const FADE_ANGLE:float = 1;
+const DWING_START_ANGLE:float = 1;
+const DWING_FACTOR:float = sin(DWING_START_ANGLE);
+const DWING_END_ANGLE:float = PI - DWING_START_ANGLE;
+const DWING_SPEED:float = 0.07;
+const DWING_FADE_SPEED:float = 0.05;
 
 var player_snap:bool = true;
 var focus_dir:int = 0; #-1 for x, 1 for y, 0 for neither

@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://cy3daaugnn180"]
+[gd_scene load_steps=10 format=3 uid="uid://cy3daaugnn180"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_s0cd0"]
 [ext_resource type="AudioStream" uid="uid://bd85mhurlir6i" path="res://Audio/Tap 1.wav" id="2_ir48s"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
 [ext_resource type="AudioStream" uid="uid://bj8mylcl4px1v" path="res://Audio/Coin 7.wav" id="2_yhtgc"]
+[ext_resource type="AudioStream" uid="uid://bat5pt1w6khrt" path="res://Audio/Coin 1.wav" id="5_xnm0j"]
 
 [sub_resource type="Animation" id="Animation_o2tpm"]
 length = 0.001
@@ -109,5 +110,8 @@ volume_db = -2.0
 [node name="Slide" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("2_ir48s")
 volume_db = -2.0
+
+[node name="Split" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("5_xnm0j")
 
 [connection signal="animation_finished" from="Overlay/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

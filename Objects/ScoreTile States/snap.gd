@@ -1,19 +1,42 @@
 extends State
 
+var next_state:Node2D;
+
 
 func enter():
+	next_state = null;
+	
 	actor.velocity = Vector2.ZERO;
 	actor.slide_dir = Vector2.ZERO;
 	
 func inPhysicsProcess(delta):
-	#set slide direction; releasing a key should not induce slide
-	if GV.focus_dir == -1:
-		actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
-	elif GV.focus_dir == 1:
-		actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
+	#don't overwrite slide_dir before state change happens
+	if next_state != null:
+		return;
 	
-	if actor.slide_dir != Vector2.ZERO:
-		actor.slide(actor.slide_dir);
+	#don't split if just splitted
+	if not actor.splitted: #split
+		if Input.is_action_pressed("split_left"):
+			actor.split(Vector2(-1, 0));
+		elif Input.is_action_pressed("split_right"):
+			actor.split(Vector2(1, 0));
+		elif Input.is_action_pressed("split_up"):
+			actor.split(Vector2(0, -1));
+		elif Input.is_action_pressed("split_down"):
+			actor.split(Vector2(0, 1));
+	
+	if next_state == null: #slide/merge
+		if GV.focus_dir == -1:
+			actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
+		elif GV.focus_dir == 1:
+			actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
+		
+		if actor.slide_dir != Vector2.ZERO:
+			actor.slide(actor.slide_dir);
+
+func changeParentState():
+	return next_state;
+
 
 
 '''

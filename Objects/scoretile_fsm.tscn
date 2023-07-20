@@ -1,10 +1,10 @@
 [gd_scene load_steps=10 format=3 uid="uid://b5xshtev3l7ey"]
 
 [ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="1_jrp3e"]
-[ext_resource type="Script" path="res://Objects/ScoreTile States/idle.gd" id="2_o6oeu"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/slide.gd" id="2_xe2lt"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/snap.gd" id="3_6hfip"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/sliding.gd" id="3_tod5h"]
+[ext_resource type="Script" path="res://Objects/ScoreTile States/tile.gd" id="4_nqmyl"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/merging1.gd" id="4_touaw"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/merging2.gd" id="5_8qdpd"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/combining.gd" id="6_4357s"]
@@ -20,7 +20,7 @@ script = ExtResource("2_xe2lt")
 script = ExtResource("3_6hfip")
 
 [node name="tile" type="Node2D" parent="."]
-script = ExtResource("2_o6oeu")
+script = ExtResource("4_nqmyl")
 
 [node name="sliding" type="Node2D" parent="."]
 script = ExtResource("3_tod5h")

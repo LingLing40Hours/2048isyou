@@ -12,3 +12,4 @@ func _input(event):
 		game.change_level_faded(0);
 	elif event.is_action_pressed("restart"):
 		game.change_level_faded(GV.current_level_index);
+

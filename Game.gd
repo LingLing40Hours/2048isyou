@@ -9,9 +9,11 @@ extends Node2D
 
 @onready var combine_sound = $"Audio/Combine";
 @onready var slide_sound = $"Audio/Slide";
+@onready var split_sound = $"Audio/Split";
 
 var levels = [];
 var next_level_index:int;
+
 
 func _ready():
 	#load levels
