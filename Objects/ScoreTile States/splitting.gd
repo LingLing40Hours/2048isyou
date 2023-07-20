@@ -28,7 +28,7 @@ func enter():
 	player.position = actor.position;
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
-	get_parent().add_child(player);
+	actor.get_parent().add_child(player);
 	player.slide(actor.slide_dir); #this inits player state (assume player can slide)
 
 	#set dwing parameters
