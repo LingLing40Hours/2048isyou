@@ -9,7 +9,7 @@ var changed:bool;
 
 
 func enter():
-	print("SPLITTING");
+	#print("SPLITTING");
 	actor.power -= 1;
 	actor.is_player = false;
 	actor.set_masks(false);

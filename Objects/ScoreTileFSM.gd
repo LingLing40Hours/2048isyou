@@ -79,6 +79,8 @@ func slide(dir:Vector2) -> bool:
 		else:
 			ray = $Ray4;
 		
+		if splitted:
+			ray.force_raycast_update();
 		if ray.is_colliding():
 			var collider := ray.get_collider();
 			
@@ -185,9 +187,7 @@ func player_settings():
 #doesn't affect layers or masks or physics
 func tile_settings():
 	#remove from player list
-	var index = game.current_level.players.rfind(self);
-	#print("remove index: ", index);
-	game.current_level.players.remove_at(index);
+	remove_from_players();
 		
 	#remove group
 	remove_from_group("player");
@@ -243,3 +243,8 @@ func split(dir:Vector2) -> bool:
 	slide_dir = dir;
 	$FSM.curState.next_state = $FSM.states.splitting;
 	return true;
+
+func remove_from_players():
+	var index = game.current_level.players.rfind(self);
+	game.current_level.players.remove_at(index);
+	#print("remove index: ", index);
