@@ -1,7 +1,7 @@
 extends State
 
 	
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	#friction
 	actor.velocity *= 1-GV.PLAYER_MU;
 
@@ -31,7 +31,8 @@ func inPhysicsProcess(delta):
 			
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
-				collider.slide(slide_dir);
+				if collider.slide(slide_dir):
+					collider.snap_slid = false;
 
 func changeParentState():
 	if GV.player_snap:

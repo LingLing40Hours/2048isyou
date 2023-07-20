@@ -14,7 +14,8 @@ var new_img:Sprite2D = Sprite2D.new();
 var partner:ScoreTile;
 
 var slide_dir:Vector2 = Vector2.ZERO;
-var splitted:bool = false;
+var splitted:bool = false; #created from split, not settled yet
+var snap_slid:bool = false; #slid by player in snap mode
 
 
 func _ready():
@@ -47,7 +48,7 @@ func _ready():
 	$FSM.setState($FSM.states[initial_state]);
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if debug:
 		print(get_state());
 
@@ -91,6 +92,7 @@ func slide(dir:Vector2) -> bool:
 					partner = collider;
 					next_state = $FSM.states.merging1;
 				elif is_player and collider.slide(dir): #try to slide collider
+					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
 				else:
 					return false;
@@ -155,11 +157,11 @@ func set_physics(state):
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).enabled = state;
 
-func update_texture(s:Sprite2D, power, dark):
+func update_texture(s:Sprite2D, img_pow, dark):
 	if dark:
-		s.texture = load("res://Sprites/2_"+str(power)+"_dark.png");
+		s.texture = load("res://Sprites/2_"+str(img_pow)+"_dark.png");
 	else:
-		s.texture = load("res://Sprites/2_"+str(power)+".png");
+		s.texture = load("res://Sprites/2_"+str(img_pow)+".png");
 
 #doesn't affect layers or masks or physics
 func player_settings():
@@ -231,7 +233,11 @@ func split(dir:Vector2) -> bool:
 			
 		if collider is ScoreTile:
 			#return false;
-			if collider.power != power - 1 and not collider.slide(dir): #can't merge or push
+			if collider.power == power - 1: #merge split
+				pass;
+			elif collider.slide(dir): #slide split
+				collider.snap_slid = true;
+			else: #obstructed
 				return false;
 	
 	slide_dir = dir;

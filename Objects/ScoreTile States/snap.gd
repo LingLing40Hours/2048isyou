@@ -9,7 +9,7 @@ func enter():
 	actor.velocity = Vector2.ZERO;
 	actor.slide_dir = Vector2.ZERO;
 	
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	#don't overwrite slide_dir before state change happens
 	if next_state != null:
 		return;
@@ -33,6 +33,7 @@ func inPhysicsProcess(delta):
 		
 		if actor.slide_dir != Vector2.ZERO:
 			actor.slide(actor.slide_dir);
+
 
 func changeParentState():
 	return next_state;

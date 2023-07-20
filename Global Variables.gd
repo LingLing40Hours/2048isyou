@@ -42,7 +42,7 @@ func _ready():
 	level_scores.resize(LEVEL_COUNT);
 	level_scores.fill(0);
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	#releasing direction key loses focus
 	if focus_dir == -1 and (Input.is_action_just_released("ui_left") or Input.is_action_just_released("ui_right")):
 		focus_dir = 0;

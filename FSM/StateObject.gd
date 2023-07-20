@@ -30,6 +30,6 @@ func inProcess(_delta):
 func changeParentState():
 	return null
 
-func handleInput(event):
+func handleInput(_event):
 	pass
 

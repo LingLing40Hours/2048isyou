@@ -41,7 +41,8 @@ func enter():
 	actor.set_layers(false, !collide_with_player);
 	
 	#play sound
-	game.slide_sound.play();
+	if not actor.snap_slid:
+		game.slide_sound.play();
 
 func inPhysicsProcess(delta):
 	#sliding into empty space

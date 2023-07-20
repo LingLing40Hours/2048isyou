@@ -39,7 +39,7 @@ func enter():
 	#play sound
 	game.split_sound.play();
 
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	#fade out img, fade in new_img, shrinking animation
 	changed = false;
 	if dwing_curr_angle >= GV.FADE_ANGLE and actor.new_img.modulate.a < 1:

@@ -21,7 +21,7 @@ func enter():
 	actor.img.z_index = 4;
 	actor.new_img.z_index = 3;
 
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	#fade out img, fade in new img, do scaling animation
 	changed = false;
 	if actor.new_img.modulate.a < 1:
