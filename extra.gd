@@ -145,3 +145,31 @@ func levelup():
 		Input.is_action_just_released("ui_down")):
 			focus_dir = 0;
 '''
+
+
+'''
+var focus_dir:int = 0; #-1 for x, 1 for y, 0 for neither
+func _physics_process(_delta):
+	#releasing direction key loses focus
+	if focus_dir == -1 and (Input.is_action_just_released("ui_left") or Input.is_action_just_released("ui_right")):
+		focus_dir = 0;
+	elif focus_dir == 1 and (Input.is_action_just_released("ui_up") or Input.is_action_just_released("ui_down")):
+		focus_dir = 0;
+	
+	#pressing direction key sets focus
+	if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
+		focus_dir = -1;
+	elif Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down"):
+		focus_dir = 1;
+'''
+
+'''
+	if next_state == null and not Input.is_action_pressed("cc"): #slide/merge
+		if GV.focus_dir == -1:
+			actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
+		elif GV.focus_dir == 1:
+			actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
+		
+		if actor.slide_dir != Vector2.ZERO:
+			actor.slide(actor.slide_dir);
+'''

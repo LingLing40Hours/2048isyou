@@ -60,6 +60,21 @@ func inPhysicsProcess(delta):
 		actor.position = slide_target;
 		slide_done = true;
 
+func handleInput(event):
+	if not actor.presnapped:
+		if event.is_action_pressed("ui_left"):
+			actor.next_dir = Vector2(-1, 0);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_right"):
+			actor.next_dir = Vector2(1, 0);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_up"):
+			actor.next_dir = Vector2(0, -1);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_down"):
+			actor.next_dir = Vector2(0, 1);
+			actor.presnapped = true;
+
 func changeParentState():
 	if slide_done:
 		if actor.is_player:

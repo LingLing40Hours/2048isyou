@@ -14,6 +14,8 @@ var new_img:Sprite2D = Sprite2D.new();
 var partner:ScoreTile;
 
 var slide_dir:Vector2 = Vector2.ZERO;
+var next_dir:Vector2 = Vector2.ZERO; #for presnapping
+var presnapped:bool = false; #allow early input in snap mode
 var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode
 
@@ -135,7 +137,9 @@ func _on_physics_enabler_body_exited(body):
 
 func die():
 	#play an animation
-	game.change_level_faded(GV.current_level_index);
+	if not GV.changing_level:
+		GV.changing_level = true;
+		game.change_level_faded(GV.current_level_index);
 
 
 #layer 2 is for membrane and scoreTile raycasts

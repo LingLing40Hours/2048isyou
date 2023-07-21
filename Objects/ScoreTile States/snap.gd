@@ -9,31 +9,36 @@ func enter():
 	actor.velocity = Vector2.ZERO;
 	actor.slide_dir = Vector2.ZERO;
 	
-func inPhysicsProcess(_delta):
+	#check presnap
+	if actor.presnapped:
+		actor.slide(actor.next_dir);
+		actor.presnapped = false;
+	
+func handleInput(event):
 	#don't overwrite slide_dir before state change happens
 	if next_state != null:
 		return;
 	
 	#don't split if just splitted
 	if not actor.splitted and GV.abilities["split"]: #split
-		if Input.is_action_pressed("split_left"):
+		if event.is_action_pressed("split_left"):
 			actor.split(Vector2(-1, 0));
-		elif Input.is_action_pressed("split_right"):
+		elif event.is_action_pressed("split_right"):
 			actor.split(Vector2(1, 0));
-		elif Input.is_action_pressed("split_up"):
+		elif event.is_action_pressed("split_up"):
 			actor.split(Vector2(0, -1));
-		elif Input.is_action_pressed("split_down"):
+		elif event.is_action_pressed("split_down"):
 			actor.split(Vector2(0, 1));
 	
-	if next_state == null and not Input.is_action_pressed("cc"): #slide/merge
-		if GV.focus_dir == -1:
-			actor.slide_dir = Vector2(Input.get_axis("ui_left", "ui_right"), 0);
-		elif GV.focus_dir == 1:
-			actor.slide_dir = Vector2(0, Input.get_axis("ui_up", "ui_down"));
-		
-		if actor.slide_dir != Vector2.ZERO:
-			actor.slide(actor.slide_dir);
-
+	if next_state == null and not event.is_action_pressed("cc"): #slide/merge
+		if event.is_action_pressed("ui_left"):
+			actor.slide(Vector2(-1, 0));
+		elif event.is_action_pressed("ui_right"):
+			actor.slide(Vector2(1, 0));
+		elif event.is_action_pressed("ui_up"):
+			actor.slide(Vector2(0, -1));
+		elif event.is_action_pressed("ui_down"):
+			actor.slide(Vector2(0, 1));
 
 func changeParentState():
 	return next_state;

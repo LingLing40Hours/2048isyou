@@ -43,6 +43,7 @@ func add_level(n):
 	var level:Node2D = levels[n].instantiate();
 	current_level = level;
 	add_child(level);
+	GV.changing_level = false;
 	
 	#update right sidebar visibility
 	#right_sidebar.visible = true if n else false;
@@ -94,5 +95,6 @@ func _on_level_name_faded_in(): #display level name
 	timer.timeout.connect(_on_level_name_displayed);
 
 func _on_level_name_displayed(): #fade out level name
-	var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
-	tween.tween_property(current_level_name, "modulate:a", 0, GV.LEVEL_NAME_FADE_OUT_TIME);
+	if current_level_name != null:
+		var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
+		tween.tween_property(current_level_name, "modulate:a", 0, GV.LEVEL_NAME_FADE_OUT_TIME);
