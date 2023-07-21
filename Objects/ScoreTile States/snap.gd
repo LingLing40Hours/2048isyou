@@ -8,11 +8,19 @@ func enter():
 	
 	actor.velocity = Vector2.ZERO;
 	actor.slide_dir = Vector2.ZERO;
-	
+		
 	#check presnap
-	if actor.presnapped:
+	if actor.presnapped: #entered snap already, tiny offset is fixed
 		actor.slide(actor.next_dir);
 		actor.presnapped = false;
+	else: #snap to grid if offset within player collider
+		var pos_t:Vector2i = actor.position/GV.TILE_WIDTH;
+		var offset:Vector2 = actor.position - (Vector2(pos_t) + Vector2(0.5, 0.5)) * GV.TILE_WIDTH;
+		if offset.x and abs(offset.x) <= GV.TILE_WIDTH * (1 - GV.PLAYER_COLLIDER_SCALE):
+			actor.position.x -= offset.x;
+		if offset.y and abs(offset.y) <= GV.TILE_WIDTH * (1 - GV.PLAYER_COLLIDER_SCALE):
+			actor.position.y -= offset.y;
+				
 	
 func handleInput(event):
 	#don't overwrite slide_dir before state change happens
