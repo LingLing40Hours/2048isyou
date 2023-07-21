@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var GV:Node = $"/root/GV";
-@onready var current_level:Node2D;
 
 @onready var fader:AnimationPlayer = $"Overlay/AnimationPlayer";
 @onready var right_sidebar:VBoxContainer = $"GUI/HBoxContainer/RightSideBar";
@@ -11,6 +10,8 @@ extends Node2D
 @onready var slide_sound = $"Audio/Slide";
 @onready var split_sound = $"Audio/Split";
 
+var current_level:Node2D;
+var current_level_name:Label;
 var levels = [];
 var next_level_index:int;
 
@@ -26,8 +27,7 @@ func _ready():
 
 
 func _input(event):
-	if GV.current_level_index and event.is_action_pressed("change_move_mode"):
-		#change move mode if not in lv0
+	if event.is_action_pressed("change_move_mode") and GV.abilities["move_mode"]:
 		change_move_mode(not GV.player_snap);
 		
 		#update player(s) state
@@ -45,7 +45,16 @@ func add_level(n):
 	add_child(level);
 	
 	#update right sidebar visibility
-	right_sidebar.visible = true if n else false;
+	#right_sidebar.visible = true if n else false;
+	
+	#get level name
+	if current_level.get_node("Background").has_node("LevelName"):
+		current_level_name = current_level.get_node("Background/LevelName");
+	else:
+		current_level_name = null;
+	
+	#init player position
+	level.get_node("Player").position = GV.spawn_point;
 
 #update current level and current level index
 func change_level(n):
@@ -62,9 +71,15 @@ func change_level_faded(n):
 	fader.play("fade_in_black");
 
 func _on_animation_player_animation_finished(anim_name):
-	if anim_name == "fade_in_black":
+	if anim_name == "fade_in_black": #fade out black
 		change_level(next_level_index);
 		fader.play("fade_out_black");
+	elif anim_name == "fade_out_black": #fade in level name
+		if current_level_name != null:
+			var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
+			tween.finished.connect(_on_level_name_faded_in);
+			tween.tween_property(current_level_name, "modulate:a", 1, GV.LEVEL_NAME_FADE_IN_TIME);
+			
 
 func change_move_mode(snap):
 	GV.player_snap = snap;
@@ -74,3 +89,10 @@ func change_move_mode(snap):
 	s += "snap" if snap else "slide";
 	mode_label.text = s;
 
+func _on_level_name_faded_in(): #display level name
+	var timer = get_tree().create_timer(GV.LEVEL_NAME_DISPLAY_TIME);
+	timer.timeout.connect(_on_level_name_displayed);
+
+func _on_level_name_displayed(): #fade out level name
+	var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
+	tween.tween_property(current_level_name, "modulate:a", 0, GV.LEVEL_NAME_FADE_OUT_TIME);

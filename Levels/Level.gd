@@ -9,7 +9,9 @@ var players = []; #if player, add here in _ready()
 
 func _input(event):
 	if event.is_action_pressed("home"):
-		game.change_level_faded(0);
+		if GV.abilities["home"]:
+			game.change_level_faded(0);
 	elif event.is_action_pressed("restart"):
-		game.change_level_faded(GV.current_level_index);
+		if GV.abilities["restart"]:
+			game.change_level_faded(GV.current_level_index);
 

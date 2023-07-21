@@ -15,7 +15,7 @@ func inPhysicsProcess(_delta):
 		return;
 	
 	#don't split if just splitted
-	if not actor.splitted: #split
+	if not actor.splitted and GV.abilities["split"]: #split
 		if Input.is_action_pressed("split_left"):
 			actor.split(Vector2(-1, 0));
 		elif Input.is_action_pressed("split_right"):

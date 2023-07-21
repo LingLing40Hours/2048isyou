@@ -89,7 +89,6 @@ custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 
 [node name="RightSideBar" type="VBoxContainer" parent="GUI/HBoxContainer"]
-visible = false
 layout_mode = 2
 theme = ExtResource("2_jtwee")
 

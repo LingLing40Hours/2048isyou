@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Levels/Level 5.gd" id="1_htpu8"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_eeqjb"]
-[ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal.tscn" id="4_n2und"]
+[ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal_2x2_Level.tscn" id="4_n2und"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_qcnej"]
 
 [node name="Level 5" type="Node2D"]
@@ -21,6 +21,11 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0
 
 [node name="Goal" parent="." instance=ExtResource("4_n2und")]
 position = Vector2(1520, 80)
+
+[node name="Player" parent="." instance=ExtResource("5_qcnej")]
+position = Vector2(80, 1120)
+is_player = true
+power = 0
 
 [node name="ScoreTiles" type="Node2D" parent="."]
 
@@ -2966,11 +2971,6 @@ position = Vector2(1540, 1060)
 
 [node name="ScoreTile981" parent="ScoreTiles" instance=ExtResource("5_qcnej")]
 position = Vector2(220, 1100)
-
-[node name="ScoreTile1049" parent="ScoreTiles" instance=ExtResource("5_qcnej")]
-position = Vector2(80, 1120)
-is_player = true
-power = 0
 
 [node name="ScoreTile982" parent="ScoreTiles" instance=ExtResource("5_qcnej")]
 position = Vector2(260, 1100)
