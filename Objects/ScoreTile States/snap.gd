@@ -23,8 +23,7 @@ func enter():
 				
 	
 func handleInput(event):
-	#don't overwrite slide_dir before state change happens
-	if next_state != null:
+	if next_state != null or GV.changing_level:
 		return;
 	
 	#don't split if just splitted

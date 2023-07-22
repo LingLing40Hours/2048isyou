@@ -7,6 +7,7 @@
 size = Vector2(80, 80)
 
 [node name="Goal" type="Area2D"]
+z_index = -2
 script = ExtResource("1_cyxw5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

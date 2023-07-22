@@ -98,3 +98,6 @@ func _on_level_name_displayed(): #fade out level name
 	if current_level_name != null:
 		var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
 		tween.tween_property(current_level_name, "modulate:a", 0, GV.LEVEL_NAME_FADE_OUT_TIME);
+
+func save_level():
+	pass;

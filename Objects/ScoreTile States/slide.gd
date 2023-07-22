@@ -9,18 +9,24 @@ func inPhysicsProcess(_delta):
 	var hdir = Input.get_axis("ui_left", "ui_right")
 	var vdir = Input.get_axis("ui_up", "ui_down");
 	var dir:Vector2 = Vector2(hdir, vdir);
-	actor.velocity += dir * GV.PLAYER_SLIDE_SPEED;
+	
+	#accelerate
+	if not GV.changing_level:
+		actor.velocity += dir * GV.PLAYER_SLIDE_SPEED;
 
 	#clamping
 	if actor.velocity.length() < GV.PLAYER_SLIDE_SPEED_MIN:
 		actor.velocity = Vector2.ZERO;
 	
 	actor.move_and_slide()
-	#see baddie scripts for death detection
 	for index in actor.get_slide_collision_count():
 		var collision:KinematicCollision2D = actor.get_slide_collision(index);
 		var collider = collision.get_collider();
-		if collider is ScoreTile:
+		
+		if collider.is_in_group("baddie"):
+			actor.die();
+		
+		elif collider is ScoreTile:
 			#find slide direction
 			var slide_dir:Vector2 = collision.get_normal() * (-1);
 			if abs(slide_dir.x) >= abs(slide_dir.y):

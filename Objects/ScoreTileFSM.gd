@@ -137,6 +137,8 @@ func _on_physics_enabler_body_exited(body):
 
 func die():
 	#play an animation
+	#spawn in checkpoint (if set)
+	
 	if not GV.changing_level:
 		GV.changing_level = true;
 		game.change_level_faded(GV.current_level_index);
@@ -213,6 +215,7 @@ func split(dir:Vector2) -> bool:
 	if get_state() != "snap":
 		return false;
 	
+	#ensure player is aligned with grid
 	if fmod(position.x, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not xaligned
 		return false;
 	if fmod(position.y, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not yaligned

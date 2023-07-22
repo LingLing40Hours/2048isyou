@@ -49,13 +49,18 @@ func inPhysicsProcess(delta):
 	slide_distance += slide_speed * delta;
 	if slide_distance < target_distance:
 		var collision = actor.move_and_collide(actor.velocity * delta);
-		if collision and (slide_target - actor.position).length() > stop_margin:
-			var norm = collision.get_normal();
-			if actor.slide_dir.x:
-				if GV.same_sign_exclusive(actor.slide_dir.x, norm.x):
-					slide_done = true;
-			elif GV.same_sign_exclusive(actor.slide_dir.y, norm.y):
-					slide_done = true;
+		
+		if collision:
+			if collision.get_collider().is_in_group("baddie"):
+				actor.die();
+				
+			if (slide_target - actor.position).length() > stop_margin:
+				var norm = collision.get_normal();
+				if actor.slide_dir.x:
+					if GV.same_sign_exclusive(actor.slide_dir.x, norm.x):
+						slide_done = true;
+				elif GV.same_sign_exclusive(actor.slide_dir.y, norm.y):
+						slide_done = true;
 	else:
 		actor.position = slide_target;
 		slide_done = true;

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqnt4lwfr4gb6"]
+[gd_scene load_steps=7 format=3 uid="uid://dqnt4lwfr4gb6"]
 
 [ext_resource type="Script" path="res://Levels/Level 3.gd" id="1_wvf4a"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_paeos"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="4_hi00y"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="5_2s88y"]
-[ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal_2x2_Level.tscn" id="5_8r1gq"]
+[ext_resource type="PackedScene" uid="uid://dvg1vfgncuqoc" path="res://Objects/Goal_2x2_Concave.tscn" id="6_g78k8"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_jxmc5"]
 
 [node name="Level 3" type="Node2D"]
 script = ExtResource("1_wvf4a")
@@ -3187,10 +3188,10 @@ position = Vector2(1540, 1140)
 
 [node name="Goals" type="Node2D" parent="."]
 
-[node name="Goal" parent="Goals" instance=ExtResource("5_8r1gq")]
+[node name="Goal" parent="Goals" instance=ExtResource("6_jxmc5")]
 position = Vector2(80, 1200)
 to_level = 2
 
-[node name="Goal2" parent="Goals" instance=ExtResource("5_8r1gq")]
-position = Vector2(1520, 80)
-to_level = 4
+[node name="Goal2" parent="Goals" instance=ExtResource("6_g78k8")]
+position = Vector2(1560, 80)
+rotation = -1.5708
