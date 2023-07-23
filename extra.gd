@@ -173,3 +173,40 @@ func _physics_process(_delta):
 		if actor.slide_dir != Vector2.ZERO:
 			actor.slide(actor.slide_dir);
 '''
+
+'''
+	#split
+	if next_state == null:
+		if event.is_action_pressed("split_left"):
+			actor.split(Vector2(-1, 0));
+		elif event.is_action_pressed("split_right"):
+			actor.split(Vector2(1, 0));
+		elif event.is_action_pressed("split_up"):
+			actor.split(Vector2(0, -1));
+		elif event.is_action_pressed("split_down"):
+			actor.split(Vector2(0, 1));
+	
+	#shift
+	if next_state == null:
+		if event.is_action_pressed("shift_left"):
+			actor.shift(Vector2(-1, 0));
+		elif event.is_action_pressed("shift_right"):
+			actor.shift(Vector2(1, 0));
+		elif event.is_action_pressed("shift_up"):
+			actor.shift(Vector2(0, -1));
+		elif event.is_action_pressed("shift_down"):
+			actor.shift(Vector2(0, 1));
+		
+	#slide/merge
+	if next_state == null and not event.is_action_pressed("cc") and not event.is_action_pressed("shift"):
+		if event.is_action_pressed("ui_left"):
+			actor.slide(Vector2(-1, 0));
+		elif event.is_action_pressed("ui_right"):
+			actor.slide(Vector2(1, 0));
+		elif event.is_action_pressed("ui_up"):
+			actor.slide(Vector2(0, -1));
+		elif event.is_action_pressed("ui_down"):
+			actor.slide(Vector2(0, 1));
+'''
+
+

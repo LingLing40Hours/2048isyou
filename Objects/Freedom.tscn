@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://drayn2lsacylt"]
+
+[ext_resource type="Script" path="res://Objects/Freedom.gd" id="1_1gnah"]
+
+[node name="Freedom" type="Area2D"]
+script = ExtResource("1_1gnah")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-160, -160, 1760, -160, 1760, -120, -120, -120, -120, 1320, 1760, 1320, 1760, 1360, -160, 1360)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(1720, -120, 1760, -120, 1760, 1320, 1720, 1320)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

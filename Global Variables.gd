@@ -1,13 +1,15 @@
 extends Node
 
 var rng = RandomNumberGenerator.new();
+var factorials:Array[int] = [1];
+var combinations:Array[Array] = [[1]];
 
 var TILE_WIDTH:float = 40; #px
 var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
-var LEVEL_COUNT:int = 7;
-var current_level_index:int = 0;
+var LEVEL_COUNT:int = 8;
+var current_level_index:int = 7;
 var level_scores = [];
 var changing_level:bool = false;
 var spawn_point:Vector2 = Vector2(80, 160);
@@ -38,14 +40,29 @@ const DWING_END_ANGLE:float = PI - DWING_START_ANGLE;
 const DWING_SPEED:float = 0.07;
 const DWING_FADE_SPEED:float = 0.05;
 
+var SHIFT_RAY_LENGTH:float = RESOLUTION.x;
+const SHIFT_TIME:float = 6; #in frames
+const SHIFT_LERP_WEIGHT:float = 0.6;
+var SHIFT_LERP_WEIGHT_TOTAL:float = 0;
+var SHIFT_DISTANCE_TO_SPEED_MAX:float;
+
 var player_snap:bool = true;
+
+var directions = {
+	"left" : Vector2(-1, 0),
+	"right" : Vector2(1, 0),
+	"up" : Vector2(0, -1),
+	"down" : Vector2(0, 1),
+};
 
 var abilities = {
 	"home" : true,
 	"restart" : true,
 	"move_mode" : true,
 	"undo" : true,
+	#"merge" : true,
 	"split" : true,
+	"shift" : true,
 };
 
 
@@ -54,6 +71,14 @@ func _ready():
 	
 	level_scores.resize(LEVEL_COUNT);
 	level_scores.fill(0);
+	
+	#calculate shift parameter
+	for frame in range(1, SHIFT_TIME+1):
+		var term_sign = 1;
+		for term in range(1, frame+1):
+			SHIFT_LERP_WEIGHT_TOTAL += term_sign * combinations_dp(frame, term) * pow(SHIFT_LERP_WEIGHT, term);
+			term_sign *= -1;
+	SHIFT_DISTANCE_TO_SPEED_MAX = 60 / SHIFT_LERP_WEIGHT_TOTAL;
 
 
 func same_sign_inclusive(a, b) -> bool:
@@ -70,3 +95,42 @@ func same_sign_exclusive(a, b) -> bool:
 		return b > 0;
 	return b < 0;
 		
+func factorial(n) -> int:
+	if factorials.size() > n:
+		return factorials[n];
+	
+	var ans = factorials[factorials.size() - 1];
+	for i in range(factorials.size(), n+1):
+		ans *= i;
+		factorials.push_back(ans);
+	return ans;
+
+func combinations_gen(n, k) -> int:
+	if n < k:
+		return 0;
+	if n == k:
+		return 1;
+	@warning_ignore("integer_division")
+	return factorial(n)/factorial(k)/factorial(n-k);
+
+func combinations_dp(n, k) -> int:
+	#range check
+	if n < 0 or k < 0 or k > n:
+		return 0;
+	
+	#query stored answers
+	if combinations.size() > n:
+		if combinations[n][k] != -1:
+			return combinations[n][k];
+	else:
+		#expand combinations
+		for i in range(combinations.size(), n+1):
+			var row = [];
+			row.resize(i+1);
+			row.fill(-1);
+			combinations.push_back(row);
+	
+	#recursion
+	var ans = 1 if (k == 0 or k == n) else (combinations_dp(n-1, k) + combinations_dp(n-1, k-1));
+	combinations[n][k] = ans;
+	return ans;

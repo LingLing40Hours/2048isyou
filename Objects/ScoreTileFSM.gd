@@ -18,6 +18,7 @@ var next_dir:Vector2 = Vector2.ZERO; #for presnapping
 var presnapped:bool = false; #allow early input in snap mode
 var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode
+var shift_ray:RayCast2D = null;
 
 
 func _ready():
@@ -54,6 +55,18 @@ func _physics_process(_delta):
 	if debug:
 		print(get_state());
 
+func get_ray(dir:Vector2) -> RayCast2D:
+	if dir == Vector2(1, 0):
+		return $Ray1;
+	elif dir == Vector2(0, -1):
+		return $Ray2;
+	elif dir == Vector2(-1, 0):
+		return $Ray3;
+	elif dir == Vector2(0, 1):
+		return $Ray4;
+	else:
+		return null;
+
 
 func slide(dir:Vector2) -> bool:
 	if get_state() not in ["tile", "snap"]:
@@ -61,25 +74,15 @@ func slide(dir:Vector2) -> bool:
 	
 	#determine whether to slide or merge or, if obstructed, idle
 	var next_state:Node2D;
-	var xaligned = true;
-	var yaligned = true;
+	var xaligned = is_xaligned();
+	var yaligned = is_yaligned();
 	if is_player: #ignore ray if not aligned with tile grid
-		xaligned = fmod(position.x, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
-		yaligned = fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 		if (dir.x and not xaligned) or (dir.y and not yaligned):
 			next_state = $FSM.states.sliding;
 	
 	if next_state == null:
 		#find ray in slide direction
-		var ray:RayCast2D;
-		if dir == Vector2(1, 0):
-			ray = $Ray1;
-		elif dir == Vector2(0, -1):
-			ray = $Ray2;
-		elif dir == Vector2(-1, 0):
-			ray = $Ray3;
-		else:
-			ray = $Ray4;
+		var ray = get_ray(dir);
 		
 		if splitted:
 			ray.force_raycast_update();
@@ -108,6 +111,63 @@ func slide(dir:Vector2) -> bool:
 	slide_dir = dir;
 	$FSM.curState.next_state = next_state;
 	return true;
+
+
+func split(dir:Vector2) -> bool:
+	if power == 0:
+		return false;
+	if get_state() != "snap":
+		return false;
+	if not GV.abilities["split"]:
+		return false;
+	if not is_xaligned() or not is_yaligned():
+		return false;
+	
+	#get ray in direction
+	var ray = get_ray(dir);
+	
+	if ray.is_colliding():
+		var collider := ray.get_collider();
+
+		if collider.is_in_group("wall"): #obstructed
+			return false;
+			
+		if collider is ScoreTile:
+			#return false;
+			if collider.power == power - 1: #merge split
+				pass;
+			elif collider.slide(dir): #slide split
+				collider.snap_slid = true;
+			else: #obstructed
+				return false;
+	
+	slide_dir = dir;
+	$FSM.curState.next_state = $FSM.states.splitting;
+	return true;
+
+
+func shift(dir:Vector2) -> bool:
+	if get_state() != "snap":
+		return false;
+	if not GV.abilities["shift"]:
+		return false;
+	
+	#get ray
+	var ray = get_ray(dir);
+
+	#consult ray if aligned with tile grid
+	if (dir.x and is_xaligned()) or (dir.y and is_yaligned()):
+		#check for obstruction
+		if ray.is_colliding():
+			var collider = ray.get_collider();
+			if collider is ScoreTile or collider.is_in_group("wall"):
+				return false;
+	
+	slide_dir = dir;
+	shift_ray = ray;
+	$FSM.curState.next_state = $FSM.states.shifting;
+	return true;
+	
 
 func levelup(to_player):
 	if to_player:
@@ -208,50 +268,13 @@ func tile_settings():
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;
 
-
-func split(dir:Vector2) -> bool:
-	if power == 0:
-		return false;
-	if get_state() != "snap":
-		return false;
-	
-	#ensure player is aligned with grid
-	if fmod(position.x, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not xaligned
-		return false;
-	if fmod(position.y, GV.TILE_WIDTH) != GV.TILE_WIDTH/2: #not yaligned
-		return false;
-	
-	#get ray in direction
-	var ray:RayCast2D;
-	if dir == Vector2(1, 0):
-		ray = $Ray1;
-	elif dir == Vector2(0, -1):
-		ray = $Ray2;
-	elif dir == Vector2(-1, 0):
-		ray = $Ray3;
-	else:
-		ray = $Ray4;
-	
-	if ray.is_colliding():
-		var collider := ray.get_collider();
-
-		if collider.is_in_group("wall"): #obstructed
-			return false;
-			
-		if collider is ScoreTile:
-			#return false;
-			if collider.power == power - 1: #merge split
-				pass;
-			elif collider.slide(dir): #slide split
-				collider.snap_slid = true;
-			else: #obstructed
-				return false;
-	
-	slide_dir = dir;
-	$FSM.curState.next_state = $FSM.states.splitting;
-	return true;
-
 func remove_from_players():
 	var index = game.current_level.players.rfind(self);
 	game.current_level.players.remove_at(index);
 	#print("remove index: ", index);
+
+func is_xaligned():
+	return fmod(position.x, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+
+func is_yaligned():
+	return fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;

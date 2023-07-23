@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bd85mhurlir6i"
-path="res://.godot/imported/Tap 1.wav-566d6aabe71af470e6f1fcf448e8ef1f.sample"
+uid="uid://lawh05glg1e8"
+path="res://.godot/imported/shift_long.wav-0f048c31791459f45bb1917a7b21cbb0.sample"
 
 [deps]
 
-source_file="res://Audio/Tap 1.wav"
-dest_files=["res://.godot/imported/Tap 1.wav-566d6aabe71af470e6f1fcf448e8ef1f.sample"]
+source_file="res://Audio/shift_long.wav"
+dest_files=["res://.godot/imported/shift_long.wav-0f048c31791459f45bb1917a7b21cbb0.sample"]
 
 [params]
 

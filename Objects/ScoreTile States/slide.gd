@@ -3,7 +3,7 @@ extends State
 	
 func inPhysicsProcess(_delta):
 	#friction
-	actor.velocity *= 1-GV.PLAYER_MU;
+	actor.velocity *= 1 - GV.PLAYER_MU;
 
 	#input
 	var hdir = Input.get_axis("ui_left", "ui_right")

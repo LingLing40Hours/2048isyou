@@ -9,6 +9,7 @@ extends Node2D
 @onready var combine_sound = $"Audio/Combine";
 @onready var slide_sound = $"Audio/Slide";
 @onready var split_sound = $"Audio/Split";
+@onready var shift_sound = $"Audio/Shift";
 
 var current_level:Node2D;
 var current_level_name:Label;

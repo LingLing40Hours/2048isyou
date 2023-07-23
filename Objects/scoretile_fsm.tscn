@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5xshtev3l7ey"]
+[gd_scene load_steps=11 format=3 uid="uid://b5xshtev3l7ey"]
 
 [ext_resource type="Script" path="res://FSM/FiniteStateMachine.gd" id="1_jrp3e"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/slide.gd" id="2_xe2lt"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Objects/ScoreTile States/merging2.gd" id="5_8qdpd"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/combining.gd" id="6_4357s"]
 [ext_resource type="Script" path="res://Objects/ScoreTile States/splitting.gd" id="9_m7i80"]
+[ext_resource type="Script" path="res://Objects/ScoreTile States/shifting.gd" id="10_iinjl"]
 
 [node name="FSM" type="Node"]
 script = ExtResource("1_jrp3e")
@@ -36,3 +37,6 @@ script = ExtResource("6_4357s")
 
 [node name="splitting" type="Node2D" parent="."]
 script = ExtResource("9_m7i80")
+
+[node name="shifting" type="Node2D" parent="."]
+script = ExtResource("10_iinjl")
