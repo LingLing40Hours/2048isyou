@@ -209,4 +209,25 @@ func _physics_process(_delta):
 			actor.slide(Vector2(0, 1));
 '''
 
+''' in snap.gd enter(), presnap logic
+	#check presnap
+	if actor.presnapped: #this implies snap was entered, collider offset is already fixed
+		actor.slide(actor.next_dir);
+		actor.presnapped = false;
+'''
 
+''' sliding.gd handleInput() code for presnapping
+	if not actor.presnapped and not Input.is_action_pressed("cc") and not Input.is_action_pressed("shift"):
+		if event.is_action_pressed("ui_left"):
+			actor.next_dir = Vector2(-1, 0);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_right"):
+			actor.next_dir = Vector2(1, 0);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_up"):
+			actor.next_dir = Vector2(0, -1);
+			actor.presnapped = true;
+		elif event.is_action_pressed("ui_down"):
+			actor.next_dir = Vector2(0, 1);
+			actor.presnapped = true;
+'''

@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k4s8o"]
 size = Vector2(80, 80)
 
-[node name="Goal" type="Area2D"]
+[node name="Goal" type="Area2D" groups=["savepoint"]]
 z_index = -2
 script = ExtResource("1_cyxw5")
 

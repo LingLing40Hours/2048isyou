@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqnt4lwfr4gb6"]
+[gd_scene load_steps=9 format=3 uid="uid://dqnt4lwfr4gb6"]
 
 [ext_resource type="Script" path="res://Levels/Level 3.gd" id="1_wvf4a"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_paeos"]
@@ -7,6 +7,9 @@
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="5_2s88y"]
 [ext_resource type="PackedScene" uid="uid://dvg1vfgncuqoc" path="res://Objects/Goal_2x2_Concave.tscn" id="6_g78k8"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_jxmc5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mk0r2"]
+size = Vector2(654, 32)
 
 [node name="Level 3" type="Node2D"]
 script = ExtResource("1_wvf4a")
@@ -17,7 +20,7 @@ offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.286275, 0.509804, 0.647059, 1)
 
-[node name="Label" type="Label" parent="Background"]
+[node name="MoveMode" type="Label" parent="Background"]
 layout_mode = 1
 offset_left = 280.0
 offset_top = 808.0
@@ -26,6 +29,12 @@ offset_bottom = 827.0
 rotation = -0.785398
 theme = ExtResource("5_2s88y")
 text = "press Cmd/Ctrl+X to change movement mode"
+
+[node name="Unlocker" type="Area2D" parent="Background/MoveMode"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/MoveMode/Unlocker"]
+position = Vector2(319, 8)
+shape = SubResource("RectangleShape2D_mk0r2")
 
 [node name="LevelName" type="Label" parent="Background"]
 layout_mode = 0
@@ -3198,3 +3207,5 @@ to_level = 2
 [node name="Goal2" parent="Goals" instance=ExtResource("6_g78k8")]
 position = Vector2(1560, 80)
 rotation = -1.5708
+
+[connection signal="body_entered" from="Background/MoveMode/Unlocker" to="." method="_on_unlocker_body_entered"]

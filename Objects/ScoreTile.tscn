@@ -18,18 +18,22 @@ polygon = PackedVector2Array(-16, -19, -14, -20, 14, -20, 16, -19, 19, -16, 20, 
 [node name="Ray1" type="RayCast2D" parent="."]
 target_position = Vector2(30, 0)
 collision_mask = 3
+collide_with_areas = true
 
 [node name="Ray2" type="RayCast2D" parent="."]
 target_position = Vector2(0, -30)
 collision_mask = 3
+collide_with_areas = true
 
 [node name="Ray3" type="RayCast2D" parent="."]
 target_position = Vector2(-30, 0)
 collision_mask = 3
+collide_with_areas = true
 
 [node name="Ray4" type="RayCast2D" parent="."]
 target_position = Vector2(0, 30)
 collision_mask = 3
+collide_with_areas = true
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
 visible = false

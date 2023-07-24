@@ -41,7 +41,7 @@ func enter():
 	actor.set_layers(false, !collide_with_player);
 	
 	#play sound
-	if not actor.snap_slid:
+	if not actor.snap_slid and not actor.splitted:
 		game.slide_sound.play();
 
 func inPhysicsProcess(delta):
@@ -66,19 +66,8 @@ func inPhysicsProcess(delta):
 		slide_done = true;
 
 func handleInput(event):
-	if not actor.presnapped:
-		if event.is_action_pressed("ui_left"):
-			actor.next_dir = Vector2(-1, 0);
-			actor.presnapped = true;
-		elif event.is_action_pressed("ui_right"):
-			actor.next_dir = Vector2(1, 0);
-			actor.presnapped = true;
-		elif event.is_action_pressed("ui_up"):
-			actor.next_dir = Vector2(0, -1);
-			actor.presnapped = true;
-		elif event.is_action_pressed("ui_down"):
-			actor.next_dir = Vector2(0, 1);
-			actor.presnapped = true;
+	if actor.next_move.is_null(): #check for premove
+		actor.get_next_action();
 
 func changeParentState():
 	if slide_done:

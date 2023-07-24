@@ -14,8 +14,11 @@ var new_img:Sprite2D = Sprite2D.new();
 var partner:ScoreTile;
 
 var slide_dir:Vector2 = Vector2.ZERO;
-var next_dir:Vector2 = Vector2.ZERO; #for presnapping
-var presnapped:bool = false; #allow early input in snap mode
+var next_dir:Vector2 = Vector2.ZERO; #for premoving
+var next_move:Callable = Callable(); #allow early input when sliding/shifting
+var func_slide:Callable = Callable(self, "slide");
+var func_split:Callable = Callable(self, "split");
+var func_shift:Callable = Callable(self, "shift");
 var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode
 var shift_ray:RayCast2D = null;
@@ -66,6 +69,42 @@ func get_ray(dir:Vector2) -> RayCast2D:
 		return $Ray4;
 	else:
 		return null;
+
+#if input, sets next_move and next_dir
+func get_next_action():
+	var event_name:String = "";
+	var action:Callable;
+	var s_dir:String;
+	#var dir:Vector2 = Vector2.ZERO;
+	
+	#find movement type
+	if Input.is_action_pressed("cc"):
+		action = func_split;
+		event_name += "split_";
+	elif Input.is_action_pressed("shift"):
+		action = func_shift;
+		event_name += "shift_";
+	else:
+		action = func_slide;
+		event_name += "ui_";
+	
+	#find direction
+	if Input.is_action_pressed("ui_left"):
+		s_dir = "left";
+	elif Input.is_action_pressed("ui_right"):
+		s_dir = "right";
+	elif Input.is_action_pressed("ui_up"):
+		s_dir = "up";
+	elif Input.is_action_pressed("ui_down"):
+		s_dir = "down";
+	
+	#check if movement pressed
+	if s_dir:
+		#check if movement just pressed
+		event_name += s_dir;
+		if Input.is_action_just_pressed(event_name):
+			next_dir = GV.directions[s_dir];
+			next_move = action;
 
 
 func slide(dir:Vector2) -> bool:
@@ -278,3 +317,12 @@ func is_xaligned():
 
 func is_yaligned():
 	return fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+
+#use range = GV.PLAYER_SNAP_RANGE to fix collider offset
+func snap_range(range:float):
+	var pos_t:Vector2i = position/GV.TILE_WIDTH;
+	var offset:Vector2 = position - (Vector2(pos_t) + Vector2(0.5, 0.5)) * GV.TILE_WIDTH;
+	if offset.x and abs(offset.x) <= range:
+		position.x -= offset.x;
+	if offset.y and abs(offset.y) <= range:
+		position.y -= offset.y;

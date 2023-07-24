@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xp1v8"]
 size = Vector2(40, 39)
 
-[node name="Savepoint" type="Area2D"]
+[node name="Savepoint" type="Area2D" groups=["savepoint"]]
 z_index = -2
 script = ExtResource("1_tvino")
 

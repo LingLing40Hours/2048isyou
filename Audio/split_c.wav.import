@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dmni0jl56wqp1"
-path="res://.godot/imported/split.wav-ca1d53938392b87867a925987099bbba.sample"
+uid="uid://coqrr167sjw1b"
+path="res://.godot/imported/split_c.wav-8f7067ae8761c3c4000b84471b5b4351.sample"
 
 [deps]
 
-source_file="res://Audio/split.wav"
-dest_files=["res://.godot/imported/split.wav-ca1d53938392b87867a925987099bbba.sample"]
+source_file="res://Audio/split_c.wav"
+dest_files=["res://.godot/imported/split_c.wav-8f7067ae8761c3c4000b84471b5b4351.sample"]
 
 [params]
 

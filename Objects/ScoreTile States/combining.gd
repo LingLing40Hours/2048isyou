@@ -34,6 +34,10 @@ func inPhysicsProcess(_delta):
 		actor.new_img.scale = actor.img.scale;
 		changed = true;
 
+func handleInput(event):
+	if actor.next_move.is_null(): #check for premove
+		actor.get_next_action();
+
 func changeParentState():
 	if not changed:
 		if actor.is_player:

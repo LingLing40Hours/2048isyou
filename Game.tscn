@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
 [ext_resource type="AudioStream" uid="uid://h4d75muo7lh1" path="res://Audio/merge.wav" id="3_1s3s7"]
 [ext_resource type="AudioStream" uid="uid://4acf1v8r2emv" path="res://Audio/snap.wav" id="4_erghs"]
-[ext_resource type="AudioStream" uid="uid://dmni0jl56wqp1" path="res://Audio/split.wav" id="5_47c2c"]
+[ext_resource type="AudioStream" uid="uid://qtimgux1b0st" path="res://Audio/split_b.wav" id="5_erxfs"]
 [ext_resource type="AudioStream" uid="uid://cuqvb804wfuvi" path="res://Audio/shift_long_reverbless.wav" id="6_2ro13"]
 
 [sub_resource type="Animation" id="Animation_o2tpm"]
@@ -112,7 +112,7 @@ stream = ExtResource("4_erghs")
 volume_db = -2.0
 
 [node name="Split" type="AudioStreamPlayer2D" parent="Audio"]
-stream = ExtResource("5_47c2c")
+stream = ExtResource("5_erxfs")
 
 [node name="Shift" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("6_2ro13")

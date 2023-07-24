@@ -12,13 +12,14 @@ var LEVEL_COUNT:int = 8;
 var current_level_index:int = 7;
 var level_scores = [];
 var changing_level:bool = false;
-var spawn_point:Vector2 = Vector2(80, 160);
+var spawn_point:Vector2 = Vector2.ZERO; #Vector2(80, 160);
 
 const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
 const LEVEL_NAME_FADE_OUT_TIME:float = 1.2;
 
 const PLAYER_COLLIDER_SCALE:float = 0.98;
+var PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;

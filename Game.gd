@@ -56,7 +56,8 @@ func add_level(n):
 		current_level_name = null;
 	
 	#init player position
-	level.get_node("Player").position = GV.spawn_point;
+	if GV.spawn_point != Vector2.ZERO:
+		level.get_node("Player").position = GV.spawn_point;
 
 #update current level and current level index
 func change_level(n):
