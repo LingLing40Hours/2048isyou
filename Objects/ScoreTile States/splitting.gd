@@ -2,10 +2,7 @@ extends State
 
 @onready var game:Node2D = $"/root/Game";
 
-var dwing_curr_angle:float;
-var dwing_speed:float;
-var fade_speed:float;
-var changed:bool;
+
 
 
 func enter():

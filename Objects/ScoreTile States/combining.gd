@@ -1,9 +1,6 @@
 extends State
 
-var duang_curr_angle:float;
-var duang_speed:float;
-var fade_speed:float;
-var changed:bool;
+
 
 
 func enter():

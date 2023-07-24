@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
+@onready var animator := ScoreTileAnimator.new();
 
 @export var is_player:bool = false;
 @export var power:int = 1;
