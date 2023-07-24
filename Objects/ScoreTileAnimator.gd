@@ -8,7 +8,7 @@ var animating:bool = false;
 @onready var parent = get_parent();
 
 
-func duang(duang_speed, fade_speed):
+func duang(power, duang_speed, fade_speed):
 	#set speeds
 	anim_scale_speed = duang_speed;
 	anim_fade_speed = fade_speed;
@@ -22,7 +22,7 @@ func duang(duang_speed, fade_speed):
 	#start animation
 	animating = true;
 
-func dwing(dwing_speed, fade_speed):
+func dwing(power, dwing_speed, fade_speed):
 	#set speeds
 	anim_scale_speed = dwing_speed;
 	anim_fade_speed = fade_speed;
