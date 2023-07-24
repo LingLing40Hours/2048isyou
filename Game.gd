@@ -25,6 +25,8 @@ func _ready():
 	
 	#init mode label
 	change_move_mode(GV.player_snap);
+	
+	#testing
 
 
 func _input(event):

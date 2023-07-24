@@ -231,3 +231,11 @@ func _physics_process(_delta):
 			actor.next_dir = Vector2(0, 1);
 			actor.presnapped = true;
 '''
+
+'''
+	if actor.next_move.is_null(): #check for premove
+		actor.get_next_action();
+		if actor.next_move.is_valid():
+			duang_speed *= 6;
+			fade_speed *= 6;
+'''
