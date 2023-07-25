@@ -1,5 +1,6 @@
 extends State
 
+var frame_count:int;
 @onready var game:Node2D = $"/root/Game";
 
 
@@ -29,6 +30,7 @@ func enter():
 	player.slide(actor.slide_dir); #this inits player state (assume player can slide)
 
 	#set dwing parameters
+	frame_count = 0;
 	dwing_curr_angle = GV.DWING_START_ANGLE;
 	dwing_speed = GV.DWING_SPEED;
 	fade_speed = GV.DWING_FADE_SPEED;
@@ -36,21 +38,11 @@ func enter():
 	#play sound
 	game.split_sound.play();
 
-func inPhysicsProcess(_delta):
-	#fade out img, fade in new_img, shrinking animation
-	changed = false;
-	if dwing_curr_angle >= GV.FADE_ANGLE and actor.new_img.modulate.a < 1:
-		actor.img.modulate.a = max(0, actor.img.modulate.a - fade_speed);
-		actor.new_img.modulate.a = 1 - actor.img.modulate.a;
-		changed = true;
-	if dwing_curr_angle < GV.DWING_END_ANGLE: #do dwing
-		dwing_curr_angle = min(GV.DWING_END_ANGLE, dwing_curr_angle + dwing_speed);
-		actor.img.scale = Vector2.ONE * GV.DWING_FACTOR / sin(dwing_curr_angle);
-		actor.new_img.scale = actor.img.scale;
-		changed = true;
+func inPhysicsProcess(delta):
+	frame_count += 1;
 
 func changeParentState():
-	if not changed:
+	if frame_count == GV.SPLITTING_FRAME_COUNT:
 		return states.tile;
 	return null;
 

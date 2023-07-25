@@ -1,6 +1,6 @@
 extends State
 
-
+var frame_count:int;
 
 
 func enter():
@@ -10,6 +10,7 @@ func enter():
 	actor.new_img.modulate.a = 0;
 	
 	#set duang parameters
+	frame_count = 0;
 	duang_curr_angle = GV.DUANG_START_ANGLE;
 	duang_speed = GV.DUANG_SPEED;
 	fade_speed = GV.DUANG_FADE_SPEED;
@@ -18,25 +19,15 @@ func enter():
 	actor.img.z_index = 4;
 	actor.new_img.z_index = 3;
 
-func inPhysicsProcess(_delta):
-	#fade out img, fade in new img, do scaling animation
-	changed = false;
-	if actor.new_img.modulate.a < 1:
-		actor.img.modulate.a = max(0, actor.img.modulate.a - fade_speed);
-		actor.new_img.modulate.a = 1 - actor.img.modulate.a;
-		changed = true;
-	if actor.new_img.modulate.a >= GV.DUANG_MODULATE and duang_curr_angle < GV.DUANG_END_ANGLE: #do duang
-		duang_curr_angle = min(GV.DUANG_END_ANGLE, duang_curr_angle + duang_speed);
-		actor.img.scale = Vector2.ONE * GV.DUANG_FACTOR * sin(duang_curr_angle);
-		actor.new_img.scale = actor.img.scale;
-		changed = true;
+func inPhysicsProcess(delta):
+	frame_count += 1;
 
 func handleInput(event):
 	if actor.next_move.is_null(): #check for premove
 		actor.get_next_action();
 
 func changeParentState():
-	if not changed:
+	if frame_count == GV.COMBINING_FRAME_COUNT:
 		if actor.is_player:
 			if GV.player_snap:
 				return states.snap;

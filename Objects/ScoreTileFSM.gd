@@ -265,12 +265,6 @@ func set_physics(state):
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).enabled = state;
 
-func update_texture(s:Sprite2D, img_pow, dark):
-	if dark:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+"_dark.png");
-	else:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+".png");
-
 #doesn't affect layers or masks or physics
 func player_settings():
 	#add to player list
