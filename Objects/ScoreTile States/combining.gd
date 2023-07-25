@@ -37,6 +37,9 @@ func inPhysicsProcess(_delta):
 func handleInput(event):
 	if actor.next_move.is_null(): #check for premove
 		actor.get_next_action();
+		if actor.next_move.is_valid(): #speed up if premoved
+			duang_speed *= 5;
+			fade_speed *= 5;
 
 func changeParentState():
 	if not changed:
