@@ -31,6 +31,6 @@ func inPhysicsProcess(delta):
 	actor.move_and_collide(actor.velocity * delta);
 	
 func changeParentState():
-	if slide_distance >= GV.COMBINE_MERGE_RATIO * GV.TILE_WIDTH:
+	if slide_distance >= GV.COMBINING_MERGE_RATIO * GV.TILE_WIDTH:
 		return states.merging2;
 	return null;

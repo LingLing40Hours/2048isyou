@@ -10,7 +10,7 @@ extends CharacterBody2D
 
 var score_tile:PackedScene;
 var img:Sprite2D = Sprite2D.new();
-var new_img:Sprite2D = Sprite2D.new();
+var animators:Array[ScoreTileAnimator] = [];
 var partner:ScoreTile;
 
 var slide_dir:Vector2 = Vector2.ZERO;
@@ -42,7 +42,6 @@ func _ready():
 	#add sprite
 	update_texture(img, power, is_player);
 	add_child(img);
-	add_child(new_img);
 	
 	#set initial state
 	var initial_state = "tile";
@@ -57,6 +56,12 @@ func _ready():
 func _physics_process(_delta):
 	if debug:
 		print(get_state());
+
+func update_texture(s:Sprite2D, img_pow, dark):
+	if dark:
+		s.texture = load("res://Sprites/2_"+str(img_pow)+"_dark.png");
+	else:
+		s.texture = load("res://Sprites/2_"+str(img_pow)+".png");
 
 func get_ray(dir:Vector2) -> RayCast2D:
 	if dir == Vector2(1, 0):
@@ -263,12 +268,6 @@ func set_physics(state):
 	$FSM.set_physics_process(state);
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).enabled = state;
-
-func update_texture(s:Sprite2D, img_pow, dark):
-	if dark:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+"_dark.png");
-	else:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+".png");
 
 #doesn't affect layers or masks or physics
 func player_settings():
