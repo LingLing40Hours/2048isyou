@@ -25,7 +25,7 @@ const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
 const PLAYER_SPEED_RATIO:float = 3/4.0;
 const TILE_SLIDE_SPEED:float = 360;
-const COMBINING_MERGE_RATIO:float = 1/2.4;
+const COMBINING_MERGE_RATIO:float = 1/2.7;
 
 const COMBINING_FRAME_COUNT:int = 6;
 const SPLITTING_FRAME_COUNT:int = 6;

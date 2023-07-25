@@ -4,20 +4,15 @@ var frame_count:int;
 
 
 func enter():
-	#update power and texture
-	actor.power += 1;
-	actor.update_texture(actor.new_img, actor.power, actor.is_player);
-	actor.new_img.modulate.a = 0;
-	
-	#set duang parameters
+	#reset frame count
 	frame_count = 0;
-	duang_curr_angle = GV.DUANG_START_ANGLE;
-	duang_speed = GV.DUANG_SPEED;
-	fade_speed = GV.DUANG_FADE_SPEED;
 	
-	#set z_index
-	actor.img.z_index = 4;
-	actor.new_img.z_index = 3;
+	#update power
+	actor.power += 1;
+	
+	#start animation
+	var animator = ScoreTileAnimator.new(actor.power, GV.ScaleAnim.DUANG, 4, 3);
+	actor.add_child(animator);
 
 func inPhysicsProcess(delta):
 	frame_count += 1;
@@ -34,12 +29,3 @@ func changeParentState():
 			return states.slide;
 		return states.tile;
 	return null;
-
-func exit():
-	actor.img.z_index = 0;
-	actor.new_img.z_index = 0;
-
-	#swap
-	var temp = actor.img;
-	actor.img = actor.new_img;
-	actor.new_img = temp;
