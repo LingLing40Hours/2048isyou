@@ -44,12 +44,11 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 [node name="Freedom" parent="." instance=ExtResource("4_isobq")]
 
 [node name="Player" parent="." instance=ExtResource("4_3qn8i")]
-position = Vector2(1460, 300)
+position = Vector2(820, 100)
 is_player = true
-power = 0
 
 [node name="Player2" parent="." instance=ExtResource("4_3qn8i")]
-position = Vector2(1420, 300)
+position = Vector2(820, 60)
 power = -1
 
 [node name="Player3" parent="." instance=ExtResource("4_3qn8i")]

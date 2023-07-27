@@ -26,3 +26,6 @@ func changeParentState():
 			return states.slide;
 		return states.tile;
 	return null;
+
+func exit():
+	actor.partner = null;

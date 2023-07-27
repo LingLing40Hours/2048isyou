@@ -1,6 +1,7 @@
 extends State
 
 var frame_count:int;
+var player:ScoreTile;
 @onready var game:Node2D = $"/root/Game";
 
 
@@ -20,14 +21,15 @@ func enter():
 	actor.add_child(animator);
 	
 	#create and slide/merge player in slide_dir
-	var player = actor.score_tile.instantiate();
+	player = actor.score_tile.instantiate();
 	player.is_player = true;
 	player.power = actor.power;
 	player.position = actor.position;
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
 	actor.get_parent().add_child(player);
-	player.slide(actor.slide_dir); #this inits player state (assume player can slide)
+	player.enable_physics_immediately();
+	player.slide(actor.slide_dir); #guaranteed to return true
 	
 	#play sound
 	game.split_sound.play();

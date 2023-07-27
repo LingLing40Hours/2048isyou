@@ -36,9 +36,8 @@ func enter():
 	target_distance = (slide_target - actor.position).length();
 	#print("target distance: ", target_distance);
 	
-	#disable collision when sliding
-	var collide_with_player:bool = actor.is_player or not GV.player_snap;
-	actor.set_layers(false, !collide_with_player);
+	#disable collision if in snap mode so player can follow through with slide
+	actor.set_layers(false, GV.player_snap and not actor.is_player);
 	
 	#play sound
 	if not actor.snap_slid and not actor.splitted:
@@ -77,7 +76,8 @@ func changeParentState():
 	return null;
 
 func exit():
-	#reset snap_slid
+	#reset stuff
+	actor.pusher = null;
 	actor.snap_slid = false;
 	
 	#re-enable collisions

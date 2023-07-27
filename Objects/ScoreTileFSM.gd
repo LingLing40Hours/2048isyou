@@ -5,15 +5,17 @@ extends CharacterBody2D
 @onready var game:Node2D = $"/root/Game";
 
 @export var is_player:bool = false;
-@export var ssign:int = 1;
 @export var power:int = 1;
+@export var ssign:int = 1;
 @export var debug:bool = false;
 
 var score_tile:PackedScene;
 var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
+var pusher:ScoreTile;
 var partner:ScoreTile;
 
+var physics_on:bool = true;
 var physics_enabler_count:int = 0;
 var slide_dir:Vector2 = Vector2.ZERO;
 var next_dir:Vector2 = Vector2.ZERO; #for premoving
@@ -40,6 +42,7 @@ func _ready():
 	else:
 		#turn off physics
 		set_physics(false);
+		physics_on = false;
 	
 	#add sprite
 	update_texture(img, power, ssign, is_player);
@@ -142,9 +145,9 @@ func slide(dir:Vector2) -> bool:
 	if next_state == null:
 		#find ray in slide direction
 		var ray = get_ray(dir);
-		
-		if splitted:
+		if splitted or (pusher != null and pusher.splitted):
 			ray.force_raycast_update();
+		
 		if ray.is_colliding():
 			var collider := ray.get_collider();
 			
@@ -154,7 +157,11 @@ func slide(dir:Vector2) -> bool:
 			if collider is ScoreTile:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
 					return false;
-				if collider.get_state() in ["tile", "snap"] and power in [-1, collider.power]: #merge
+				if collider.get_state() not in ["tile", "snap"]:
+					return false;
+				
+				collider.pusher = self;
+				if power in [-1, collider.power]: #merge as 0 or equal power
 					partner = collider;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
@@ -166,6 +173,7 @@ func slide(dir:Vector2) -> bool:
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
 				else:
+					collider.pusher = null;
 					return false;
 			else:
 				next_state = $FSM.states.sliding;
@@ -197,8 +205,12 @@ func split(dir:Vector2) -> bool:
 			return false;
 			
 		if collider is ScoreTile:
-			#return false;
-			if collider.get_state() in ["tile", "snap"] and power - 1 == collider.power: #merge split
+			if not collider.is_xaligned() or not collider.is_yaligned():
+				return false;
+			if collider.get_state() not in ["tile", "snap"]:
+				return false;
+			
+			if power - 1 == collider.power: #merge split
 				pass;
 			elif collider.slide(dir): #slide split
 				collider.snap_slid = true;
@@ -256,8 +268,11 @@ func levelup():
 		#print("CONVERT TO PLAYER");
 		is_player = true;
 		set_masks(true);
-		player_settings();
 		set_physics(true);
+		physics_on = true;
+		
+		player_settings();
+		enable_physics_immediately();
 	
 	$FSM.curState.next_state = $FSM.states.combining;
 
@@ -271,17 +286,30 @@ func change_state(s:String):
 
 func _on_physics_enabler_body_entered(body):
 	if body != self and body is ScoreTile and not body.is_player:
-		if body.physics_enabler_count == 0:
+		if body.physics_enabler_count == 0 and not body.physics_on:
 			body.set_physics(true);
+			body.physics_on = true;
 			#print("PHYSICS ON");
 		body.physics_enabler_count += 1;
 
 func _on_physics_enabler_body_exited(body):
 	if body != self and body is ScoreTile and not body.is_player:
 		body.physics_enabler_count -= 1;
-		if body.physics_enabler_count == 0:
+		if body.physics_enabler_count == 0 and body.physics_on:
 			body.set_physics(false);
+			body.physics_on = false;
 			#print("PHYSICS OFF EXIT");
+
+func enable_physics_immediately():
+	$PhysicsEnabler2.enabled = true;
+	$PhysicsEnabler2.force_shapecast_update();
+	for i in $PhysicsEnabler2.get_collision_count():
+		var body = $PhysicsEnabler2.get_collider(i);
+		
+		if body is ScoreTile and not body.is_player and not body.physics_on:
+			body.set_physics(true);
+			body.physics_on = true;
+	$PhysicsEnabler2.enabled = false;
 
 func die():
 	#play an animation
@@ -322,7 +350,7 @@ func player_settings():
 	#add group
 	add_to_group("player");
 	
-	#init PhysicsEnabler
+	#enable PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
 
 	#disable rays' mask 2
