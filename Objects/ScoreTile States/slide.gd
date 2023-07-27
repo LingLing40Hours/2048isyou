@@ -37,8 +37,7 @@ func inPhysicsProcess(_delta):
 			
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
-				if collider.slide(slide_dir):
-					collider.snap_slid = false;
+				collider.slide(slide_dir);
 
 func changeParentState():
 	if GV.player_snap:

@@ -8,21 +8,27 @@ func enter():
 	frame_count = 0;
 	
 	#update power
-	actor.power += 1;
+	if actor.power == -1:
+		actor.power = actor.partner.power;
+		actor.ssign = actor.partner.ssign;
+	elif actor.partner.power == -1:
+		pass;
+	elif actor.partner.ssign == actor.ssign:
+		actor.power += 1;
+	else:
+		actor.power = -1;
+	print("POWER: ", actor.power);
 	
 	#start animation
-	var animator = ScoreTileAnimator.new(actor.power, GV.ScaleAnim.DUANG, 4, 3);
+	var animator = ScoreTileAnimator.new(actor.power, actor.ssign, GV.ScaleAnim.DUANG, 4, 3);
 	actor.add_child(animator);
 
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	frame_count += 1;
 
-func handleInput(event):
+func handleInput(_event):
 	if actor.next_move.is_null(): #check for premove
 		actor.get_next_action();
-		if actor.next_move.is_valid(): #speed up if premoved
-			duang_speed *= 5;
-			fade_speed *= 5;
 
 func changeParentState():
 	if frame_count == GV.COMBINING_FRAME_COUNT:

@@ -7,6 +7,7 @@ extends Node
 
 var img:Sprite2D;
 var anim_new_power:int;
+var anim_new_ssign:int;
 var anim_scale_type:int;
 var anim_old_z:int;
 var anim_new_z:int;
@@ -18,9 +19,10 @@ var halted:bool = false;
 @onready var parent = get_parent();
 
 
-func _init(power, scale_type, z_index_old, z_index_new):
+func _init(power, ssign, scale_type, z_index_old, z_index_new):
 	#anim parameters
 	anim_new_power = power;
+	anim_new_ssign = ssign;
 	anim_scale_type = scale_type;
 	anim_old_z = z_index_old;
 	anim_new_z = z_index_new;
@@ -38,7 +40,7 @@ func _ready():
 	parent.img.z_index = anim_old_z;
 	img.z_index = anim_new_z;
 	img.modulate.a = 0;
-	parent.update_texture(img, anim_new_power, parent.is_player);
+	parent.update_texture(img, anim_new_power, anim_new_ssign, parent.is_player);
 	parent.add_child(img);
 	
 	#more anim parameters

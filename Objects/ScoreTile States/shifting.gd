@@ -56,7 +56,7 @@ func inPhysicsProcess(delta):
 		actor.velocity = Vector2.ZERO;
 
 
-func handleInput(event):
+func handleInput(_event):
 	if actor.next_move.is_null(): #check for premove
 		actor.get_next_action();
 

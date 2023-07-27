@@ -31,6 +31,7 @@ theme = ExtResource("5_2s88y")
 text = "press Cmd/Ctrl+X to change movement mode"
 
 [node name="Unlocker" type="Area2D" parent="Background/MoveMode"]
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/MoveMode/Unlocker"]
 position = Vector2(319, 8)

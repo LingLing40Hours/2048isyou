@@ -27,8 +27,8 @@ const PLAYER_SPEED_RATIO:float = 3/4.0;
 const TILE_SLIDE_SPEED:float = 360;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const COMBINING_FRAME_COUNT:int = 6;
-const SPLITTING_FRAME_COUNT:int = 6;
+const COMBINING_FRAME_COUNT:int = 9;
+const SPLITTING_FRAME_COUNT:int = 9;
 
 enum ScaleAnim {
 	DUANG=0,

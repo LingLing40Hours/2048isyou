@@ -10,7 +10,7 @@ var slide_target:Vector2;
 func enter():
 	#do the thing
 	actor.get_node("PhysicsEnabler").monitoring = false;
-	actor.partner.levelup(actor.is_player);
+	actor.partner.levelup();
 	
 	#get slide parameters
 	var prev_state:Node2D = get_parent().prevState;

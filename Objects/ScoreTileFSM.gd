@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var game:Node2D = $"/root/Game";
 
 @export var is_player:bool = false;
+@export var ssign:int = 1;
 @export var power:int = 1;
 @export var debug:bool = false;
 
@@ -13,6 +14,7 @@ var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
 var partner:ScoreTile;
 
+var physics_enabler_count:int = 0;
 var slide_dir:Vector2 = Vector2.ZERO;
 var next_dir:Vector2 = Vector2.ZERO; #for premoving
 var next_move:Callable = Callable(); #allow early input when sliding/shifting
@@ -40,7 +42,7 @@ func _ready():
 		set_physics(false);
 	
 	#add sprite
-	update_texture(img, power, is_player);
+	update_texture(img, power, ssign, is_player);
 	add_child(img);
 	
 	#set initial state
@@ -57,11 +59,24 @@ func _physics_process(_delta):
 	if debug:
 		print(get_state());
 
-func update_texture(s:Sprite2D, img_pow, dark):
-	if dark:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+"_dark.png");
+func update_texture(s:Sprite2D, score_pow, score_sign, dark):
+	var texture_path:String = "res://Sprites/2_";
+	
+	#power
+	if score_pow < 0:
+		texture_path += "n";
 	else:
-		s.texture = load("res://Sprites/2_"+str(img_pow)+".png");
+		texture_path += str(score_pow);
+	
+	#sign
+	if score_sign == -1 and score_pow >= 0:
+		texture_path += "m";
+	
+	#dark
+	if dark:
+		texture_path += "d";
+	
+	s.texture = load(texture_path + ".png");
 
 func get_ray(dir:Vector2) -> RayCast2D:
 	if dir == Vector2(1, 0):
@@ -139,12 +154,17 @@ func slide(dir:Vector2) -> bool:
 			if collider is ScoreTile:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
 					return false;
-				if collider.power == power: #merge
+				if collider.get_state() in ["tile", "snap"] and power in [-1, collider.power]: #merge
 					partner = collider;
+					collider.partner = self;
 					next_state = $FSM.states.merging1;
 				elif is_player and collider.slide(dir): #try to slide collider
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
+				elif collider.power == -1:
+					partner = collider;
+					collider.partner = self;
+					next_state = $FSM.states.merging1;
 				else:
 					return false;
 			else:
@@ -158,7 +178,7 @@ func slide(dir:Vector2) -> bool:
 
 
 func split(dir:Vector2) -> bool:
-	if power == 0:
+	if power <= 0:
 		return false;
 	if get_state() != "snap":
 		return false;
@@ -178,10 +198,12 @@ func split(dir:Vector2) -> bool:
 			
 		if collider is ScoreTile:
 			#return false;
-			if collider.power == power - 1: #merge split
+			if collider.get_state() in ["tile", "snap"] and power in [-1, collider.power]: #merge split
 				pass;
 			elif collider.slide(dir): #slide split
 				collider.snap_slid = true;
+			elif collider.power == -1: #pop a 0
+				pass;
 			else: #obstructed
 				return false;
 	
@@ -213,13 +235,20 @@ func shift(dir:Vector2) -> bool:
 	return true;
 	
 
-func levelup(to_player):
-	if to_player:
+func levelup():
+	if get_state() not in ["tile", "snap"]:
+		return;
+
+	#convert to player
+	if partner.is_player or power >= 12:
 		is_player = true;
 		set_masks(true);
 		player_settings();
 		set_physics(true);
-	change_state("combining");
+	else:
+		print("NOT PLAYER");
+	
+	$FSM.curState.next_state = $FSM.states.combining;
 
 	
 func get_state() -> String:
@@ -231,13 +260,17 @@ func change_state(s:String):
 
 func _on_physics_enabler_body_entered(body):
 	if body != self and body is ScoreTile and not body.is_player:
-		#print("PHYSICS ON");
-		body.set_physics(true);
+		if body.physics_enabler_count == 0:
+			body.set_physics(true);
+		body.physics_enabler_count += 1;
+		#print("PHYSICS ON", body.physics_enabler_count);
 
 func _on_physics_enabler_body_exited(body):
 	if body != self and body is ScoreTile and not body.is_player:
-		#print("PHYSICS OFF EXIT");
-		body.set_physics(false);
+		body.physics_enabler_count -= 1;
+		if body.physics_enabler_count == 0:
+			body.set_physics(false);
+		#print("PHYSICS OFF EXIT", body.physics_enabler_count);
 
 func die():
 	#play an animation
@@ -318,10 +351,10 @@ func is_yaligned():
 	return fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 
 #use range = GV.PLAYER_SNAP_RANGE to fix collider offset
-func snap_range(range:float):
+func snap_range(offset_range:float):
 	var pos_t:Vector2i = position/GV.TILE_WIDTH;
 	var offset:Vector2 = position - (Vector2(pos_t) + Vector2(0.5, 0.5)) * GV.TILE_WIDTH;
-	if offset.x and abs(offset.x) <= range:
+	if offset.x and abs(offset.x) <= offset_range:
 		position.x -= offset.x;
-	if offset.y and abs(offset.y) <= range:
+	if offset.y and abs(offset.y) <= offset_range:
 		position.y -= offset.y;

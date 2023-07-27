@@ -65,7 +65,7 @@ func inPhysicsProcess(delta):
 		actor.position = slide_target;
 		slide_done = true;
 
-func handleInput(event):
+func handleInput(_event):
 	if actor.next_move.is_null(): #check for premove
 		actor.get_next_action();
 
@@ -77,6 +77,9 @@ func changeParentState():
 	return null;
 
 func exit():
+	#reset snap_slid
+	actor.snap_slid = false;
+	
 	#re-enable collisions
 	actor.set_layers(true, true);
 	if actor.splitted:

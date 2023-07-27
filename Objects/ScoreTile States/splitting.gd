@@ -16,7 +16,7 @@ func enter():
 	actor.tile_settings();
 	
 	#start animation
-	var animator = ScoreTileAnimator.new(actor.power, GV.ScaleAnim.DWING, 2, 1);
+	var animator = ScoreTileAnimator.new(actor.power, actor.ssign, GV.ScaleAnim.DWING, 2, 1);
 	actor.add_child(animator);
 	
 	#create and slide/merge player in slide_dir
@@ -32,7 +32,7 @@ func enter():
 	#play sound
 	game.split_sound.play();
 
-func inPhysicsProcess(delta):
+func inPhysicsProcess(_delta):
 	frame_count += 1;
 
 func changeParentState():
