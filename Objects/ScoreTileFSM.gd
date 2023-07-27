@@ -161,7 +161,7 @@ func slide(dir:Vector2) -> bool:
 				elif is_player and collider.slide(dir): #try to slide collider
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
-				elif collider.power == -1:
+				elif collider.power == -1: #merge with 0
 					partner = collider;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
@@ -178,7 +178,7 @@ func slide(dir:Vector2) -> bool:
 
 
 func split(dir:Vector2) -> bool:
-	if power <= 0:
+	if power <= 0: #1, -1, 0 cannot split
 		return false;
 	if get_state() != "snap":
 		return false;
@@ -198,11 +198,11 @@ func split(dir:Vector2) -> bool:
 			
 		if collider is ScoreTile:
 			#return false;
-			if collider.get_state() in ["tile", "snap"] and power in [-1, collider.power]: #merge split
+			if collider.get_state() in ["tile", "snap"] and power - 1 == collider.power: #merge split
 				pass;
 			elif collider.slide(dir): #slide split
 				collider.snap_slid = true;
-			elif collider.power == -1: #pop a 0
+			elif collider.power == -1: #merge with 0
 				pass;
 			else: #obstructed
 				return false;
@@ -238,15 +238,26 @@ func shift(dir:Vector2) -> bool:
 func levelup():
 	if get_state() not in ["tile", "snap"]:
 		return;
+	
+	#update power
+	if power == -1: #0, assume partner value
+		power = partner.power;
+		ssign = partner.ssign;
+	elif partner.power == -1: #partner is 0, retain value
+		pass;
+	elif partner.ssign == ssign: #same sign same power merge
+		power += 1;
+	else: #opposite sign same power merge
+		power = -1;
+	#print("POWER: ", power);
 
 	#convert to player
-	if partner.is_player or power >= 12:
+	if not is_player and (partner.is_player or power >= 12):
+		#print("CONVERT TO PLAYER");
 		is_player = true;
 		set_masks(true);
 		player_settings();
 		set_physics(true);
-	else:
-		print("NOT PLAYER");
 	
 	$FSM.curState.next_state = $FSM.states.combining;
 
@@ -262,15 +273,15 @@ func _on_physics_enabler_body_entered(body):
 	if body != self and body is ScoreTile and not body.is_player:
 		if body.physics_enabler_count == 0:
 			body.set_physics(true);
+			#print("PHYSICS ON");
 		body.physics_enabler_count += 1;
-		#print("PHYSICS ON", body.physics_enabler_count);
 
 func _on_physics_enabler_body_exited(body):
 	if body != self and body is ScoreTile and not body.is_player:
 		body.physics_enabler_count -= 1;
 		if body.physics_enabler_count == 0:
 			body.set_physics(false);
-		#print("PHYSICS OFF EXIT", body.physics_enabler_count);
+			#print("PHYSICS OFF EXIT");
 
 func die():
 	#play an animation

@@ -7,18 +7,6 @@ func enter():
 	#reset frame count
 	frame_count = 0;
 	
-	#update power
-	if actor.power == -1:
-		actor.power = actor.partner.power;
-		actor.ssign = actor.partner.ssign;
-	elif actor.partner.power == -1:
-		pass;
-	elif actor.partner.ssign == actor.ssign:
-		actor.power += 1;
-	else:
-		actor.power = -1;
-	print("POWER: ", actor.power);
-	
 	#start animation
 	var animator = ScoreTileAnimator.new(actor.power, actor.ssign, GV.ScaleAnim.DUANG, 4, 3);
 	actor.add_child(animator);
