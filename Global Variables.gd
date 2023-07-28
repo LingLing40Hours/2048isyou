@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 8;
-var current_level_index:int = 7;
+var current_level_index:int = 0;
 var level_scores = [];
 var changing_level:bool = false;
 var spawn_point:Vector2 = Vector2.ZERO; #Vector2(80, 160);
@@ -27,8 +27,8 @@ const PLAYER_SPEED_RATIO:float = 3/4.0;
 const TILE_SLIDE_SPEED:float = 360;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const COMBINING_FRAME_COUNT:int = 9;
-const SPLITTING_FRAME_COUNT:int = 9;
+const COMBINING_FRAME_COUNT:int = 6; #9;
+const SPLITTING_FRAME_COUNT:int = 6; #9;
 
 enum ScaleAnim {
 	DUANG=0,
