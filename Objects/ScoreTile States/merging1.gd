@@ -8,6 +8,11 @@ var slide_target:Vector2;
 
 
 func enter():
+	#snapshot
+	var snapshot = PlayerSnapshot.new(actor.position, actor.partner.position);
+	actor.save_nearby_baddies(snapshot, GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+	GV.player_snapshots.push_back(snapshot);
+	
 	#set slide parameters
 	slide_speed = GV.TILE_SLIDE_SPEED;
 	slide_distance = 0;

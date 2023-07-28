@@ -397,3 +397,19 @@ func snap_range(offset_range:float):
 		position.x -= offset.x;
 	if offset.y and abs(offset.y) <= offset_range:
 		position.y -= offset.y;
+
+func save_nearby_baddies(snapshot:PlayerSnapshot, side_length):
+	$PhysicsEnabler2.enabled = true;
+	var temp_size:Vector2 = $PhysicsEnabler2.shape.size;
+	$PhysicsEnabler2.shape.size = Vector2(side_length, side_length);
+	$PhysicsEnabler2.force_shapecast_update();
+	
+	for i in $PhysicsEnabler2.get_collision_count():
+		var body = $PhysicsEnabler2.get_collider(i);
+		
+		if body.is_in_group("baddie"): #save position and velocity
+			snapshot.baddie_positions.push_back(body.position);
+			snapshot.baddie_velocities.push_back(body.velocity);
+	
+	$PhysicsEnabler2.shape.size = temp_size;
+	$PhysicsEnabler2.enabled = false;

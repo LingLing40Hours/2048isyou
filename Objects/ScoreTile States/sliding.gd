@@ -11,6 +11,12 @@ var stop_margin:float;
 
 
 func enter():
+	#snapshot
+	if actor.pusher != null:
+		var snapshot = PlayerSnapshot.new(actor.pusher.position, actor.position);
+		actor.pusher.save_nearby_baddies(snapshot, GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+		GV.player_snapshots.push_back(snapshot);
+	
 	#set slide parameters
 	if actor.is_player:
 		slide_speed = GV.TILE_SLIDE_SPEED * GV.PLAYER_SPEED_RATIO;

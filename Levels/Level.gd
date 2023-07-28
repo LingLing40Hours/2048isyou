@@ -18,3 +18,7 @@ func _input(event):
 				GV.changing_level = true;
 				game.change_level_faded(GV.current_level_index);
 
+func save():
+	var save_dict = {
+		
+	};

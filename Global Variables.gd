@@ -12,7 +12,11 @@ var LEVEL_COUNT:int = 8;
 var current_level_index:int = 0;
 var level_scores = [];
 var changing_level:bool = false;
+
+#save-related stuff
+const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
 var spawn_point:Vector2 = Vector2.ZERO; #Vector2(80, 160);
+var player_snapshots = [];
 
 const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
@@ -55,7 +59,7 @@ const SHIFT_LERP_WEIGHT:float = 0.6;
 var SHIFT_LERP_WEIGHT_TOTAL:float = 0;
 var SHIFT_DISTANCE_TO_SPEED_MAX:float;
 
-var player_snap:bool = true;
+var player_snap:bool = true; #move mode
 
 var directions = {
 	"left" : Vector2(-1, 0),

@@ -68,6 +68,9 @@ func change_level(n):
 	current_level.queue_free();
 	call_deferred("add_level", n);
 	GV.current_level_index = n;
+	
+	#clear saves for old level
+	GV.player_snapshots.clear();
 
 func change_level_faded(n):
 	if (n >= GV.LEVEL_COUNT):
