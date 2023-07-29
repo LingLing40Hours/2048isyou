@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 8;
-var current_level_index:int = 0;
+var current_level_index:int = 7;
 var level_scores = [];
 var changing_level:bool = false;
 
@@ -27,8 +27,8 @@ var PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
-const PLAYER_SPEED_RATIO:float = 3/4.0;
-const TILE_SLIDE_SPEED:float = 360;
+const PLAYER_SPEED_RATIO:float = 1; #3/4.0;
+const TILE_SLIDE_SPEED:float = 315; #360;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
 const COMBINING_FRAME_COUNT:int = 6; #9;

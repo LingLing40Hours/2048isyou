@@ -274,3 +274,68 @@ func next_state(dir:Vector2) -> Node2D:
 
 	return states.sliding;
 '''
+
+''' slide with collider_receding
+func slide(dir:Vector2) -> bool:
+	if get_state() not in ["tile", "snap"]:
+		return false;
+	
+	#determine whether to slide or merge or, if obstructed, idle
+	var next_state:Node2D;
+	var xaligned = is_xaligned();
+	var yaligned = is_yaligned();
+	if is_player: #ignore ray if not aligned with tile grid
+		if (dir.x and not xaligned) or (dir.y and not yaligned):
+			next_state = $FSM.states.sliding;
+	
+	if next_state == null:
+		#find ray in slide direction
+		var ray = get_ray(dir);
+		if splitted or (pusher != null and pusher.splitted):
+			ray.force_raycast_update();
+		
+		if ray.is_colliding():
+			var collider := ray.get_collider();
+			
+			if collider.is_in_group("wall"): #obstructed
+				return false;
+				
+			if collider is ScoreTile:
+				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
+					return false;
+				if collider.get_state() not in ["tile", "snap"]:
+					return false;
+				
+				collider.pusher = self;
+				var CFSM = collider.get_node("FSM");
+				var collider_receding = CFSM.curState.next_state in [CFSM.states.sliding, CFSM.states.merging1];
+				
+				if power == 1 and not is_player:
+					print(CFSM.curState.next_state);
+					print("collider stable: ", not collider_receding);
+				
+				if power in [-1, collider.power] and not collider_receding: #merge as 0 or equal power
+					partner = collider;
+					collider.partner = self;
+					next_state = $FSM.states.merging1;
+				elif is_player and collider.slide(dir): #try to slide collider
+					collider.snap_slid = true;
+					next_state = $FSM.states.sliding;
+				elif collider.is_player and collider_receding: #collider is making way
+					next_state = $FSM.states.sliding;
+				elif collider.power == -1 and not collider_receding: #merge with 0
+					partner = collider;
+					collider.partner = self;
+					next_state = $FSM.states.merging1;
+				else:
+					collider.pusher = null;
+					return false;
+			else:
+				next_state = $FSM.states.sliding;
+		else:
+			next_state = $FSM.states.sliding;
+	
+	slide_dir = dir;
+	$FSM.curState.next_state = next_state;
+	return true;
+'''

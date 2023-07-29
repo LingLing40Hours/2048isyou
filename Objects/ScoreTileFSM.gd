@@ -160,8 +160,12 @@ func slide(dir:Vector2) -> bool:
 				if collider.get_state() not in ["tile", "snap"]:
 					return false;
 				
-				collider.pusher = self;
-				if power in [-1, collider.power]: #merge as 0 or equal power
+				if not collider.is_player:
+					collider.pusher = self;
+				
+				if collider.is_player and collider.slide(dir): #receding player
+					next_state = $FSM.states.sliding;
+				elif power in [-1, collider.power]: #merge as 0 or equal power
 					partner = collider;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
@@ -210,9 +214,12 @@ func split(dir:Vector2) -> bool:
 			if collider.get_state() not in ["tile", "snap"]:
 				return false;
 			
+			if collider.is_player and collider.slide(dir): #recede split
+				pass;
 			if power - 1 == collider.power: #merge split
 				pass;
 			elif collider.slide(dir): #slide split
+				partner = collider; #to update collider's pusher after player is instantiated
 				collider.snap_slid = true;
 			elif collider.power == -1: #merge with 0
 				pass;
@@ -397,19 +404,3 @@ func snap_range(offset_range:float):
 		position.x -= offset.x;
 	if offset.y and abs(offset.y) <= offset_range:
 		position.y -= offset.y;
-
-func save_nearby_baddies(snapshot:PlayerSnapshot, side_length):
-	$PhysicsEnabler2.enabled = true;
-	var temp_size:Vector2 = $PhysicsEnabler2.shape.size;
-	$PhysicsEnabler2.shape.size = Vector2(side_length, side_length);
-	$PhysicsEnabler2.force_shapecast_update();
-	
-	for i in $PhysicsEnabler2.get_collision_count():
-		var body = $PhysicsEnabler2.get_collider(i);
-		
-		if body.is_in_group("baddie"): #save position and velocity
-			snapshot.baddie_positions.push_back(body.position);
-			snapshot.baddie_velocities.push_back(body.velocity);
-	
-	$PhysicsEnabler2.shape.size = temp_size;
-	$PhysicsEnabler2.enabled = false;

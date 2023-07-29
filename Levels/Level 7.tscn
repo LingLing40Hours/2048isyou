@@ -44,7 +44,7 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 [node name="Freedom" parent="." instance=ExtResource("4_isobq")]
 
 [node name="Player" parent="." instance=ExtResource("4_3qn8i")]
-position = Vector2(820, 100)
+position = Vector2(820, 180)
 is_player = true
 
 [node name="Player2" parent="." instance=ExtResource("4_3qn8i")]
@@ -87,6 +87,26 @@ power = 2
 [node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 140)
 power = 11
+
+[node name="ScoreTile11" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(900, 180)
+is_player = true
+power = 0
+
+[node name="ScoreTile13" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(900, 260)
+is_player = true
+power = 0
+
+[node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(860, 260)
+
+[node name="ScoreTile15" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(820, 260)
+is_player = true
+
+[node name="ScoreTile12" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(860, 180)
 
 [node name="ScoreTile10" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 140)

@@ -7,6 +7,10 @@ var player:ScoreTile;
 
 func enter():
 	#print("SPLITTING");
+	#save
+	var snapshot = PlayerSnapshot.new([actor, actor.partner]);
+	GV.player_snapshots.push_back(snapshot);
+	
 	#reset frame count
 	frame_count = 0;
 	
@@ -22,6 +26,9 @@ func enter():
 	
 	#create and slide/merge player in slide_dir
 	player = actor.score_tile.instantiate();
+	if actor.partner != null:
+		actor.partner.pusher = player;
+		actor.partner = null;
 	player.is_player = true;
 	player.power = actor.power;
 	player.position = actor.position;

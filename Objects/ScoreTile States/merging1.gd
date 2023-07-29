@@ -9,9 +9,10 @@ var slide_target:Vector2;
 
 func enter():
 	#snapshot
-	var snapshot = PlayerSnapshot.new(actor.position, actor.partner.position);
-	actor.save_nearby_baddies(snapshot, GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
-	GV.player_snapshots.push_back(snapshot);
+	if not actor.splitted:
+		var player = actor if actor.is_player else actor.pusher;
+		var snapshot = PlayerSnapshot.new([player]);
+		GV.player_snapshots.push_back(snapshot);
 	
 	#set slide parameters
 	slide_speed = GV.TILE_SLIDE_SPEED;

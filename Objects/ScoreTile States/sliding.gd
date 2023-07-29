@@ -12,9 +12,8 @@ var stop_margin:float;
 
 func enter():
 	#snapshot
-	if actor.pusher != null:
-		var snapshot = PlayerSnapshot.new(actor.pusher.position, actor.position);
-		actor.pusher.save_nearby_baddies(snapshot, GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+	if actor.pusher != null and not actor.pusher.splitted:
+		var snapshot = PlayerSnapshot.new([actor.pusher, actor]);
 		GV.player_snapshots.push_back(snapshot);
 	
 	#set slide parameters
