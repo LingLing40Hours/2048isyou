@@ -6,8 +6,8 @@ func inPhysicsProcess(_delta):
 	actor.velocity *= 1 - GV.PLAYER_MU;
 
 	#input
-	var hdir = Input.get_axis("ui_left", "ui_right")
-	var vdir = Input.get_axis("ui_up", "ui_down");
+	var hdir = Input.get_axis("move_left", "move_right")
+	var vdir = Input.get_axis("move_up", "move_down");
 	var dir:Vector2 = Vector2(hdir, vdir);
 	
 	#accelerate

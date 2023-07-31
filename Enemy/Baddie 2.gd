@@ -1,10 +1,12 @@
-extends CharacterBody2D
+extends Baddie
 
 @export var vx:float = 180;
 @export var vy:float = 0;
 
 
 func _ready():
+	packed_baddie = load("res://Enemy/Baddie 2.tscn");
+	
 	velocity.x = vx;
 	velocity.y = vy;
 	

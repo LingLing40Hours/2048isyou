@@ -339,3 +339,66 @@ func slide(dir:Vector2) -> bool:
 	$FSM.curState.next_state = next_state;
 	return true;
 '''
+
+''' using duplicate instead
+#remember to update texture and settings too
+func set_tile_params(tile, index):
+	tile.is_player = tile_is_players[index];
+	tile.position = tile_positions[index];
+	tile.power = tile_powers[index];
+	tile.ssign = tile_ssigns[index];
+'''
+
+'''
+	#if a tile/baddie is null, instantiate a new one
+	#otherwise it still exists, revert its parameters (NAH)
+'''
+
+''' in Level.gd
+func _physics_process(_delta):
+	#create and save snapshot
+	if tiles_changed:
+		if has_non_player(tiles_changed):
+			print("NEW SNAPSHOT");
+			var snapshot = PlayerSnapshot.new(self, tiles_changed, tiles_created);
+			player_snapshots.push_back(snapshot);
+			
+		tiles_changed.clear();
+'''
+
+'''
+func _init(level_, tiles_:Array[ScoreTile], new_tiles_:Array[ScoreTile]):
+	level = level_;
+	tiles = tiles_.duplicate();
+	new_tiles = new_tiles_.duplicate();
+	
+	for tile_index in tiles.size():
+		var tile = tiles[tile_index];
+		
+		#duplicate tile
+		tile_duplicates.push_back(tile.duplicate_custom());
+		
+		#save snapshot location
+		tile.snapshot_locations.push_back(Vector2i(level.player_snapshots.size(), tile_index));
+	
+		#save baddies
+		if tile.is_player:
+			save_nearby_baddies(tile.get_node("PhysicsEnabler2"), GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+
+	#reset baddie flags
+	for baddie in baddies:
+		baddie.snapshotted = false;
+'''
+
+#var tile_is_players:Array[bool] = [];
+#var tile_positions:Array[Vector2] = [];
+#var tile_powers:Array[int] = [];
+#var tile_ssigns:Array[int] = [];
+
+'''
+func has_non_player():
+	for tile in tiles:
+		if not tile.is_player:
+			return true;
+	return false;
+'''

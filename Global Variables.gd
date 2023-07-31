@@ -16,7 +16,6 @@ var changing_level:bool = false;
 #save-related stuff
 const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
 var spawn_point:Vector2 = Vector2.ZERO; #Vector2(80, 160);
-var player_snapshots = [];
 
 const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;

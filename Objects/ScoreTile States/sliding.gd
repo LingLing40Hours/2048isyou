@@ -11,10 +11,11 @@ var stop_margin:float;
 
 
 func enter():
-	#snapshot
-	if actor.pusher != null and not actor.pusher.splitted:
-		var snapshot = PlayerSnapshot.new([actor.pusher, actor]);
-		GV.player_snapshots.push_back(snapshot);
+	#add to snapshot
+	if actor.splitted:
+		game.current_level.current_snapshot.add_new_tile(actor);
+	else:
+		game.current_level.current_snapshot.add_tile(actor);
 	
 	#set slide parameters
 	if actor.is_player:

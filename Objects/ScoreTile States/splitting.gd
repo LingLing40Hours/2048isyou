@@ -7,9 +7,8 @@ var player:ScoreTile;
 
 func enter():
 	#print("SPLITTING");
-	#save
-	var snapshot = PlayerSnapshot.new([actor, actor.partner]);
-	GV.player_snapshots.push_back(snapshot);
+	#add to snapshot
+	game.current_level.current_snapshot.add_tile(actor);
 	
 	#reset frame count
 	frame_count = 0;

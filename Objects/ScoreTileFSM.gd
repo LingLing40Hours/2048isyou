@@ -9,7 +9,11 @@ extends CharacterBody2D
 @export var ssign:int = 1;
 @export var debug:bool = false;
 
-var score_tile:PackedScene;
+#ref locations in snapshot arrays, must be copied in custom duplicate
+var snapshot_locations:Array[Vector2i] = [];
+var snapshot_locations_new:Array[Vector2i] = [];
+
+var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
 var pusher:ScoreTile;
@@ -29,9 +33,6 @@ var shift_ray:RayCast2D = null;
 
 
 func _ready():
-	#load score_tile
-	score_tile = load("res://Objects/ScoreTile.tscn");
-	
 	#settings
 	if is_player:
 		if splitted:
@@ -109,16 +110,16 @@ func get_next_action():
 		event_name += "shift_";
 	else:
 		action = func_slide;
-		event_name += "ui_";
+		event_name += "move_";
 	
 	#find direction
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("move_left"):
 		s_dir = "left";
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed("move_right"):
 		s_dir = "right";
-	elif Input.is_action_pressed("ui_up"):
+	elif Input.is_action_pressed("move_up"):
 		s_dir = "up";
-	elif Input.is_action_pressed("ui_down"):
+	elif Input.is_action_pressed("move_down"):
 		s_dir = "down";
 	
 	#check if movement pressed
@@ -404,3 +405,15 @@ func snap_range(offset_range:float):
 		position.x -= offset.x;
 	if offset.y and abs(offset.y) <= offset_range:
 		position.y -= offset.y;
+
+func duplicate_custom() -> ScoreTile:
+	var dup = score_tile.instantiate();
+	
+	dup.position = position;
+	dup.is_player = is_player;
+	dup.power = power;
+	dup.ssign = ssign;
+	dup.snapshot_locations = snapshot_locations.duplicate();
+	dup.snapshot_locations_new = snapshot_locations_new.duplicate();
+	
+	return dup;

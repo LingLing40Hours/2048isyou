@@ -8,11 +8,12 @@ var slide_target:Vector2;
 
 
 func enter():
-	#snapshot
-	if not actor.splitted:
-		var player = actor if actor.is_player else actor.pusher;
-		var snapshot = PlayerSnapshot.new([player]);
-		GV.player_snapshots.push_back(snapshot);
+	#add to snapshot
+	if actor.splitted:
+		game.current_level.current_snapshot.add_new_tile(actor);
+	else:
+		game.current_level.current_snapshot.add_tile(actor);
+	game.current_level.current_snapshot.add_tile(actor.partner);
 	
 	#set slide parameters
 	slide_speed = GV.TILE_SLIDE_SPEED;
