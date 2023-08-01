@@ -40,13 +40,17 @@ func add_tile(tile):
 	#save baddies
 	if tile.is_player:
 		save_nearby_baddies(tile.get_node("PhysicsEnabler2"), GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+	
+	#debug
+	#if tile.is_player and tile.power == 0:
+	#	print(tile.snapshot_locations);
 
 func add_new_tile(tile):
 	new_tiles.push_back(tile);
 	
 	#save snapshot location
 	tile.snapshot_locations_new.push_back(Vector2i(index, new_tiles.size() - 1));
-	print("new snapshot location at ", Vector2i(index, new_tiles.size() - 1));
+	#print("new snapshot location at ", Vector2i(index, new_tiles.size() - 1));
 
 #not a slide of 1+ players
 func meaningful() -> bool:
@@ -112,7 +116,9 @@ func reset_objects(objects_name, duplicates_name, category_name):
 			if location.x == index - 1:
 				var prev_snapshot = level.player_snapshots[location.x];
 				prev_snapshot.get(objects_name)[location.y] = dup;
-				#print("UPDATED REF");
+				print("UPDATED REF");
+			elif location.x == index: #snapshot consumed, remove snapshot location
+				locations.pop_back();
 		
 		#update tile reference in previous new_tiles
 		if dup is ScoreTile:
@@ -123,6 +129,19 @@ func reset_objects(objects_name, duplicates_name, category_name):
 					var prev_snapshot = level.player_snapshots[location_new.x];
 					prev_snapshot.get("new_tiles")[location_new.y] = dup;
 					print("UPDATED NEW REF");
+				elif location_new.x == index: #snapshot consumed, remove snapshot location
+					locations_new.pop_back();
 		
 		#add duplicate
 		level.get_node(category_name).call_deferred("add_child", dup);
+
+#assume self is current snapshot (and thus objects are valid)
+func remove():
+	for tile in tiles:
+		tile.snapshot_locations.pop_back();
+	for tile in new_tiles:
+		tile.snapshot_locations_new.pop_back();
+	for baddie in baddies:
+		baddie.snapshot_locations.pop_back();
+	
+	queue_free();

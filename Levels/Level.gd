@@ -13,9 +13,7 @@ var current_snapshot:PlayerSnapshot;
 func _input(event):
 	if not GV.changing_level:
 		if event.is_action_pressed("home"):
-			if GV.abilities["home"]:
-				GV.changing_level = true;
-				game.change_level_faded(0);
+			on_home();
 		elif event.is_action_pressed("restart"):
 			if GV.abilities["restart"]:
 				GV.changing_level = true;
@@ -26,6 +24,7 @@ func _input(event):
 				current_snapshot.reset_baddie_flags();
 				if not current_snapshot.meaningful():
 					player_snapshots.pop_back();
+					current_snapshot.remove();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);
 		elif event.is_action_pressed("undo"):
@@ -36,6 +35,7 @@ func _input(event):
 					snapshot.checkout();
 				elif player_snapshots:
 					print("USING PREV SNAPSHOT");
+					snapshot.remove();
 					snapshot = player_snapshots.pop_back();
 					snapshot.checkout();
 
@@ -49,3 +49,8 @@ func save():
 	var save_dict = {
 		
 	};
+
+func on_home():
+	if GV.abilities["home"]:
+		GV.changing_level = true;
+		game.change_level_faded(0);

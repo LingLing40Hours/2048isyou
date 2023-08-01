@@ -197,3 +197,5 @@ position = Vector2(0, 640)
 rotation = 1.5708
 to_level = 7
 spawn_point = Vector2(1540, 640)
+
+[node name="Baddies" type="Node2D" parent="."]

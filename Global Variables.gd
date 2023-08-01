@@ -26,8 +26,8 @@ var PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
-const PLAYER_SPEED_RATIO:float = 1; #3/4.0;
-const TILE_SLIDE_SPEED:float = 315; #360;
+const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies before premove
+const TILE_SLIDE_SPEED:float = 320;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
 const COMBINING_FRAME_COUNT:int = 6; #9;
