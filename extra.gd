@@ -402,3 +402,25 @@ func has_non_player():
 			return true;
 	return false;
 '''
+
+'''
+		#update object reference in previous snapshot
+		var dup = duplicates[object_index];
+		var locations = dup.snapshot_locations;
+		if locations:
+			var location:Vector2i = locations[locations.size() - 1];
+			if location.x == index - 1:
+				var prev_snapshot = level.player_snapshots[location.x];
+				prev_snapshot.get(objects_name)[location.y] = dup;
+				print("UPDATED REF at ", location);
+			elif location.x == index: #snapshot consumed, remove snapshot location
+				locations.pop_back();
+'''
+
+'''
+				#debug
+				if player_snapshots:
+					var s = player_snapshots[0];
+					for t in s.tiles:
+						print(t);
+'''

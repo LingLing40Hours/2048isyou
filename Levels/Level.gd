@@ -39,6 +39,7 @@ func _input(event):
 					snapshot = player_snapshots.pop_back();
 					snapshot.checkout();
 
+
 #isn't freed, isn't null, and has non-player tile
 func is_snapshot_valid(snapshot):
 	if is_instance_valid(snapshot) and snapshot.has_non_player():

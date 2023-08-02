@@ -42,8 +42,6 @@ func add_tile(tile):
 		save_nearby_baddies(tile.get_node("PhysicsEnabler2"), GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
 	
 	#debug
-	#if tile.is_player and tile.power == 0:
-	#	print(tile.snapshot_locations);
 
 func add_new_tile(tile):
 	new_tiles.push_back(tile);
@@ -85,7 +83,7 @@ func checkout(): #reset to snapshot
 	for new_tile in new_tiles:
 		if is_instance_valid(new_tile):
 			new_tile.queue_free();
-	
+			
 	reset_objects("tiles", "tile_duplicates", "ScoreTiles");
 	reset_objects("baddies", "baddie_duplicates", "Baddies");
 	
@@ -108,29 +106,23 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		if is_instance_valid(object):
 			object.queue_free();
 		
-		#update object reference in previous snapshot
+		#update object reference in last snapshot
 		var dup = duplicates[object_index];
 		var locations = dup.snapshot_locations;
 		if locations:
 			var location:Vector2i = locations[locations.size() - 1];
-			if location.x == index - 1:
-				var prev_snapshot = level.player_snapshots[location.x];
-				prev_snapshot.get(objects_name)[location.y] = dup;
-				print("UPDATED REF");
-			elif location.x == index: #snapshot consumed, remove snapshot location
-				locations.pop_back();
+			var last_snapshot = level.player_snapshots[location.x];
+			last_snapshot.get(objects_name)[location.y] = dup;
+			print("UPDATED REF at ", location);
 		
-		#update tile reference in previous new_tiles
+		#update tile reference in last new_tiles
 		if dup is ScoreTile:
 			var locations_new = dup.snapshot_locations_new;
 			if locations_new:
 				var location_new:Vector2i = locations_new[locations_new.size() - 1];
-				if location_new.x == index - 1:
-					var prev_snapshot = level.player_snapshots[location_new.x];
-					prev_snapshot.get("new_tiles")[location_new.y] = dup;
-					print("UPDATED NEW REF");
-				elif location_new.x == index: #snapshot consumed, remove snapshot location
-					locations_new.pop_back();
+				var last_snapshot = level.player_snapshots[location_new.x];
+				last_snapshot.get("new_tiles")[location_new.y] = dup;
+				print("UPDATED NEW REF at ", location_new);
 		
 		#add duplicate
 		level.get_node(category_name).call_deferred("add_child", dup);
