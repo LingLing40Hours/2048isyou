@@ -3209,4 +3209,6 @@ to_level = 2
 position = Vector2(1560, 80)
 rotation = -1.5708
 
+[node name="Baddies" type="Node2D" parent="."]
+
 [connection signal="body_entered" from="Background/MoveMode/Unlocker" to="." method="_on_unlocker_body_entered"]

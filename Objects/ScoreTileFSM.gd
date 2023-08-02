@@ -410,6 +410,7 @@ func duplicate_custom() -> ScoreTile:
 	var dup = score_tile.instantiate();
 	
 	dup.position = position;
+	dup.velocity = Vector2.ZERO;
 	dup.is_player = is_player;
 	dup.power = power;
 	dup.ssign = ssign;

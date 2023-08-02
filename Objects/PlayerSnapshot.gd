@@ -25,6 +25,10 @@ func _init(level_):
 	index = level.player_snapshots.size();
 
 func add_tile(tile):
+	#print("ADD TILE");
+	if tile.snapshot_locations and tile.snapshot_locations.back().x == index: #already added
+		return;
+	
 	tiles.push_back(tile);
 	
 	#check if non-player
@@ -82,6 +86,8 @@ func checkout(): #reset to snapshot
 	#remove new tiles
 	for new_tile in new_tiles:
 		if is_instance_valid(new_tile):
+			if new_tile.is_player:
+				new_tile.remove_from_players();
 			new_tile.queue_free();
 			
 	reset_objects("tiles", "tile_duplicates", "ScoreTiles");
@@ -104,6 +110,8 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		
 		#remove changed object
 		if is_instance_valid(object):
+			if object is ScoreTile and object.is_player:
+				object.remove_from_players();
 			object.queue_free();
 		
 		#update object reference in last snapshot

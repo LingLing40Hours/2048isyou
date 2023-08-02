@@ -1,5 +1,7 @@
 extends State
 
+@onready var game:Node2D = $"/root/Game";
+
 	
 func inPhysicsProcess(_delta):
 	#friction
@@ -38,6 +40,7 @@ func inPhysicsProcess(_delta):
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
 				collider.slide(slide_dir);
+				game.current_level.current_snapshot.add_tile(actor);
 
 func changeParentState():
 	if GV.player_snap:
