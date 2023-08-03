@@ -3,21 +3,33 @@ extends Node2D
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
+@onready var scoretiles:Node2D = $ScoreTiles;
+@onready var savepoints:Node2D = $SavePoints;
+@onready var baddies:Node2D = $Baddies;
 
 var players = []; #if player, add here in _ready()
-var player_snapshots:Array[PlayerSnapshot] = [];
-#last snapshot in array, might not have non-player tile, baddie flags not reset
-var current_snapshot:PlayerSnapshot;
 
+var initial_goal_id:int = -1; #id of goal where player first enters level
+#the first player to enter any savepoint, whose value will be respawned
+#on save, other players will become regular tiles
+var player_saved:ScoreTile;
+var player_power:int;
+var player_ssign:int;
+
+var player_snapshots:Array[PlayerSnapshot] = [];
+var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
+
+
+func _ready():
+	if initial_goal_id == -1: #first time entering lv
+		initial_goal_id = GV.goal_id;
 
 func _input(event):
 	if not GV.changing_level:
 		if event.is_action_pressed("home"):
 			on_home();
 		elif event.is_action_pressed("restart"):
-			if GV.abilities["restart"]:
-				GV.changing_level = true;
-				game.change_level_faded(GV.current_level_index);
+			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
 			print("NEW SNAPSHOT");
 			if is_instance_valid(current_snapshot):
@@ -54,4 +66,11 @@ func save():
 func on_home():
 	if GV.abilities["home"]:
 		GV.changing_level = true;
+		GV.goal_id = -1;
 		game.change_level_faded(0);
+
+func on_restart():
+	if GV.abilities["restart"]:
+		GV.changing_level = true;
+		GV.goal_id = initial_goal_id;
+		game.change_level_faded(GV.current_level_index);

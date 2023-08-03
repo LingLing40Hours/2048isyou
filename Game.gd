@@ -14,11 +14,14 @@ extends Node2D
 var current_level:Node2D;
 var current_level_name:Label;
 var levels = [];
+var level_saves = [];
 var next_level_index:int;
 
 
 func _ready():
 	#load levels
+	level_saves.resize(GV.LEVEL_COUNT);
+	
 	for i in range(GV.LEVEL_COUNT):
 		levels.append(load("res://Levels/Level "+str(i)+".tscn"));
 	add_level(GV.current_level_index);
@@ -43,10 +46,20 @@ func _input(event):
 
 #defer this until previous level has been freed
 func add_level(n):
-	var level:Node2D = levels[n].instantiate();
+	var level:Node2D;
+	if level_saves[n]:
+		#print("LOAD FROM SAVE");
+		level = level_saves[n].instantiate();
+		GV.current_level_from_save = true;
+	else:
+		#print("NO SAVE FOUND");
+		level = levels[n].instantiate();
+		GV.current_level_from_save = false;
+	
 	current_level = level;
 	add_child(level);
 	GV.changing_level = false;
+	GV.tunneling_goal = false;
 	
 	#update right sidebar visibility
 	#right_sidebar.visible = true if n else false;
@@ -56,15 +69,29 @@ func add_level(n):
 		current_level_name = current_level.get_node("Background/LevelName");
 	else:
 		current_level_name = null;
-	
-	#init player position
-	if GV.spawn_point != Vector2.ZERO:
-		level.get_node("Player").position = GV.spawn_point;
 
 #update current level and current level index
 func change_level(n):
 	if (n >= GV.LEVEL_COUNT):
 		return;
+	
+	#if lv change through goal, prepare for and do save
+	if GV.tunneling_goal:
+		#free player so it doesn't trigger lv change when lv loads
+		current_level.player_saved.remove_from_players();
+		current_level.player_saved.free();
+		
+		#convert other players to tiles
+		for player in current_level.players:
+			player.is_player = false;
+		current_level.players.clear();
+		
+		#clear snapshots
+		current_level.player_snapshots.clear();
+		
+		#save level
+		save_level();
+	
 	current_level.queue_free();
 	call_deferred("add_level", n);
 	GV.current_level_index = n;
@@ -106,4 +133,7 @@ func _on_level_name_displayed(): #fade out level name
 		tween.tween_property(current_level_name, "modulate:a", 0, GV.LEVEL_NAME_FADE_OUT_TIME);
 
 func save_level():
-	pass;
+	var packed_level = PackedScene.new();
+	packed_level.pack(current_level);
+	ResourceSaver.save(packed_level, "res://Saves/Level%d.tscn" % GV.current_level_index);
+	level_saves[GV.current_level_index] = packed_level;

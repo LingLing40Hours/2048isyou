@@ -5,7 +5,7 @@ extends Baddie
 
 
 func _ready():
-	packed_baddie = load("res://Enemy/Baddie 1.tscn");
+	super._ready();
 	
 	velocity.x = vx;
 	velocity.y = vy;

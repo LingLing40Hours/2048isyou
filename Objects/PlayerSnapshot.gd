@@ -43,7 +43,7 @@ func add_tile(tile):
 	
 	#save baddies
 	if tile.is_player:
-		save_nearby_baddies(tile.get_node("PhysicsEnabler2"), GV.PLAYER_SNAPSHOT_BADDIE_RANGE);
+		save_baddies(tile.get_nearby_baddies(GV.PLAYER_SNAPSHOT_BADDIE_RANGE));
 	
 	#debug
 
@@ -62,27 +62,20 @@ func reset_baddie_flags():
 	for baddie in baddies:
 		baddie.snapshotted = false;
 
-func save_nearby_baddies(shapecast, side_length):
-	shapecast.enabled = true;
-	var temp_size:Vector2 = shapecast.shape.size;
-	shapecast.shape.size = Vector2(side_length, side_length);
-	shapecast.force_shapecast_update();
-	
-	for i in shapecast.get_collision_count():
-		var body = shapecast.get_collider(i);
-		
-		if body.is_in_group("baddie") and not body.snapshotted: #save position and velocity using duplicate			
-			baddies.push_back(body);
-			baddie_duplicates.push_back(body.duplicate_custom());
-			body.snapshotted = true;
+func save_baddies(baddies_:Array[Baddie]):
+	for baddie in baddies_:
+		if not baddie.snapshotted: #save
+			baddies.push_back(baddie);
+			baddie_duplicates.push_back(baddie.duplicate_custom());
+			baddie.snapshotted = true;
 			
 			#save snapshot location
-			body.snapshot_locations.push_back(Vector2i(index, baddies.size() - 1));
-	
-	shapecast.shape.size = temp_size;
-	shapecast.enabled = false;
+			baddie.snapshot_locations.push_back(Vector2i(index, baddies.size() - 1));
 
 func checkout(): #reset to snapshot
+	if baddies:
+		print("BADDIES!!!");
+	
 	#remove new tiles
 	for new_tile in new_tiles:
 		if is_instance_valid(new_tile):
@@ -90,15 +83,15 @@ func checkout(): #reset to snapshot
 				new_tile.remove_from_players();
 			new_tile.queue_free();
 			
-	reset_objects("tiles", "tile_duplicates", "ScoreTiles");
-	reset_objects("baddies", "baddie_duplicates", "Baddies");
+	reset_objects("tiles", "tile_duplicates", "scoretiles");
+	reset_objects("baddies", "baddie_duplicates", "baddies");
 	
 	queue_free();
 
 #removes changed objects (if they still exist) and adds their duplicates
-#category_name is name of the node in level under which objects are organized
+#category_name is name of node ref in level under which objects are organized
 func reset_objects(objects_name, duplicates_name, category_name):
-	if objects_name not in self or duplicates_name not in self or not level.has_node(category_name):
+	if objects_name not in self or duplicates_name not in self or category_name not in level:
 		print("RESET ERROR");
 		return;
 	
@@ -133,7 +126,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 				print("UPDATED NEW REF at ", location_new);
 		
 		#add duplicate
-		level.get_node(category_name).call_deferred("add_child", dup);
+		level.get(category_name).call_deferred("add_child", dup);
 
 #assume self is current snapshot (and thus objects are valid)
 func remove():

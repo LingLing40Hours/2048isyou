@@ -18,6 +18,7 @@ var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
 var pusher:ScoreTile;
 var partner:ScoreTile;
+var shift_ray:RayCast2D = null;
 
 var physics_on:bool = true;
 var physics_enabler_count:int = 0;
@@ -27,9 +28,10 @@ var next_move:Callable = Callable(); #allow early input when sliding/shifting
 var func_slide:Callable = Callable(self, "slide");
 var func_split:Callable = Callable(self, "split");
 var func_shift:Callable = Callable(self, "shift");
+
 var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode
-var shift_ray:RayCast2D = null;
+var invincible:bool = false; #give player some spawn protection
 
 
 func _ready():
@@ -39,6 +41,12 @@ func _ready():
 			set_layers(false, true);
 		else:
 			set_masks(true);
+			
+			#spawn protection
+			invincible = true;
+			var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
+			timer.timeout.connect(_on_invincibility_timeout);
+		
 		player_settings();
 	else:
 		#turn off physics
@@ -319,7 +327,28 @@ func enable_physics_immediately():
 			body.physics_on = true;
 	$PhysicsEnabler2.enabled = false;
 
+func get_nearby_baddies(side_length) -> Array[Baddie]:
+	var ans:Array[Baddie] = [];
+	
+	$PhysicsEnabler2.enabled = true;
+	var old_size:Vector2 = $PhysicsEnabler2.shape.size;
+	$PhysicsEnabler2.shape.size = Vector2(side_length, side_length);
+	$PhysicsEnabler2.force_shapecast_update();
+	for i in $PhysicsEnabler2.get_collision_count():
+		var body = $PhysicsEnabler2.get_collider(i);
+		
+		if body is Baddie:
+			ans.push_back(body);
+	
+	$PhysicsEnabler2.shape.size = old_size;
+	$PhysicsEnabler2.enabled = false;
+	
+	return ans;
+
 func die():
+	if invincible:
+		return;
+	
 	#play an animation
 	#spawn in checkpoint (if set)
 	
@@ -418,3 +447,6 @@ func duplicate_custom() -> ScoreTile:
 	dup.snapshot_locations_new = snapshot_locations_new.duplicate();
 	
 	return dup;
+
+func _on_invincibility_timeout():
+	invincible = false;

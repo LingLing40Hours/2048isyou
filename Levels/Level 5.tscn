@@ -22,14 +22,6 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0
 
 [node name="Freedom" parent="." instance=ExtResource("3_0xw50")]
 
-[node name="Goal" parent="." instance=ExtResource("4_n2und")]
-position = Vector2(1520, 80)
-
-[node name="Player" parent="." instance=ExtResource("5_qcnej")]
-position = Vector2(80, 1120)
-is_player = true
-power = 0
-
 [node name="ScoreTiles" type="Node2D" parent="."]
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_qcnej")]
@@ -3175,3 +3167,10 @@ position = Vector2(1500, 1140)
 
 [node name="ScoreTile1048" parent="ScoreTiles" instance=ExtResource("5_qcnej")]
 position = Vector2(1540, 1140)
+
+[node name="SavePoints" type="Node2D" parent="."]
+
+[node name="Goal" parent="SavePoints" instance=ExtResource("4_n2und")]
+position = Vector2(1520, 80)
+
+[node name="Baddies" type="Node2D" parent="."]

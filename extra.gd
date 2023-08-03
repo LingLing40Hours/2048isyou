@@ -424,3 +424,29 @@ func has_non_player():
 					for t in s.tiles:
 						print(t);
 '''
+
+'''
+	var test = "save_%03d.tscn";
+	print(test % 1);
+'''
+
+''' this overwrites test.tscn
+	var test = PackedScene.new();
+	test.pack(current_level);
+	ResourceSaver.save(test, "res://test.tscn");
+'''
+
+''' previously at the end of add_level(n)
+	#init player position
+	if GV.spawn_point != Vector2.ZERO:
+		level.get_node("Player").position = GV.spawn_point;
+'''
+
+''' from lv5.gd
+func _ready():
+	#init random score tiles
+	for score_tile in scoretiles.get_children():
+		score_tile.power = GV.rng.randi_range(1, 11);
+		score_tile.update_texture(score_tile.img, score_tile.power, score_tile.ssign, false);
+
+'''
