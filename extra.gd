@@ -450,3 +450,23 @@ func _ready():
 		score_tile.update_texture(score_tile.img, score_tile.power, score_tile.ssign, false);
 
 '''
+
+'''
+	#if lv change through goal, prepare for and do save
+	if GV.through_goal:
+		if is_instance_valid(current_level.player_saved): #wasn't freed by freedom
+			#free player so it doesn't trigger lv change when lv loads
+			current_level.player_saved.remove_from_players();
+			current_level.player_saved.free();
+		
+		#convert other players to tiles
+		for player in current_level.players:
+			player.is_player = false;
+		current_level.players.clear();
+		
+		#clear snapshots
+		current_level.player_snapshots.clear();
+		
+		#save level
+		save_level();
+'''

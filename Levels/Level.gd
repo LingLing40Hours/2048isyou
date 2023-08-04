@@ -12,12 +12,9 @@ extends Node2D
 
 var players = []; #if player, add here in _ready()
 
-var initial_goal_id:int = -1; #id of goal where player first enters level
 #the first player to enter any savepoint, whose value will be respawned
 #on save, other players will become regular tiles
 var player_saved:ScoreTile;
-var player_power:int;
-var player_ssign:int;
 
 var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
@@ -25,7 +22,7 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 func _ready():
 	if not GV.current_level_from_save: #first time entering lv
-		initial_goal_id = GV.goal_id;
+		GV.level_initial_goal_ids[GV.current_level_index] = GV.savepoint_id;
 		
 
 func _input(event):
@@ -54,6 +51,8 @@ func _input(event):
 					snapshot.remove();
 					snapshot = player_snapshots.pop_back();
 					snapshot.checkout();
+		elif event.is_action_pressed("revert"):
+			on_revert();
 
 
 #isn't freed, isn't null, and has non-player tile
@@ -70,11 +69,21 @@ func save():
 func on_home():
 	if GV.abilities["home"]:
 		GV.changing_level = true;
-		GV.goal_id = -1;
+		GV.savepoint_id = -1;
 		game.change_level_faded(0);
 
 func on_restart():
 	if GV.abilities["restart"]:
+		#remove save
+		game.level_saves[GV.current_level_index] = null;
+		
 		GV.changing_level = true;
-		GV.goal_id = initial_goal_id;
+		GV.savepoint_id = GV.level_initial_goal_ids[GV.current_level_index];
+		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
+		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
+		game.change_level_faded(GV.current_level_index);
+
+func on_revert():
+	if GV.abilities["revert"]:
+		GV.changing_level = true;
 		game.change_level_faded(GV.current_level_index);

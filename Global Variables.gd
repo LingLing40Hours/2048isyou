@@ -13,11 +13,18 @@ var current_level_index:int = 0;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
-var tunneling_goal:bool = false; #changing level via goal
+var through_goal:bool = false; #changing level via goal
 
 #save-related stuff
+#note non-export variables are not saved in packed scene
 const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
-var goal_id:int = -1;;
+var savepoint_id:int = -1;
+var player_power:int;
+var player_ssign:int;
+var level_last_goal_ids:Array[int] = []; #in lv0, for spawning player after "home"
+var level_initial_goal_ids:Array[int] = []; #id of goal where player first enters level
+var level_initial_player_powers:Array[int] = [];
+var level_initial_player_ssigns:Array[int] = [];
 
 const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
@@ -75,6 +82,7 @@ var abilities = {
 	"restart" : true,
 	"move_mode" : true,
 	"undo" : true,
+	"revert" : true,
 	#"merge" : true,
 	"split" : true,
 	"shift" : true,
@@ -86,6 +94,11 @@ func _ready():
 	
 	level_scores.resize(LEVEL_COUNT);
 	level_scores.fill(0);
+	level_last_goal_ids.resize(LEVEL_COUNT);
+	level_last_goal_ids.fill(-1);
+	level_initial_goal_ids.resize(LEVEL_COUNT);
+	level_initial_player_powers.resize(LEVEL_COUNT);
+	level_initial_player_ssigns.resize(LEVEL_COUNT);
 	
 	#calculate shift parameter
 	for frame in range(1, SHIFT_TIME+1):

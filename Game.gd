@@ -59,7 +59,7 @@ func add_level(n):
 	current_level = level;
 	add_child(level);
 	GV.changing_level = false;
-	GV.tunneling_goal = false;
+	GV.through_goal = false;
 	
 	#update right sidebar visibility
 	#right_sidebar.visible = true if n else false;
@@ -76,7 +76,7 @@ func change_level(n):
 		return;
 	
 	#if lv change through goal, prepare for and do save
-	if GV.tunneling_goal:
+	if GV.through_goal:
 		if is_instance_valid(current_level.player_saved): #wasn't freed by freedom
 			#free player so it doesn't trigger lv change when lv loads
 			current_level.player_saved.remove_from_players();
@@ -85,10 +85,6 @@ func change_level(n):
 		#convert other players to tiles
 		for player in current_level.players:
 			player.is_player = false;
-		current_level.players.clear();
-		
-		#clear snapshots
-		current_level.player_snapshots.clear();
 		
 		#save level
 		save_level();

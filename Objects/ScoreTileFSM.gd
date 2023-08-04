@@ -48,6 +48,11 @@ func _ready():
 			timer.timeout.connect(_on_invincibility_timeout);
 		
 		player_settings();
+		
+		#set level's initial player value
+		if not GV.current_level_from_save:
+			GV.level_initial_player_powers[GV.current_level_index] = power;
+			GV.level_initial_player_ssigns[GV.current_level_index] = ssign;
 	else:
 		#turn off physics
 		set_physics(false);
@@ -70,7 +75,8 @@ func _ready():
 func _physics_process(_delta):
 	if debug:
 		#print("physics_on: ", physics_on);
-		print("state: ", get_state());
+		#print("state: ", get_state());
+		print("value: ", pow(2, power) * ssign);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):

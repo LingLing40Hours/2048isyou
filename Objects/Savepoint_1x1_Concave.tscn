@@ -11,10 +11,9 @@ z_index = -2
 script = ExtResource("1_tvino")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -20)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_ju7sh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -19.5)
+position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_xp1v8")

@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_fpe11"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dgm03"]
-size = Vector2(159, 80)
+size = Vector2(80, 119)
 
 [node name="Level 0" type="Node2D"]
 script = ExtResource("1_qtly1")
@@ -54,11 +54,10 @@ position = Vector2(66.5, 37)
 shape = SubResource("RectangleShape2D_dgm03")
 
 [node name="Shift" type="Label" parent="Background"]
-visible = false
 layout_mode = 1
-offset_left = 201.0
-offset_top = 84.0
-offset_right = 281.0
+offset_left = 521.0
+offset_top = 83.0
+offset_right = 601.0
 offset_bottom = 200.0
 theme = ExtResource("2_y4jbc")
 text = "press
@@ -68,6 +67,13 @@ ement
 to
 shift"
 
+[node name="Unlocker" type="Area2D" parent="Background/Shift"]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/Unlocker"]
+position = Vector2(39, 57.5)
+shape = SubResource("RectangleShape2D_dgm03")
+
 [node name="Title" type="Sprite2D" parent="."]
 z_index = -9
 position = Vector2(800, 600)
@@ -76,7 +82,7 @@ texture = ExtResource("2_fdd0n")
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("2_tkk78")
 format = 2
-layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 11, 0, 0, 12, 0, 0, 13, 0, 0, 14, 0, 0, 15, 0, 0, 16, 0, 0, 17, 0, 0, 18, 0, 0, 19, 0, 0, 20, 0, 0, 21, 0, 0, 24, 0, 0, 25, 0, 0, 26, 0, 0, 27, 0, 0, 28, 0, 0, 29, 0, 0, 32, 0, 0, 33, 0, 0, 34, 0, 0, 35, 0, 0, 36, 0, 0, 39, 0, 0, 65575, 0, 0, 131111, 0, 0, 196647, 0, 0, 262183, 0, 0, 327719, 0, 0, 393255, 0, 0, 458791, 0, 0, 524327, 0, 0, 589863, 0, 0, 655399, 0, 0, 720935, 0, 0, 786471, 0, 0, 852007, 0, 0, 917543, 0, 0, 983079, 0, 0, 1048615, 0, 0, 1114151, 0, 0, 1179687, 0, 0, 1245223, 0, 0, 1310759, 0, 0, 1376295, 0, 0, 1441831, 0, 0, 1507367, 0, 0, 1572903, 0, 0, 1638439, 0, 0, 1703975, 0, 0, 1769511, 0, 0, 1835047, 0, 0, 1900583, 0, 0, 1900582, 0, 0, 1900581, 0, 0, 1900580, 0, 0, 1900579, 0, 0, 1900578, 0, 0, 1900577, 0, 0, 1900576, 0, 0, 1900575, 0, 0, 1900574, 0, 0, 1900573, 0, 0, 1900572, 0, 0, 1900571, 0, 0, 1900570, 0, 0, 1900569, 0, 0, 1900568, 0, 0, 1900567, 0, 0, 1900566, 0, 0, 1900565, 0, 0, 1900564, 0, 0, 1900563, 0, 0, 1900562, 0, 0, 1900561, 0, 0, 1900560, 0, 0, 1900559, 0, 0, 1900558, 0, 0, 1900557, 0, 0, 1900556, 0, 0, 1900555, 0, 0, 1900554, 0, 0, 1900553, 0, 0, 1900552, 0, 0, 1900551, 0, 0, 1900550, 0, 0, 1900549, 0, 0, 1900548, 0, 0, 1900547, 0, 0, 1900546, 0, 0, 1900545, 0, 0, 1900544, 0, 0, 1835008, 0, 0, 1769472, 0, 0, 1703936, 0, 0, 1638400, 0, 0, 1572864, 0, 0, 1507328, 0, 0, 1441792, 0, 0, 1376256, 0, 0, 1310720, 0, 0, 1245184, 0, 0, 1179648, 0, 0, 1114112, 0, 0, 917504, 0, 0, 720896, 0, 0, 655360, 0, 0, 589824, 0, 0, 524288, 0, 0, 458752, 0, 0, 393216, 0, 0, 327680, 0, 0, 262144, 0, 0, 196608, 0, 0, 131072, 0, 0, 65536, 0, 0, 4, 0, 0, 8, 0, 0, 7, 0, 0, 786432, 0, 0, 851968, 0, 0, 983040, 0, 0, 1048576, 0, 0, 1, 0, 0, 2, 0, 0, 65541, 1, 0, 65542, 1, 0, 327687, 1, 0, 327688, 1, 0, 65545, 1, 0, 65546, 1, 0, 65547, 1, 0, 131083, 1, 0)
+layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 11, 0, 0, 12, 0, 0, 15, 0, 0, 16, 0, 0, 17, 0, 0, 18, 0, 0, 19, 0, 0, 20, 0, 0, 21, 0, 0, 24, 0, 0, 25, 0, 0, 26, 0, 0, 27, 0, 0, 28, 0, 0, 29, 0, 0, 32, 0, 0, 33, 0, 0, 34, 0, 0, 35, 0, 0, 36, 0, 0, 39, 0, 0, 65575, 0, 0, 131111, 0, 0, 196647, 0, 0, 262183, 0, 0, 327719, 0, 0, 393255, 0, 0, 458791, 0, 0, 524327, 0, 0, 589863, 0, 0, 655399, 0, 0, 720935, 0, 0, 786471, 0, 0, 852007, 0, 0, 917543, 0, 0, 983079, 0, 0, 1048615, 0, 0, 1114151, 0, 0, 1179687, 0, 0, 1245223, 0, 0, 1310759, 0, 0, 1376295, 0, 0, 1441831, 0, 0, 1507367, 0, 0, 1572903, 0, 0, 1638439, 0, 0, 1703975, 0, 0, 1769511, 0, 0, 1835047, 0, 0, 1900583, 0, 0, 1900582, 0, 0, 1900581, 0, 0, 1900580, 0, 0, 1900579, 0, 0, 1900578, 0, 0, 1900577, 0, 0, 1900576, 0, 0, 1900575, 0, 0, 1900574, 0, 0, 1900573, 0, 0, 1900572, 0, 0, 1900571, 0, 0, 1900570, 0, 0, 1900569, 0, 0, 1900568, 0, 0, 1900567, 0, 0, 1900566, 0, 0, 1900565, 0, 0, 1900564, 0, 0, 1900563, 0, 0, 1900562, 0, 0, 1900561, 0, 0, 1900560, 0, 0, 1900559, 0, 0, 1900558, 0, 0, 1900557, 0, 0, 1900556, 0, 0, 1900555, 0, 0, 1900554, 0, 0, 1900553, 0, 0, 1900552, 0, 0, 1900551, 0, 0, 1900550, 0, 0, 1900549, 0, 0, 1900548, 0, 0, 1900547, 0, 0, 1900546, 0, 0, 1900545, 0, 0, 1900544, 0, 0, 1835008, 0, 0, 1769472, 0, 0, 1703936, 0, 0, 1638400, 0, 0, 1572864, 0, 0, 1507328, 0, 0, 1441792, 0, 0, 1376256, 0, 0, 1310720, 0, 0, 1245184, 0, 0, 1179648, 0, 0, 1114112, 0, 0, 917504, 0, 0, 720896, 0, 0, 655360, 0, 0, 589824, 0, 0, 524288, 0, 0, 458752, 0, 0, 393216, 0, 0, 327680, 0, 0, 262144, 0, 0, 196608, 0, 0, 131072, 0, 0, 65536, 0, 0, 4, 0, 0, 8, 0, 0, 7, 0, 0, 786432, 0, 0, 851968, 0, 0, 983040, 0, 0, 1048576, 0, 0, 1, 0, 0, 2, 0, 0, 65541, 1, 0, 65542, 1, 0, 327687, 1, 0, 327688, 1, 0, 65549, 1, 0, 65550, 1, 0, 196623, 1, 0, 262159, 1, 0, 65545, 1, 0, 65546, 1, 0)
 
 [node name="Freedom" parent="." instance=ExtResource("4_lbtfe")]
 
@@ -114,22 +120,11 @@ power = 2
 [node name="ScoreTile24" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(300, 140)
 
-[node name="ScoreTile30" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(380, 140)
-
-[node name="ScoreTile41" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(420, 140)
-
 [node name="ScoreTile27" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(340, 180)
 
 [node name="ScoreTile28" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(380, 180)
-power = 0
-
-[node name="ScoreTile29" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(420, 180)
-power = 0
 
 [node name="ScoreTile25" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(340, 140)
@@ -170,6 +165,50 @@ power = -1
 
 [node name="ScoreTile35" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(180, 100)
+power = -1
+
+[node name="ScoreTile53" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(540, 100)
+power = -1
+
+[node name="ScoreTile182" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(380, 100)
+power = -1
+
+[node name="ScoreTile183" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(420, 100)
+power = -1
+
+[node name="ScoreTile186" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(420, 180)
+power = -1
+
+[node name="ScoreTile184" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(380, 140)
+power = -1
+
+[node name="ScoreTile185" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(420, 140)
+power = -1
+
+[node name="ScoreTile54" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(580, 100)
+power = -1
+
+[node name="ScoreTile174" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(540, 140)
+power = -1
+
+[node name="ScoreTile175" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(580, 140)
+power = -1
+
+[node name="ScoreTile176" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(540, 180)
+power = -1
+
+[node name="ScoreTile177" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(580, 180)
 power = -1
 
 [node name="ScoreTile36" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
@@ -219,18 +258,88 @@ position = Vector2(260, 220)
 position = Vector2(60, 260)
 
 [node name="ScoreTile7" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(540, 60)
+position = Vector2(540, 220)
 power = 2
 
 [node name="ScoreTile8" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(580, 60)
+position = Vector2(580, 220)
+
+[node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(460, 60)
+power = 2
+
+[node name="ScoreTile10" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(500, 60)
+
+[node name="ScoreTile13" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(460, 100)
+power = 2
+
+[node name="ScoreTile22" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(500, 100)
+
+[node name="ScoreTile23" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(460, 140)
+power = 2
+
+[node name="ScoreTile30" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(500, 180)
+power = 2
+
+[node name="ScoreTile29" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(500, 140)
+
+[node name="ScoreTile41" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(460, 180)
 
 [node name="ScoreTile20" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(580, 100)
+position = Vector2(580, 260)
+power = 2
+
+[node name="ScoreTile178" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(620, 220)
+
+[node name="ScoreTile179" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(620, 260)
 power = 2
 
 [node name="ScoreTile21" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(540, 100)
+position = Vector2(540, 260)
+
+[node name="ScoreTile180" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(660, 220)
+power = 2
+
+[node name="ScoreTile181" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(660, 260)
+
+[node name="ScoreTile42" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(620, 60)
+power = 2
+
+[node name="ScoreTile49" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(660, 60)
+
+[node name="ScoreTile51" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(660, 100)
+power = 2
+
+[node name="ScoreTile52" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(620, 100)
+
+[node name="ScoreTile187" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(380, 220)
+power = 2
+
+[node name="ScoreTile188" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(420, 220)
+
+[node name="ScoreTile189" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(420, 260)
+power = 2
+
+[node name="ScoreTile190" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
+position = Vector2(380, 260)
 
 [node name="ScoreTile55" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(420, 460)
@@ -661,32 +770,40 @@ to_level = 2
 spawn_point = Vector2(240, 60)
 
 [node name="Goal7" parent="SavePoints" instance=ExtResource("6_fpe11")]
+position = Vector2(560, 0)
+rotation = -3.14159
+to_level = 2
+id = 1
+spawn_point = Vector2(560, 60)
+
+[node name="Goal9" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(400, 0)
 rotation = -3.14159
-id = 1
-to_level = 2
+to_level = 1
+id = 3
 spawn_point = Vector2(400, 60)
 
 [node name="Goal8" parent="SavePoints" instance=ExtResource("6_fpe11")]
-position = Vector2(520, 80)
+position = Vector2(680, 160)
 rotation = -1.5708
-id = 2
 to_level = 1
-spawn_point = Vector2(460, 80)
+id = 2
+spawn_point = Vector2(620, 160)
 
 [node name="Goal6" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(320, 280)
 rotation = -3.14159
-id = 4
 to_level = 1
+id = 5
 spawn_point = Vector2(80, 1140)
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(320, 280)
-id = 3
 to_level = 2
+id = 4
 spawn_point = Vector2(1540, 520)
 
 [node name="Baddies" type="Node2D" parent="."]
 
 [connection signal="body_entered" from="Background/Restart/Unlocker" to="." method="_on_unlocker_body_entered"]
+[connection signal="body_entered" from="Background/Shift/Unlocker" to="." method="_on_unlocker_body_entered"]
