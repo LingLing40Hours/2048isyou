@@ -69,7 +69,9 @@ func _ready():
 
 func _physics_process(_delta):
 	if debug:
-		print(get_state());
+		#print("physics_on: ", physics_on);
+		print("state: ", get_state());
+		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
 	var texture_path:String = "res://Sprites/2_";

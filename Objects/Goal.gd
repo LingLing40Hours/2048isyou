@@ -8,13 +8,15 @@ var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 
 
 func _ready():
+	super._ready();
+	
 	if id == GV.goal_id: #spawn player at spawn_point
 		var player = score_tile.instantiate();
 		player.is_player = true;
 		player.power = game.current_level.player_power;
 		player.ssign = game.current_level.player_ssign;
 		player.position = spawn_point;
-		game.current_level.scoretiles.add_child(player);
+		game.current_level.get_node("ScoreTiles").add_child(player); #lv not ready yet, scoretiles not init
 
 func _on_body_entered(body):
 	if body.is_in_group("player") and not GV.changing_level:

@@ -1,11 +1,14 @@
 class_name Level
 extends Node2D
 
+#unlocker areas must not be collision layer1, else they interfere with tile movement
+
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
 @onready var savepoints:Node2D = $SavePoints;
 @onready var baddies:Node2D = $Baddies;
+@onready var freedom:Area2D = $Freedom;
 
 var players = []; #if player, add here in _ready()
 
@@ -21,8 +24,9 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 
 func _ready():
-	if initial_goal_id == -1: #first time entering lv
+	if not GV.current_level_from_save: #first time entering lv
 		initial_goal_id = GV.goal_id;
+		
 
 func _input(event):
 	if not GV.changing_level:
@@ -31,7 +35,7 @@ func _input(event):
 		elif event.is_action_pressed("restart"):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
-			print("NEW SNAPSHOT");
+			#print("NEW SNAPSHOT");
 			if is_instance_valid(current_snapshot):
 				current_snapshot.reset_baddie_flags();
 				if not current_snapshot.meaningful():
@@ -46,7 +50,7 @@ func _input(event):
 					snapshot.reset_baddie_flags();
 					snapshot.checkout();
 				elif player_snapshots:
-					print("USING PREV SNAPSHOT");
+					#print("USING PREV SNAPSHOT");
 					snapshot.remove();
 					snapshot = player_snapshots.pop_back();
 					snapshot.checkout();

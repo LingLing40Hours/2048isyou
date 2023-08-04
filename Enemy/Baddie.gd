@@ -9,7 +9,7 @@ var snapshot_locations:Array[Vector2i] = [];
 
 func _ready():
 	#save packed scene of own type
-	packed_baddie = load(self.filename);
+	packed_baddie = load(scene_file_path);
 
 func duplicate_custom() -> Baddie:
 	var dup = packed_baddie.instantiate();

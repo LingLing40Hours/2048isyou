@@ -10,5 +10,3 @@ polygon = PackedVector2Array(-160, -160, 1760, -160, 1760, -120, -120, -120, -12
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(1720, -120, 1760, -120, 1760, 1320, 1720, 1320)
-
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]

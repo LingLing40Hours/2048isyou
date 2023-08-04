@@ -114,7 +114,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 			var location:Vector2i = locations[locations.size() - 1];
 			var last_snapshot = level.player_snapshots[location.x];
 			last_snapshot.get(objects_name)[location.y] = dup;
-			print("UPDATED REF at ", location);
+			#print("UPDATED REF at ", location);
 		
 		#update tile reference in last new_tiles
 		if dup is ScoreTile:
@@ -123,7 +123,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 				var location_new:Vector2i = locations_new[locations_new.size() - 1];
 				var last_snapshot = level.player_snapshots[location_new.x];
 				last_snapshot.get("new_tiles")[location_new.y] = dup;
-				print("UPDATED NEW REF at ", location_new);
+				#print("UPDATED NEW REF at ", location_new);
 		
 		#add duplicate
 		level.get(category_name).call_deferred("add_child", dup);

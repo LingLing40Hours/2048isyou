@@ -1518,10 +1518,11 @@ position = Vector2(300, 1100)
 
 [node name="Goal4" parent="SavePoints" instance=ExtResource("6_gbbtm")]
 position = Vector2(80, 1200)
-spawn_point = Vector2(80, 60)
+spawn_point = Vector2(80, 1140)
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_gbbtm")]
 position = Vector2(240, 1200)
-spawn_point = Vector2(240, 60)
+id = 1
+spawn_point = Vector2(240, 1140)
 
 [node name="Baddies" type="Node2D" parent="."]

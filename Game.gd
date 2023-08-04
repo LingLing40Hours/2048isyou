@@ -48,11 +48,11 @@ func _input(event):
 func add_level(n):
 	var level:Node2D;
 	if level_saves[n]:
-		#print("LOAD FROM SAVE");
+		print("LOAD FROM SAVE");
 		level = level_saves[n].instantiate();
 		GV.current_level_from_save = true;
 	else:
-		#print("NO SAVE FOUND");
+		print("NO SAVE FOUND");
 		level = levels[n].instantiate();
 		GV.current_level_from_save = false;
 	
@@ -77,9 +77,10 @@ func change_level(n):
 	
 	#if lv change through goal, prepare for and do save
 	if GV.tunneling_goal:
-		#free player so it doesn't trigger lv change when lv loads
-		current_level.player_saved.remove_from_players();
-		current_level.player_saved.free();
+		if is_instance_valid(current_level.player_saved): #wasn't freed by freedom
+			#free player so it doesn't trigger lv change when lv loads
+			current_level.player_saved.remove_from_players();
+			current_level.player_saved.free();
 		
 		#convert other players to tiles
 		for player in current_level.players:
