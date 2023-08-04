@@ -14,7 +14,7 @@ func _ready():
 	
 	if id == GV.savepoint_id:
 		spawn_player();
-	elif GV.savepoint_id == -1 and id == GV.level_last_goal_ids[GV.current_level_index]:
+	elif GV.savepoint_id == -1 and id == GV.level_last_savepoint_ids[GV.current_level_index]:
 		spawn_player();
 
 func init_spawn_point():

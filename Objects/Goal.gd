@@ -10,7 +10,7 @@ func _on_body_entered(body):
 	if body.is_in_group("player") and not GV.changing_level:
 		#save goal id and player value
 		GV.savepoint_id = id;
-		GV.level_last_goal_ids[GV.current_level_index] = id;
+		GV.level_last_savepoint_ids[GV.current_level_index] = id;
 		game.current_level.player_saved = body;
 		GV.player_power = body.power;
 		GV.player_ssign = body.ssign;

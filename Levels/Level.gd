@@ -22,7 +22,7 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 func _ready():
 	if not GV.current_level_from_save: #first time entering lv
-		GV.level_initial_goal_ids[GV.current_level_index] = GV.savepoint_id;
+		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 		
 
 func _input(event):
@@ -77,8 +77,11 @@ func on_restart():
 		#remove save
 		game.level_saves[GV.current_level_index] = null;
 		
+		#clear last_savepoint_id
+		GV.level_last_savepoint_ids[GV.current_level_index] = -1;
+		
 		GV.changing_level = true;
-		GV.savepoint_id = GV.level_initial_goal_ids[GV.current_level_index];
+		GV.savepoint_id = GV.level_initial_savepoint_ids[GV.current_level_index];
 		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);

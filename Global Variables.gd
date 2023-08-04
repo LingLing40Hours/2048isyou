@@ -21,8 +21,8 @@ const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
 var savepoint_id:int = -1;
 var player_power:int;
 var player_ssign:int;
-var level_last_goal_ids:Array[int] = []; #in lv0, for spawning player after "home"
-var level_initial_goal_ids:Array[int] = []; #id of goal where player first enters level
+var level_last_savepoint_ids:Array[int] = []; #in lv0, for spawning player after "home"
+var level_initial_savepoint_ids:Array[int] = []; #id of goal where player first enters level
 var level_initial_player_powers:Array[int] = [];
 var level_initial_player_ssigns:Array[int] = [];
 
@@ -94,9 +94,9 @@ func _ready():
 	
 	level_scores.resize(LEVEL_COUNT);
 	level_scores.fill(0);
-	level_last_goal_ids.resize(LEVEL_COUNT);
-	level_last_goal_ids.fill(-1);
-	level_initial_goal_ids.resize(LEVEL_COUNT);
+	level_last_savepoint_ids.resize(LEVEL_COUNT);
+	level_last_savepoint_ids.fill(-1);
+	level_initial_savepoint_ids.resize(LEVEL_COUNT);
 	level_initial_player_powers.resize(LEVEL_COUNT);
 	level_initial_player_ssigns.resize(LEVEL_COUNT);
 	
