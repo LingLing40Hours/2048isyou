@@ -87,6 +87,6 @@ func on_restart():
 		game.change_level_faded(GV.current_level_index);
 
 func on_revert():
-	if GV.abilities["revert"]:
+	if GV.abilities["revert"] and game.level_saves[GV.current_level_index]:
 		GV.changing_level = true;
 		game.change_level_faded(GV.current_level_index);
