@@ -19,6 +19,7 @@ z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.286275, 0.509804, 0.647059, 1)
+metadata/_edit_lock_ = true
 
 [node name="MoveMode" type="Label" parent="Background"]
 visible = false
@@ -47,6 +48,7 @@ offset_bottom = 23.0
 theme = ExtResource("5_2s88y")
 theme_override_font_sizes/font_size = 50
 text = "Messing In Memory"
+metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("2_paeos")

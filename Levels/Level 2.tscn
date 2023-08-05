@@ -15,6 +15,7 @@ z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
 
 [node name="LevelName" type="Label" parent="Background"]
 modulate = Color(1, 1, 1, 0)
@@ -34,6 +35,7 @@ grow_vertical = 2
 theme = ExtResource("2_ebpqo")
 theme_override_font_sizes/font_size = 50
 text = "World's Hardest Maze"
+metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("2_62338")
@@ -45,7 +47,10 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 [node name="ScoreTiles" type="Node2D" parent="."]
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_c75n2")]
-position = Vector2(140, 1140)
+position = Vector2(260, 820)
+
+[node name="ScoreTile491" parent="ScoreTiles" instance=ExtResource("5_c75n2")]
+position = Vector2(180, 1140)
 
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_c75n2")]
 position = Vector2(180, 1100)

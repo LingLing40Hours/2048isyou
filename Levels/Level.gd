@@ -21,6 +21,8 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 
 func _ready():
+	set_level_name();
+	
 	if not GV.current_level_from_save: #first time entering lv
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 		
@@ -90,3 +92,9 @@ func on_revert():
 	if GV.abilities["revert"] and game.level_saves[GV.current_level_index]:
 		GV.changing_level = true;
 		game.change_level_faded(GV.current_level_index);
+
+func set_level_name():
+	if $Background.has_node("LevelName"):
+		game.current_level_name = $"Background/LevelName";
+	else:
+		game.current_level_name = null;

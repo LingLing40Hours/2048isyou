@@ -477,6 +477,11 @@ position = Vector2(140, 60)
 [node name="ScoreTile710" parent="ScoreTiles" instance=ExtResource("5_3oau8")]
 position = Vector2(100, 60)
 
+[node name="ScoreTile1060" parent="ScoreTiles" instance=ExtResource("5_3oau8")]
+position = Vector2(60, 60)
+is_player = true
+power = 0
+
 [node name="ScoreTile711" parent="ScoreTiles" instance=ExtResource("5_3oau8")]
 position = Vector2(100, 100)
 

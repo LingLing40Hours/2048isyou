@@ -63,12 +63,6 @@ func add_level(n):
 	
 	#update right sidebar visibility
 	#right_sidebar.visible = true if n else false;
-	
-	#get level name
-	if current_level.get_node("Background").has_node("LevelName"):
-		current_level_name = current_level.get_node("Background/LevelName");
-	else:
-		current_level_name = null;
 
 #update current level and current level index
 func change_level(n):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://hoeoow4ned02"]
+[gd_scene load_steps=10 format=3 uid="uid://hoeoow4ned02"]
 
 [ext_resource type="Script" path="res://Levels/Level 0.gd" id="1_qtly1"]
 [ext_resource type="Texture2D" uid="uid://csyjsmyupt3u5" path="res://Sprites/2048_Is_You.png" id="2_fdd0n"]
@@ -8,7 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_lbtfe"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_fpe11"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dgm03"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y1ucs"]
+size = Vector2(159, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xxfp6"]
 size = Vector2(80, 119)
 
 [node name="Level 0" type="Node2D"]
@@ -46,12 +49,12 @@ text = "press Cmd
 to resta-
 rt level"
 
-[node name="Unlocker" type="Area2D" parent="Background/Restart"]
+[node name="RestartUnlocker" type="Area2D" parent="Background/Restart"]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Restart/Unlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Restart/RestartUnlocker"]
 position = Vector2(66.5, 37)
-shape = SubResource("RectangleShape2D_dgm03")
+shape = SubResource("RectangleShape2D_y1ucs")
 
 [node name="Shift" type="Label" parent="Background"]
 layout_mode = 1
@@ -67,12 +70,32 @@ ement
 to
 shift"
 
-[node name="Unlocker" type="Area2D" parent="Background/Shift"]
+[node name="ShiftUnlocker" type="Area2D" parent="Background/Shift"]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/Unlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/ShiftUnlocker"]
 position = Vector2(39, 57.5)
-shape = SubResource("RectangleShape2D_dgm03")
+shape = SubResource("RectangleShape2D_xxfp6")
+
+[node name="Revert" type="Label" parent="Background"]
+layout_mode = 1
+offset_left = 297.0
+offset_top = 83.0
+offset_right = 441.0
+offset_bottom = 200.0
+theme = ExtResource("2_y4jbc")
+text = "    press
+    Cmd/
+    Ctrl+
+    T to
+revert to
+savepoint"
+
+[node name="RevertUnlocker" type="Area2D" parent="Background/Revert"]
+collision_layer = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Background/Revert/RevertUnlocker"]
+polygon = PackedVector2Array(63, -2, 143, -2, 143, 117, -17, 117, -17, 77, 63, 77)
 
 [node name="Title" type="Sprite2D" parent="."]
 z_index = -9
@@ -779,31 +802,32 @@ spawn_point = Vector2(560, 60)
 [node name="Goal9" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(400, 0)
 rotation = -3.14159
-to_level = 1
+to_level = 8
 id = 3
 spawn_point = Vector2(400, 60)
 
 [node name="Goal8" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(680, 160)
 rotation = -1.5708
-to_level = 1
+to_level = 8
 id = 2
 spawn_point = Vector2(620, 160)
 
 [node name="Goal6" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(320, 280)
 rotation = -3.14159
-to_level = 1
+to_level = 10
 id = 5
-spawn_point = Vector2(80, 1140)
+spawn_point = Vector2(320, 340)
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_fpe11")]
 position = Vector2(320, 280)
-to_level = 2
+to_level = 10
 id = 4
-spawn_point = Vector2(1540, 520)
+spawn_point = Vector2(320, 220)
 
 [node name="Baddies" type="Node2D" parent="."]
 
-[connection signal="body_entered" from="Background/Restart/Unlocker" to="." method="_on_unlocker_body_entered"]
-[connection signal="body_entered" from="Background/Shift/Unlocker" to="." method="_on_unlocker_body_entered"]
+[connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
+[connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
+[connection signal="body_entered" from="Background/Revert/RevertUnlocker" to="." method="_on_revert_unlocker_body_entered"]

@@ -8,7 +8,7 @@ var TILE_WIDTH:float = 40; #px
 var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
-var LEVEL_COUNT:int = 8;
+var LEVEL_COUNT:int = 12;
 var current_level_index:int = 0;
 var current_level_from_save:bool = false;
 var level_scores = [];
@@ -30,7 +30,7 @@ const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
 const LEVEL_NAME_FADE_OUT_TIME:float = 1.2;
 
-const PLAYER_SPAWN_INVINCIBILITY_TIME:float = 2;
+const PLAYER_SPAWN_INVINCIBILITY_TIME:float = 0.25;
 const PLAYER_COLLIDER_SCALE:float = 0.98;
 var PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction
