@@ -1,8 +1,9 @@
 extends Level
 
-const LEVEL_NAME:String = "R Is For ";
-const RWORDS:Array[String] = ["Reverse", "Rewind", "Restore", "Re-undo", "Reset", "Revert"];
+const LEVEL_NAME:String = "T Is For ";
+const RWORDS:Array[String] = ["Restore", "Rewind", "Re-undo", "Reset", "Reverse", "Revert"]; #"Restart", 
 const RWORD_DISPLAY_TIME:float = 0.3;
+const RWORD_DELETE_TIME:float = 0.08;
 var rword_index = 0;
 
 
@@ -10,7 +11,7 @@ func _ready():
 	super._ready();
 	
 	#init level name
-	$Background/LevelName.text = LEVEL_NAME + RWORDS[rword_index]; print("INIT TEXT");
+	$Background/LevelName.text = LEVEL_NAME + RWORDS[rword_index];
 	rword_index += 1;
 	
 	#connect fader signal
@@ -23,9 +24,15 @@ func _on_fader_animation_finished(anim_name):
 		timer.timeout.connect(change_rword);
 
 func change_rword():
+	#delete incorrect rword
+	$Background/LevelName.text = LEVEL_NAME + (" ").repeat(RWORDS[rword_index].length());
+	
+	var delete_timer = get_tree().create_timer(RWORD_DELETE_TIME);
+	await delete_timer.timeout;
+	
 	$Background/LevelName.text = LEVEL_NAME + RWORDS[rword_index];
 	rword_index += 1;
 	
 	if rword_index < RWORDS.size():
-		var timer = get_tree().create_timer(RWORD_DISPLAY_TIME);
-		timer.timeout.connect(change_rword);
+		var display_timer = get_tree().create_timer(RWORD_DISPLAY_TIME);
+		display_timer.timeout.connect(change_rword);

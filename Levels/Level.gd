@@ -14,7 +14,7 @@ var players = []; #if player, add here in _ready()
 
 #the first player to enter any savepoint, whose value will be respawned
 #on save, other players will become regular tiles
-var player_saved:ScoreTile;
+@export var player_saved:ScoreTile;
 
 var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset

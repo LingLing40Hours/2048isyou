@@ -470,3 +470,19 @@ func _ready():
 		#save level
 		save_level();
 '''
+
+'''
+	if GV.through_goal:
+		#convert other players to tiles to prepare for save
+		for player in current_level.players:
+			player.is_player = false;
+		
+	#free player so it doesn't trigger lv change when lv loads
+	#also to respawn at spawn point, not wherever it got saved
+	if is_instance_valid(current_level.player_saved): #player saved and not freed by freedom
+		#current_level.player_saved.remove_from_players(); #player array not saved
+		#current_level.player_saved.free();
+		
+		#save level
+		save_level();
+'''

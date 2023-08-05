@@ -57,9 +57,15 @@ func add_level(n):
 		GV.current_level_from_save = false;
 	
 	current_level = level;
+	
+	#remove and free saved player
+	var player_saved = current_level.player_saved;
+	if is_instance_valid(player_saved):
+		current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
+		player_saved.free();
+	
 	add_child(level);
 	GV.changing_level = false;
-	GV.through_goal = false;
 	
 	#update right sidebar visibility
 	#right_sidebar.visible = true if n else false;
@@ -68,20 +74,6 @@ func add_level(n):
 func change_level(n):
 	if (n >= GV.LEVEL_COUNT):
 		return;
-	
-	#if lv change through goal, prepare for and do save
-	if GV.through_goal:
-		if is_instance_valid(current_level.player_saved): #wasn't freed by freedom
-			#free player so it doesn't trigger lv change when lv loads
-			current_level.player_saved.remove_from_players();
-			current_level.player_saved.free();
-		
-		#convert other players to tiles
-		for player in current_level.players:
-			player.is_player = false;
-		
-		#save level
-		save_level();
 	
 	current_level.queue_free();
 	call_deferred("add_level", n);

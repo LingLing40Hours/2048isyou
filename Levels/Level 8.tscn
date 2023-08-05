@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cacy7xg2rjarb"]
+[gd_scene load_steps=7 format=3 uid="uid://cacy7xg2rjarb"]
 
 [ext_resource type="Script" path="res://Levels/Level 8.gd" id="1_6ts27"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_3fj3s"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_y3btf"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_20i30"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_mucte"]
-[ext_resource type="PackedScene" uid="uid://ccfedk60ha7ud" path="res://Enemy/Baddie 1.tscn" id="6_dndsg"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_dswkw"]
 
 [node name="Level 8" type="Node2D"]
@@ -83,8 +82,3 @@ id = 3
 spawn_point = Vector2(240, 1140)
 
 [node name="Baddies" type="Node2D" parent="."]
-
-[node name="Baddie 1" parent="Baddies" instance=ExtResource("6_dndsg")]
-position = Vector2(1260, 60)
-vx = -200.0
-vy = 200.0

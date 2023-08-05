@@ -13,7 +13,7 @@ var current_level_index:int = 0;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
-var through_goal:bool = false; #changing level via goal
+#var through_goal:bool = false; #changing level via goal
 
 #save-related stuff
 #note non-export variables are not saved in packed scene
