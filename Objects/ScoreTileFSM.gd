@@ -58,6 +58,12 @@ func _ready():
 		set_physics(false);
 		physics_on = false;
 	
+	#scale shapecasts (bc of floating point error)
+	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
+	
 	#add sprite
 	update_texture(img, power, ssign, is_player);
 	add_child(img);
@@ -76,7 +82,7 @@ func _physics_process(_delta):
 	if debug:
 		#print("physics_on: ", physics_on);
 		#print("state: ", get_state());
-		print("value: ", pow(2, power) * ssign);
+		#print("value: ", pow(2, power) * ssign);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
@@ -107,6 +113,18 @@ func get_ray(dir:Vector2) -> RayCast2D:
 		return $Ray3;
 	elif dir == Vector2(0, 1):
 		return $Ray4;
+	else:
+		return null;
+
+func get_shape(dir:Vector2) -> ShapeCast2D:
+	if dir == Vector2(1, 0):
+		return $Shape1;
+	elif dir == Vector2(0, -1):
+		return $Shape2;
+	elif dir == Vector2(-1, 0):
+		return $Shape3;
+	elif dir == Vector2(0, 1):
+		return $Shape4;
 	else:
 		return null;
 
@@ -160,13 +178,15 @@ func slide(dir:Vector2) -> bool:
 			next_state = $FSM.states.sliding;
 	
 	if next_state == null:
-		#find ray in slide direction
-		var ray = get_ray(dir);
-		if splitted or (pusher != null and pusher.splitted):
-			ray.force_raycast_update();
+		next_state = $FSM.states.sliding;
 		
-		if ray.is_colliding():
-			var collider := ray.get_collider();
+		#find shapecast in slide direction
+		var shape = get_shape(dir);
+		if splitted or (pusher != null and pusher.splitted):
+			shape.force_shapecast_update();
+		
+		for i in shape.get_collision_count():
+			var collider := shape.get_collider(i);
 			
 			if collider.is_in_group("wall"): #obstructed
 				return false;
@@ -198,8 +218,6 @@ func slide(dir:Vector2) -> bool:
 					return false;
 			else:
 				next_state = $FSM.states.sliding;
-		else:
-			next_state = $FSM.states.sliding;
 	
 	slide_dir = dir;
 	$FSM.curState.next_state = next_state;
@@ -216,11 +234,11 @@ func split(dir:Vector2) -> bool:
 	if not is_xaligned() or not is_yaligned():
 		return false;
 	
-	#get ray in direction
-	var ray = get_ray(dir);
+	#get shapecast in direction
+	var shape = get_shape(dir);
 	
-	if ray.is_colliding():
-		var collider := ray.get_collider();
+	for i in shape.get_collision_count():
+		var collider := shape.get_collider(i);
 
 		if collider.is_in_group("wall"): #obstructed
 			return false;
@@ -386,6 +404,7 @@ func set_physics(state):
 	$FSM.set_physics_process(state);
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).enabled = state;
+		get_node("Shape"+str(i)).enabled = state;
 
 #doesn't affect layers or masks or physics
 func player_settings():
@@ -402,6 +421,7 @@ func player_settings():
 	#disable rays' mask 2
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).set_collision_mask_value(2, false);
+		get_node("Shape"+str(i)).set_collision_mask_value(2, false);
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
@@ -420,6 +440,7 @@ func tile_settings():
 	#enable rays' mask 2
 	for i in range(1, 5):
 		get_node("Ray"+str(i)).set_collision_mask_value(2, true);
+		get_node("Shape"+str(i)).set_collision_mask_value(2, true);
 	
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;

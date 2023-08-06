@@ -1,12 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://bs5pnnv5k17ao"]
+[gd_scene load_steps=9 format=3 uid="uid://bs5pnnv5k17ao"]
 
 [ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="1_6p48m"]
 [ext_resource type="PackedScene" uid="uid://b5xshtev3l7ey" path="res://Objects/scoretile_fsm.tscn" id="2_6q1l5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v04qv"]
+resource_local_to_scene = true
+size = Vector2(10, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5pb3o"]
+resource_local_to_scene = true
+size = Vector2(40, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ef7xw"]
+resource_local_to_scene = true
+size = Vector2(10, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i8nir"]
+resource_local_to_scene = true
+size = Vector2(40, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_35qgv"]
 size = Vector2(224, 224)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3f48n"]
+resource_local_to_scene = true
 size = Vector2(224, 224)
 
 [node name="ScoreTile" type="CharacterBody2D"]
@@ -37,6 +54,34 @@ collide_with_areas = true
 target_position = Vector2(0, 30)
 collision_mask = 3
 collide_with_areas = true
+
+[node name="Shape1" type="ShapeCast2D" parent="."]
+visible = false
+position = Vector2(25, 0)
+shape = SubResource("RectangleShape2D_v04qv")
+target_position = Vector2(0, 0)
+collision_mask = 3
+
+[node name="Shape2" type="ShapeCast2D" parent="."]
+visible = false
+position = Vector2(0, -25)
+shape = SubResource("RectangleShape2D_5pb3o")
+target_position = Vector2(0, 0)
+collision_mask = 3
+
+[node name="Shape3" type="ShapeCast2D" parent="."]
+visible = false
+position = Vector2(-25, 0)
+shape = SubResource("RectangleShape2D_ef7xw")
+target_position = Vector2(0, 0)
+collision_mask = 3
+
+[node name="Shape4" type="ShapeCast2D" parent="."]
+visible = false
+position = Vector2(0, 25)
+shape = SubResource("RectangleShape2D_i8nir")
+target_position = Vector2(0, 0)
+collision_mask = 3
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
 visible = false
