@@ -85,14 +85,20 @@ func change_level_faded(n):
 	if (n >= GV.LEVEL_COUNT):
 		return;
 	next_level_index = n;
+	
+	#set speed scale and fade
+	if GV.minor_level_change:
+		fader.speed_scale = GV.FADER_SPEED_SCALE_MINOR;
+	else:
+		fader.speed_scale = GV.FADER_SPEED_SCALE_MAJOR;
 	fader.play("fade_in_black");
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "fade_in_black": #fade out black
 		change_level(next_level_index);
 		fader.play("fade_out_black");
-	elif anim_name == "fade_out_black": #fade in level name
-		if current_level_name != null and GV.show_level_name:
+	elif anim_name == "fade_out_black":
+		if current_level_name != null and not GV.minor_level_change: #fade in level name
 			var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
 			tween.finished.connect(_on_level_name_faded_in);
 			tween.tween_property(current_level_name, "modulate:a", 1, GV.LEVEL_NAME_FADE_IN_TIME);

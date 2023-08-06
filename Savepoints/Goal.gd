@@ -19,7 +19,7 @@ func _on_body_entered(body):
 		
 		#change level
 		GV.changing_level = true;
-		GV.show_level_name = true;
+		GV.minor_level_change = false;
 		game.change_level_faded(to_level);
 
 		#save level after cleanup work after overlayer turns black

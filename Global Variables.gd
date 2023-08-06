@@ -13,7 +13,7 @@ var current_level_index:int = 1;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
-var show_level_name:bool = true;
+var minor_level_change:bool = false; #if true, fade faster and don't show lv name
 #var through_goal:bool = false; #changing level via goal
 
 #save-related stuff
@@ -27,6 +27,8 @@ var level_initial_savepoint_ids:Array[int] = []; #id of goal where player first 
 var level_initial_player_powers:Array[int] = [];
 var level_initial_player_ssigns:Array[int] = [];
 
+const FADER_SPEED_SCALE_MAJOR:float = 1;
+const FADER_SPEED_SCALE_MINOR:float = 1.2;
 const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
 const LEVEL_NAME_FADE_OUT_TIME:float = 1.2;
