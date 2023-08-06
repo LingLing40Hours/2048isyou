@@ -182,7 +182,10 @@ func slide(dir:Vector2) -> bool:
 		
 		#find shapecast in slide direction
 		var shape = get_shape(dir);
-		if splitted or (pusher != null and pusher.splitted):
+		#if splitted, tile was newly added, shapecast hasn't updated
+		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
+		#if next_move is valid, premoved, last shapecast update may have caught a tile corner
+		if splitted or (pusher != null and pusher.splitted) or next_move.is_valid():
 			shape.force_shapecast_update();
 		
 		for i in shape.get_collision_count():
@@ -236,6 +239,8 @@ func split(dir:Vector2) -> bool:
 	
 	#get shapecast in direction
 	var shape = get_shape(dir);
+	if next_move.is_valid():
+		shape.force_shapecast_update();
 	
 	for i in shape.get_collision_count():
 		var collider := shape.get_collider(i);
