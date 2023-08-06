@@ -746,6 +746,7 @@ position = Vector2(300, 300)
 
 [node name="ScoreTile66" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(340, 300)
+power = 2
 
 [node name="ScoreTile67" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 300)

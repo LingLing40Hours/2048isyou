@@ -91,10 +91,11 @@ func on_restart():
 		game.change_level_faded(GV.current_level_index);
 
 func on_revert():
-	if GV.abilities["revert"] and game.level_saves[GV.current_level_index]:
+	if GV.abilities["revert"]: #if save load save else do a discount restart
 		GV.changing_level = true;
 		GV.minor_level_change = true;
 		game.change_level_faded(GV.current_level_index);
+			
 
 func set_level_name():
 	if $Background.has_node("LevelName"):
