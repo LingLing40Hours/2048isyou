@@ -1,14 +1,14 @@
 [gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://Levels/Level 2.gd" id="1_hmegj"]
-[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_yh5st"]
-[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_cpo2b"]
-[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_ul872"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_yh5st"]
+[ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_cpo2b"]
+[ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_ul872"]
 [ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_deuty"]
-[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_cwm04"]
+[ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="6_cwm04"]
 [ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_ffxwp"]
-[ext_resource type="PackedScene" path="res://Objects/Goal_1x2_Concave.tscn" id="8_vt6s1"]
-[ext_resource type="Script" path="res://Objects/Goal.gd" id="9_a80y1"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="8_vt6s1"]
+[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="9_a80y1"]
 
 [node name="Level 2" type="Node2D"]
 script = ExtResource("1_hmegj")

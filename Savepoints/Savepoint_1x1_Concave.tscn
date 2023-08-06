@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://0qmtkgfxag4o"]
 
 [ext_resource type="Texture2D" uid="uid://je8ejacalqx3" path="res://Sprites/Savepoint.png" id="1_ju7sh"]
-[ext_resource type="Script" path="res://Objects/Savepoint.gd" id="1_tvino"]
+[ext_resource type="Script" path="res://Savepoints/Savepoint.gd" id="1_tvino"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xp1v8"]
 size = Vector2(40, 39)

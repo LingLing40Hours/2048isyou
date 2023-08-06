@@ -5,7 +5,7 @@
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_ebpqo"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_te6kc"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_c75n2"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_gbbtm"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_gbbtm"]
 
 [node name="Level 2" type="Node2D"]
 script = ExtResource("1_ot1s4")

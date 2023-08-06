@@ -5,7 +5,7 @@
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_molow"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_fpfpj"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_uxx7o"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_jfxkb"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_jfxkb"]
 [ext_resource type="PackedScene" uid="uid://bs18ouhqw13ql" path="res://Enemy/Baddie 2.tscn" id="7_i2hsu"]
 
 [node name="Level 9" type="Node2D"]

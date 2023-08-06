@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="4_3qn8i"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_isobq"]
 [ext_resource type="PackedScene" uid="uid://ccfedk60ha7ud" path="res://Enemy/Baddie 1.tscn" id="6_7fl4i"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_lb8ip"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_lb8ip"]
 
 [node name="Level 7" type="Node2D"]
 script = ExtResource("1_uhj3u")
