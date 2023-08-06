@@ -722,6 +722,7 @@ position = Vector2(340, 260)
 
 [node name="ScoreTile57" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 260)
+power = -1
 
 [node name="ScoreTile59" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(140, 300)
@@ -750,6 +751,7 @@ power = 2
 
 [node name="ScoreTile67" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 300)
+power = -1
 
 [node name="ScoreTile69" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(140, 340)
@@ -774,7 +776,6 @@ position = Vector2(300, 340)
 
 [node name="ScoreTile76" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(340, 340)
-power = -1
 
 [node name="ScoreTile77" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 340)
