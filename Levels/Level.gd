@@ -71,6 +71,7 @@ func save():
 func on_home():
 	if GV.abilities["home"]:
 		GV.changing_level = true;
+		GV.show_level_name = true;
 		GV.savepoint_id = -1;
 		game.change_level_faded(0);
 
@@ -83,6 +84,7 @@ func on_restart():
 		GV.level_last_savepoint_ids[GV.current_level_index] = -1;
 		
 		GV.changing_level = true;
+		GV.show_level_name = true;
 		GV.savepoint_id = GV.level_initial_savepoint_ids[GV.current_level_index];
 		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
@@ -91,6 +93,7 @@ func on_restart():
 func on_revert():
 	if GV.abilities["revert"] and game.level_saves[GV.current_level_index]:
 		GV.changing_level = true;
+		GV.show_level_name = false;
 		game.change_level_faded(GV.current_level_index);
 
 func set_level_name():

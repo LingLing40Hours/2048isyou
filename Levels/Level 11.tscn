@@ -4,8 +4,8 @@
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_x0cap"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_x0mvw"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_op6i1"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="5_k8sde"]
-[ext_resource type="PackedScene" uid="uid://0qmtkgfxag4o" path="res://Objects/Savepoint_1x1_Concave.tscn" id="6_o3sbw"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="5_k8sde"]
+[ext_resource type="PackedScene" uid="uid://0qmtkgfxag4o" path="res://Savepoints/Savepoint_1x1_Concave.tscn" id="6_o3sbw"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="7_e26lk"]
 
 [node name="Level 11" type="Node2D"]

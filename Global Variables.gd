@@ -9,10 +9,11 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 12;
-var current_level_index:int = 0;
+var current_level_index:int = 1;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
+var show_level_name:bool = true;
 #var through_goal:bool = false; #changing level via goal
 
 #save-related stuff

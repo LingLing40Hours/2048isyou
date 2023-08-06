@@ -3,7 +3,7 @@ extends Level
 const LEVEL_NAME:String = "T Is For ";
 const RWORDS:Array[String] = ["Restore", "Rewind", "Re-undo", "Reset", "Reverse", "Revert"]; #"Restart", 
 const RWORD_DISPLAY_TIME:float = 0.33;
-const RWORD_DELETE_TIME:float = 0.12;
+const RWORD_DELETE_TIME:float = 0.14;
 var rword_index = 0;
 
 

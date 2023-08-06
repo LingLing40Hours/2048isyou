@@ -92,7 +92,7 @@ func _on_animation_player_animation_finished(anim_name):
 		change_level(next_level_index);
 		fader.play("fade_out_black");
 	elif anim_name == "fade_out_black": #fade in level name
-		if current_level_name != null:
+		if current_level_name != null and GV.show_level_name:
 			var tween = current_level_name.create_tween().set_trans(Tween.TRANS_LINEAR);
 			tween.finished.connect(_on_level_name_faded_in);
 			tween.tween_property(current_level_name, "modulate:a", 1, GV.LEVEL_NAME_FADE_IN_TIME);

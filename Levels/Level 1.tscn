@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_5bs3o"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_ecrt2"]
 [ext_resource type="PackedScene" uid="uid://bs18ouhqw13ql" path="res://Enemy/Baddie 2.tscn" id="7_aq6of"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="8_spjyj"]
-[ext_resource type="PackedScene" uid="uid://0qmtkgfxag4o" path="res://Objects/Savepoint_1x1_Concave.tscn" id="9_5a06k"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="8_spjyj"]
+[ext_resource type="PackedScene" uid="uid://0qmtkgfxag4o" path="res://Savepoints/Savepoint_1x1_Concave.tscn" id="9_5a06k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_adef3"]
 size = Vector2(480, 40)
@@ -96,6 +96,11 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
 position = Vector2(300, 1100)
+
+[node name="ScoreTile15" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
+position = Vector2(60, 1120)
+is_player = true
+power = 0
 
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
 position = Vector2(580, 1060)
