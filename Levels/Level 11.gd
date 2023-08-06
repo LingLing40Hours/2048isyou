@@ -17,9 +17,11 @@ func _ready():
 	#connect fader signal
 	if rword_index < RWORDS.size():
 		game.fader.animation_finished.connect(_on_fader_animation_finished);
+	print("level name modulate: ", game.current_level_name.modulate.a);
 
 func _on_fader_animation_finished(anim_name):
-	if anim_name == "fade_out_black": #wait for half of level name fade-in time
+	if anim_name == "fade_out_black" and not GV.minor_level_change:
+		#wait for half of level name fade-in time
 		var timer = get_tree().create_timer(GV.LEVEL_NAME_FADE_IN_TIME/2);
 		timer.timeout.connect(change_rword);
 

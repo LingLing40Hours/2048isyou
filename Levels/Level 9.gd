@@ -6,3 +6,4 @@ func set_level_name():
 		game.current_level_name = $Background/DownIsUp;
 	else:
 		game.current_level_name = $Background/UpIsDown;
+	game.current_level_name.modulate.a = 0;

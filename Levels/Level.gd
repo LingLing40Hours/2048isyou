@@ -99,5 +99,6 @@ func on_revert():
 func set_level_name():
 	if $Background.has_node("LevelName"):
 		game.current_level_name = $"Background/LevelName";
+		game.current_level_name.modulate.a = 0;
 	else:
 		game.current_level_name = null;
