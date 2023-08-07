@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://die53co3fbgij"]
+
+[ext_resource type="Script" path="res://Enemy/Baddie 4.gd" id="1_lj0ns"]
+[ext_resource type="Texture2D" uid="uid://c5tjbqj0r63ln" path="res://icon.svg" id="2_f1xnx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dtva8"]
+size = Vector2(34, 29.3125)
+
+[node name="Baddie 3" type="CharacterBody2D"]
+position = Vector2(1137, 921)
+collision_layer = 2147483640
+collision_mask = 2147483650
+script = ExtResource("1_lj0ns")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dtva8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.277343, 0.257812)
+texture = ExtResource("2_f1xnx")
