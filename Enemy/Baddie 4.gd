@@ -1,7 +1,7 @@
 extends Baddie
 
-var speed = 250
-var angular_speed = PI
+@export var speed = 250
+@export var angular_speed = PI
 
 func _physics_process(delta):
 	rotation += angular_speed * delta
