@@ -66,6 +66,11 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(140, 60)
 
+[node name="ScoreTile287" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(80, 60)
+is_player = true
+power = 0
+
 [node name="ScoreTile8" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(60, 460)
 power = 2
@@ -243,6 +248,286 @@ position = Vector2(340, 740)
 
 [node name="ScoreTile167" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 740)
+
+[node name="ScoreTile215" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 860)
+power = -1
+
+[node name="ScoreTile223" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 860)
+
+[node name="ScoreTile216" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 860)
+power = -1
+
+[node name="ScoreTile217" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 860)
+power = 4
+
+[node name="ScoreTile218" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 860)
+power = 4
+
+[node name="ScoreTile219" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 860)
+power = 3
+
+[node name="ScoreTile220" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 860)
+power = 2
+
+[node name="ScoreTile221" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 860)
+
+[node name="ScoreTile222" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 860)
+
+[node name="ScoreTile224" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 900)
+power = 5
+
+[node name="ScoreTile225" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 900)
+
+[node name="ScoreTile226" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 900)
+power = 4
+
+[node name="ScoreTile227" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 900)
+power = 3
+
+[node name="ScoreTile228" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 900)
+power = 2
+
+[node name="ScoreTile229" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 900)
+power = 2
+
+[node name="ScoreTile230" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 900)
+power = 2
+
+[node name="ScoreTile231" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 900)
+
+[node name="ScoreTile232" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 900)
+
+[node name="ScoreTile233" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 940)
+power = 5
+
+[node name="ScoreTile234" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 940)
+power = 2
+
+[node name="ScoreTile235" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 940)
+power = 5
+
+[node name="ScoreTile236" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 940)
+power = -1
+
+[node name="ScoreTile237" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 940)
+power = 4
+
+[node name="ScoreTile238" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 940)
+power = 3
+
+[node name="ScoreTile239" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 940)
+power = 2
+
+[node name="ScoreTile240" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 940)
+
+[node name="ScoreTile241" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 940)
+
+[node name="ScoreTile242" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 980)
+power = 6
+
+[node name="ScoreTile243" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 980)
+power = 3
+
+[node name="ScoreTile244" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 980)
+power = 6
+
+[node name="ScoreTile245" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 980)
+power = 5
+
+[node name="ScoreTile246" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 980)
+power = 4
+
+[node name="ScoreTile247" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 980)
+power = 3
+
+[node name="ScoreTile248" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 980)
+power = 2
+
+[node name="ScoreTile249" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 980)
+power = 2
+
+[node name="ScoreTile250" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 980)
+power = 2
+
+[node name="ScoreTile251" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 1020)
+power = 7
+
+[node name="ScoreTile252" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 1020)
+power = 3
+
+[node name="ScoreTile253" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 1020)
+power = 6
+
+[node name="ScoreTile254" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 1020)
+power = 5
+
+[node name="ScoreTile255" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 1020)
+power = -1
+
+[node name="ScoreTile256" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 1020)
+power = 5
+
+[node name="ScoreTile257" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 1020)
+power = 4
+
+[node name="ScoreTile258" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 1020)
+power = 3
+
+[node name="ScoreTile259" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 1020)
+power = 2
+
+[node name="ScoreTile260" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 1060)
+power = -1
+
+[node name="ScoreTile261" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 1060)
+power = 4
+
+[node name="ScoreTile262" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 1060)
+power = 7
+
+[node name="ScoreTile263" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 1060)
+power = 6
+
+[node name="ScoreTile264" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 1060)
+power = 5
+
+[node name="ScoreTile265" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 1060)
+power = 4
+
+[node name="ScoreTile266" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 1060)
+power = -1
+
+[node name="ScoreTile267" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 1060)
+power = 4
+
+[node name="ScoreTile268" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 1060)
+power = 3
+
+[node name="ScoreTile269" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 1100)
+power = 8
+
+[node name="ScoreTile270" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 1100)
+power = 5
+
+[node name="ScoreTile271" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 1100)
+power = -1
+
+[node name="ScoreTile272" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 1100)
+power = 9
+
+[node name="ScoreTile273" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 1100)
+power = 8
+
+[node name="ScoreTile274" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 1100)
+power = 7
+
+[node name="ScoreTile275" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 1100)
+power = -1
+
+[node name="ScoreTile276" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 1100)
+power = 6
+
+[node name="ScoreTile277" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 1100)
+power = 5
+
+[node name="ScoreTile278" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(60, 1140)
+power = 9
+
+[node name="ScoreTile279" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(380, 1140)
+power = -1
+
+[node name="ScoreTile280" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(100, 1140)
+power = 9
+
+[node name="ScoreTile281" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(140, 1140)
+power = -1
+
+[node name="ScoreTile282" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(180, 1140)
+power = 8
+
+[node name="ScoreTile283" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(220, 1140)
+power = 8
+
+[node name="ScoreTile284" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(260, 1140)
+power = 7
+
+[node name="ScoreTile285" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(300, 1140)
+power = 7
+
+[node name="ScoreTile286" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(340, 1140)
+power = -1
 
 [node name="ScoreTile168" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(420, 740)

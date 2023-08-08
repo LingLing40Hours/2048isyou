@@ -5,19 +5,19 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v04qv"]
 resource_local_to_scene = true
-size = Vector2(10, 40)
+size = Vector2(9, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5pb3o"]
 resource_local_to_scene = true
-size = Vector2(40, 10)
+size = Vector2(40, 9)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ef7xw"]
 resource_local_to_scene = true
-size = Vector2(10, 40)
+size = Vector2(9, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i8nir"]
 resource_local_to_scene = true
-size = Vector2(40, 10)
+size = Vector2(40, 9)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_35qgv"]
 size = Vector2(224, 224)
@@ -57,28 +57,28 @@ collide_with_areas = true
 
 [node name="Shape1" type="ShapeCast2D" parent="."]
 visible = false
-position = Vector2(25, 0)
+position = Vector2(25.5, 0)
 shape = SubResource("RectangleShape2D_v04qv")
 target_position = Vector2(0, 0)
 collision_mask = 3
 
 [node name="Shape2" type="ShapeCast2D" parent="."]
 visible = false
-position = Vector2(0, -25)
+position = Vector2(0, -25.5)
 shape = SubResource("RectangleShape2D_5pb3o")
 target_position = Vector2(0, 0)
 collision_mask = 3
 
 [node name="Shape3" type="ShapeCast2D" parent="."]
 visible = false
-position = Vector2(-25, 0)
+position = Vector2(-25.5, 0)
 shape = SubResource("RectangleShape2D_ef7xw")
 target_position = Vector2(0, 0)
 collision_mask = 3
 
 [node name="Shape4" type="ShapeCast2D" parent="."]
 visible = false
-position = Vector2(0, 25)
+position = Vector2(0, 25.5)
 shape = SubResource("RectangleShape2D_i8nir")
 target_position = Vector2(0, 0)
 collision_mask = 3

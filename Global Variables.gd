@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 12;
-var current_level_index:int = 0;
+var current_level_index:int = 7;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -42,6 +42,8 @@ const PLAYER_SLIDE_SPEED_MIN:float = 8;
 const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies before premove
 const TILE_SLIDE_SPEED:float = 320;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
+
+const INPUT_REPEAT_DELAY:float = 0.1; #when movement held down, delay (s) between action calls
 
 const COMBINING_FRAME_COUNT:int = 6; #9;
 const SPLITTING_FRAME_COUNT:int = 6; #9;

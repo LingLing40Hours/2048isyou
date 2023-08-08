@@ -198,6 +198,10 @@ func slide(dir:Vector2) -> bool:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
 					return false;
 				if collider.get_state() not in ["tile", "snap"]:
+					if debug:
+						print("slide failed: collider in state ", collider.get_state());
+						for it in range(1, 33):
+							print("layer ", it, ": ", collider.get_collision_layer_value(it));
 					return false;
 				
 				if not collider.is_player:
