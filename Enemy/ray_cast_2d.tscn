@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://co1bcvyagnmm5"]
+
+[ext_resource type="Script" path="res://Enemy/ray_cast_2d.gd" id="1_qvm0i"]
+[ext_resource type="Texture2D" uid="uid://c5tjbqj0r63ln" path="res://icon.svg" id="2_s1umo"]
+[ext_resource type="Texture2D" uid="uid://bwk0yn4jrrqtg" path="res://Sprites/2_12d.png" id="3_i6rax"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n14sa"]
+size = Vector2(51.9141, 48.7188)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xaqmw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_i6rax")
+}],
+"loop": true,
+"name": &"chase",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_s1umo")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+position = Vector2(800, 256)
+script = ExtResource("1_qvm0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -3.05176e-05)
+scale = Vector2(0.402344, 0.371094)
+texture = ExtResource("2_s1umo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_n14sa")
+
+[node name="Ray_Cast_2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 96)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xaqmw")
+animation = &"chase"

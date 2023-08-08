@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://hoeoow4ned02"]
+[gd_scene load_steps=12 format=3 uid="uid://hoeoow4ned02"]
 
 [ext_resource type="Script" path="res://Levels/Level 0.gd" id="1_qtly1"]
 [ext_resource type="Texture2D" uid="uid://csyjsmyupt3u5" path="res://Sprites/2048_Is_You.png" id="2_fdd0n"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_lbtfe"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_fpe11"]
 [ext_resource type="PackedScene" uid="uid://die53co3fbgij" path="res://Enemy/Baddie 4.tscn" id="8_q5bss"]
+[ext_resource type="PackedScene" uid="uid://co1bcvyagnmm5" path="res://Enemy/ray_cast_2d.tscn" id="9_w18hv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y1ucs"]
 size = Vector2(159, 80)
@@ -815,14 +816,14 @@ id = 2
 spawn_point = Vector2(620, 160)
 
 [node name="Goal6" parent="SavePoints" instance=ExtResource("6_fpe11")]
-position = Vector2(316, 293)
+position = Vector2(320, 276)
 rotation = -3.14159
 to_level = 11
 id = 5
 spawn_point = Vector2(320, 340)
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_fpe11")]
-position = Vector2(319, 288)
+position = Vector2(320, 276)
 to_level = 11
 id = 4
 spawn_point = Vector2(320, 220)
@@ -831,6 +832,9 @@ spawn_point = Vector2(320, 220)
 
 [node name="Baddie 1" parent="Baddies" instance=ExtResource("8_q5bss")]
 position = Vector2(78, 537)
+
+[node name="CharacterBody2D" parent="Baddies" instance=ExtResource("9_w18hv")]
+position = Vector2(972, 224)
 
 [connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
 [connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
