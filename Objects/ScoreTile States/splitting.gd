@@ -28,7 +28,7 @@ func enter():
 	if actor.partner != null:
 		actor.partner.pusher = player;
 		actor.partner = null;
-	player.debug = true;
+	#player.debug = true;
 	player.is_player = true;
 	player.power = actor.power;
 	player.position = actor.position;

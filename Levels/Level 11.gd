@@ -19,7 +19,7 @@ func _ready():
 		game.fader.animation_finished.connect(_on_fader_animation_finished);
 
 func _on_fader_animation_finished(anim_name):
-	if anim_name == "fade_out_black" and not GV.minor_level_change:
+	if anim_name == "fade_out_black" and not GV.reverting:
 		#wait for half of level name fade-in time
 		var timer = get_tree().create_timer(GV.LEVEL_NAME_FADE_IN_TIME/2);
 		timer.timeout.connect(change_rword);

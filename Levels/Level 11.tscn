@@ -67,7 +67,7 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 position = Vector2(140, 60)
 
 [node name="ScoreTile287" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
-position = Vector2(80, 60)
+position = Vector2(420, 1140)
 is_player = true
 power = 0
 
@@ -255,6 +255,18 @@ power = -1
 
 [node name="ScoreTile223" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(380, 860)
+
+[node name="ScoreTile288" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(500, 1140)
+
+[node name="ScoreTile289" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(900, 740)
+
+[node name="ScoreTile290" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(1020, 340)
+
+[node name="ScoreTile291" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
+position = Vector2(1220, 180)
 
 [node name="ScoreTile216" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(100, 860)
@@ -1114,5 +1126,39 @@ spawn_point = Vector2(1520, 1140)
 [node name="Savepoint" parent="SavePoints" instance=ExtResource("6_o3sbw")]
 position = Vector2(380, 420)
 rotation = -3.14159
+
+[node name="Savepoint2" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(380, 820)
+rotation = -3.14159
+id = 1
+metadata/_edit_lock_ = true
+
+[node name="Savepoint3" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(460, 1140)
+rotation = 1.5708
+id = 2
+
+[node name="Savepoint4" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(900, 780)
+id = 3
+
+[node name="Savepoint5" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(1020, 380)
+id = 6
+
+[node name="Savepoint6" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(1180, 180)
+rotation = 1.5708
+id = 7
+
+[node name="Savepoint7" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(1340, 420)
+rotation = 3.14159
+id = 8
+
+[node name="Savepoint8" parent="SavePoints" instance=ExtResource("6_o3sbw")]
+position = Vector2(1420, 820)
+rotation = 3.14159
+id = 9
 
 [node name="Baddies" type="Node2D" parent="."]

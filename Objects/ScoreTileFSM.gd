@@ -389,7 +389,7 @@ func die():
 	
 	if not GV.changing_level:
 		GV.changing_level = true;
-		GV.minor_level_change = true;
+		GV.reverting = true;
 		game.change_level_faded(GV.current_level_index);
 
 

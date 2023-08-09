@@ -15,12 +15,14 @@ func _on_body_entered(body):
 			player.is_player = false;
 		
 		#save level
-		game.save_level();
+		game.save_level(-1);
 		
 		#change level
 		GV.changing_level = true;
-		GV.minor_level_change = false;
+		GV.reverting = false;
 		game.change_level_faded(to_level);
 
 		#save level after cleanup work after overlayer turns black
 
+func _on_body_exited(body):
+	pass;

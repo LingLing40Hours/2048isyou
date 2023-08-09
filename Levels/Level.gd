@@ -24,6 +24,7 @@ func _ready():
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv
+		print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 		
 
@@ -71,7 +72,7 @@ func save():
 func on_home():
 	if GV.abilities["home"]:
 		GV.changing_level = true;
-		GV.minor_level_change = false;
+		GV.reverting = false;
 		GV.savepoint_id = -1;
 		game.change_level_faded(0);
 
@@ -84,16 +85,16 @@ func on_restart():
 		GV.level_last_savepoint_ids[GV.current_level_index] = -1;
 		
 		GV.changing_level = true;
-		GV.minor_level_change = false;
+		GV.reverting = false;
 		GV.savepoint_id = GV.level_initial_savepoint_ids[GV.current_level_index];
 		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);
 
 func on_revert():
-	if GV.abilities["revert"]: #if save load save else do a discount restart
+	if GV.abilities["revert"]: #if savepoint save exists load it else do a discount restart
 		GV.changing_level = true;
-		GV.minor_level_change = true;
+		GV.reverting = true;
 		game.change_level_faded(GV.current_level_index);
 			
 
