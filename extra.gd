@@ -494,3 +494,8 @@ func is_snapshot_valid(snapshot):
 		return true;
 	return false;
 '''
+
+''' in level.gd, upon undo
+				#reset savepoint.saved to false, but don't perform save if player is on savepoint
+				#so that a revert after this goes to previous savepoint
+'''

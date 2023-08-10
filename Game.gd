@@ -68,7 +68,7 @@ func add_level(n):
 		print("LOAD FROM INITIAL");
 		level_saves[n] = null;
 		#clear last savepoint id
-		GV.level_last_savepoint_ids[n] = -1;
+		GV.level_last_savepoint_ids[n] = GV.level_initial_savepoint_ids[n];
 		
 		GV.savepoint_id = GV.level_initial_savepoint_ids[n];
 		GV.current_savepoint_powers = [GV.level_initial_player_powers[n]];

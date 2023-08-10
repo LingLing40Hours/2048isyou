@@ -12,6 +12,7 @@ var new_tiles:Array[ScoreTile] = []; #created by action
 var tiles:Array[ScoreTile] = []; #changed by action
 var tile_duplicates:Array[ScoreTile] = [];
 var tiles_all_player:bool = true;
+var enter_savepoint:bool = false;
 
 var baddies:Array[CharacterBody2D] = [];
 var baddie_duplicates:Array[CharacterBody2D] = [];
@@ -56,7 +57,7 @@ func add_new_tile(tile):
 
 #not a slide of 1+ players
 func meaningful() -> bool:
-	return not tiles_all_player or new_tiles;
+	return not tiles_all_player or new_tiles or enter_savepoint;
 
 func reset_baddie_flags():
 	for baddie in baddies:

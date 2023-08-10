@@ -35,7 +35,7 @@ func _input(event):
 		elif event.is_action_pressed("restart"):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
-			#print("NEW SNAPSHOT");
+			print("NEW SNAPSHOT");
 			remove_last_snapshot_if_not_meaningful();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);
@@ -53,16 +53,21 @@ func _input(event):
 					snapshot.checkout();
 				
 				#if undid past savepoint, remove the savepoint save, reset savepoint status
-				#reset savepoint.saved to false, but don't perform save if player is on savepoint
-				#so that a revert after this goes to previous savepoint
-				if GV.current_savepoints and player_snapshots.size() <= GV.current_snapshot_sizes.back():
-					GV.current_savepoints.pop_back();
+				if GV.current_savepoints and player_snapshots.size() < GV.current_snapshot_sizes.back():
+					GV.current_savepoints.pop_back().saved = false;
 					GV.current_savepoint_saves.pop_back();
 					GV.current_snapshot_sizes.pop_back();
 					GV.current_savepoint_powers.pop_back();
 					GV.current_savepoint_ssigns.pop_back();
 					GV.current_savepoint_snapshot_locations.pop_back();
 					GV.current_savepoint_snapshot_locations_new.pop_back();
+					
+					#update last savepoint id
+					if GV.current_savepoints:
+						GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoints.back().id;
+					else:
+						GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
+					
 		elif event.is_action_pressed("revert"):
 			on_revert();
 
@@ -84,8 +89,8 @@ func on_restart():
 		#remove save
 		game.level_saves[GV.current_level_index] = null;
 		
-		#clear last_savepoint_id
-		GV.level_last_savepoint_ids[GV.current_level_index] = -1;
+		#reset last_savepoint_id
+		GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
 		
 		GV.changing_level = true;
 		GV.reverting = false;
@@ -114,3 +119,4 @@ func remove_last_snapshot_if_not_meaningful():
 		if not current_snapshot.meaningful():
 			player_snapshots.pop_back();
 			current_snapshot.remove();
+			print("OVERWRITE LAST SNAPSHOT");

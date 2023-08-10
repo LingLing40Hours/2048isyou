@@ -25,7 +25,8 @@ func init_spawn_point():
 
 func _on_body_entered(body):
 	if body.is_in_group("player") and not GV.changing_level and not saved and not spawned: #save level
-		game.current_level.remove_last_snapshot_if_not_meaningful();
+		game.current_level.current_snapshot.enter_savepoint = true;
+		#game.current_level.remove_last_snapshot_if_not_meaningful();
 		save_id_and_player_value(body);
 		
 		game.save_level(id);
