@@ -1,7 +1,7 @@
 extends Baddie
 
-@export var vx:float = 180;
-@export var vy:float = 0;
+@export var vx:float = 0;
+@export var vy:float = 180;
 
 
 func _ready():

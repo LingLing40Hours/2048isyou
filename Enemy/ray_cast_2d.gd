@@ -1,17 +1,19 @@
 extends CharacterBody2D
 
 @onready var ray_cast = get_node("Ray_Cast_2D")
+@onready var game:Node2D = $"/root/Game"
+
 
 @export var speed = 50
 @export var distance_limit:float = 200;
 
 func _physics_process(delta):
 	#do not know the excat node path of player
-	var player = get_node("../../ScoreTiles/ScoreTile14")
+	var player = game.current_level.players[0]
 	#raycast always points towards the player
-	ray_cast.set_target_position(player.position)
+	ray_cast.set_target_position(player.position - self.position)
 	
-	if ray_cast.is_colliding():
+	if ray_cast.is_colliding() and ray_cast.get_collider().is_in_group("player"):
 		#do not know the exact build_in function of calculating the distance between two points
 		var distance = ((player.position.x - self.position.x) ** 2 + (player.position.y - self.position.y) ** 2) ** 0.5
 		

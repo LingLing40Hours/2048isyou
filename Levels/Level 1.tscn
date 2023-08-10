@@ -276,8 +276,6 @@ power = 4
 
 [node name="Baddie 4" parent="Baddies" instance=ExtResource("7_aq6of")]
 position = Vector2(260, 1120)
-vx = 0.0
-vy = 180.0
 
 [node name="Baddie 1" parent="Baddies" instance=ExtResource("4_4kcqd")]
 position = Vector2(520, 1000)
