@@ -24,5 +24,23 @@ func _on_body_entered(body):
 
 		#save level after cleanup work after overlayer turns black
 
-func _on_body_exited(body):
+func _on_body_exited(_body):
 	pass;
+
+func spawn_player(): #spawns player at spawn_point
+	print(id, " SPAWN PLAYER");
+	spawned = true;
+	var player = score_tile.instantiate();
+	player.is_player = true;
+	player.power = GV.current_savepoint_powers.back();
+	player.ssign = GV.current_savepoint_ssigns.back();
+	player.position = spawn_point;
+	#player.debug = true;
+	game.current_level.get_node("ScoreTiles").add_child(player); #lv not ready yet, scoretiles not init
+
+func save_id_and_player_value(player):
+	GV.savepoint_id = id;
+	GV.level_last_savepoint_ids[GV.current_level_index] = id;
+	game.current_level.player_saved = player;
+	GV.current_savepoint_powers = [player.power];
+	GV.current_savepoint_ssigns = [player.ssign];

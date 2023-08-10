@@ -6,7 +6,7 @@ extends Baddie
 func _physics_process(delta):
 	rotation += angular_speed * delta
 
-	var velocity = Vector2.UP.rotated(rotation) * speed
+	velocity = Vector2.UP.rotated(rotation) * speed
 	
 	var collision_info = move_and_collide(velocity * delta)
 	if collision_info:

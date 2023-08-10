@@ -24,7 +24,7 @@ func _ready():
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv
-		print("set initial SVID to ", GV.savepoint_id);
+		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 		
 
@@ -36,17 +36,14 @@ func _input(event):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
 			#print("NEW SNAPSHOT");
-			if is_instance_valid(current_snapshot):
-				current_snapshot.reset_baddie_flags();
-				if not current_snapshot.meaningful():
-					player_snapshots.pop_back();
-					current_snapshot.remove();
+			remove_last_snapshot_if_not_meaningful();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);
 		elif event.is_action_pressed("undo"):
 			if GV.abilities["undo"] and player_snapshots:
 				var snapshot = player_snapshots.pop_back();
 				if snapshot.meaningful():
+					#print("USING CURR SNAPSHOT");
 					snapshot.reset_baddie_flags();
 					snapshot.checkout();
 				elif player_snapshots:
@@ -54,15 +51,21 @@ func _input(event):
 					snapshot.remove();
 					snapshot = player_snapshots.pop_back();
 					snapshot.checkout();
+				
+				#if undid past savepoint, remove the savepoint save, reset savepoint status
+				#reset savepoint.saved to false, but don't perform save if player is on savepoint
+				#so that a revert after this goes to previous savepoint
+				if GV.current_savepoints and player_snapshots.size() <= GV.current_snapshot_sizes.back():
+					GV.current_savepoints.pop_back();
+					GV.current_savepoint_saves.pop_back();
+					GV.current_snapshot_sizes.pop_back();
+					GV.current_savepoint_powers.pop_back();
+					GV.current_savepoint_ssigns.pop_back();
+					GV.current_savepoint_snapshot_locations.pop_back();
+					GV.current_savepoint_snapshot_locations_new.pop_back();
 		elif event.is_action_pressed("revert"):
 			on_revert();
 
-
-#isn't freed, isn't null, and has non-player tile
-func is_snapshot_valid(snapshot):
-	if is_instance_valid(snapshot) and snapshot.has_non_player():
-		return true;
-	return false;
 
 func save():
 	var save_dict = {
@@ -87,8 +90,8 @@ func on_restart():
 		GV.changing_level = true;
 		GV.reverting = false;
 		GV.savepoint_id = GV.level_initial_savepoint_ids[GV.current_level_index];
-		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
-		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
+		GV.current_savepoint_powers = [GV.level_initial_player_powers[GV.current_level_index]];
+		GV.current_savepoint_ssigns = [GV.level_initial_player_ssigns[GV.current_level_index]];
 		game.change_level_faded(GV.current_level_index);
 
 func on_revert():
@@ -104,3 +107,10 @@ func set_level_name():
 		game.current_level_name.modulate.a = 0;
 	else:
 		game.current_level_name = null;
+
+func remove_last_snapshot_if_not_meaningful():
+	if is_instance_valid(current_snapshot):
+		current_snapshot.reset_baddie_flags();
+		if not current_snapshot.meaningful():
+			player_snapshots.pop_back();
+			current_snapshot.remove();

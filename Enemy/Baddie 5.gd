@@ -1,10 +1,10 @@
-extends CharacterBody2D
+extends Baddie
 
-@onready var ray_cast = get_node("RayCast2D")
-@onready var game:Node2D = $"/root/Game"
+@onready var ray_cast = $RayCast2D;
+@onready var game:Node2D = $"/root/Game";
 
 
-@export var speed = 50
+@export var speed = 50;
 @export var distance_limit:float = 200;
 
 func _physics_process(delta):

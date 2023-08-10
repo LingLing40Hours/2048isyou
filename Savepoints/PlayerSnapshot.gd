@@ -106,6 +106,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 			if object is ScoreTile and object.is_player:
 				object.remove_from_players();
 			object.queue_free();
+			#print("REMOVE TILE at ", object.position);
 		
 		#update object reference in last snapshot
 		var dup = duplicates[object_index];
@@ -127,6 +128,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		
 		#add duplicate
 		level.get(category_name).call_deferred("add_child", dup);
+		#print("ADD DUPLICATE at ", dup.position);
 
 #assume self is current snapshot (and thus objects are valid)
 func remove():

@@ -486,3 +486,11 @@ func _ready():
 		#save level
 		save_level();
 '''
+
+'''
+#isn't freed, isn't null, and has non-player tile
+func is_snapshot_valid(snapshot):
+	if is_instance_valid(snapshot) and snapshot.has_non_player():
+		return true;
+	return false;
+'''

@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 12;
-var current_level_index:int = 0;
+var current_level_index:int = 11;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -19,9 +19,16 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 #save-related stuff
 #note non-export variables are not saved in packed scene
 const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
-var savepoint_id:int = -1;
-var player_power:int;
-var player_ssign:int;
+var savepoint_id:int = -1; #id of savepoint at which player will spawn (after lv change)
+var current_savepoints = []; #refs of saved savepoints
+var current_savepoint_saves = []; #packed scene of level (at saved savepoints)
+var current_snapshot_sizes = []; #size of player_snapshots (at saved savepoints)
+var temp_player_snapshots = []; #keep player snapshots when reverting
+var current_savepoint_powers = [];
+var current_savepoint_ssigns = [];
+var current_savepoint_snapshot_locations = []; #to reinstate after player spawns
+var current_savepoint_snapshot_locations_new = [];
+
 var level_last_savepoint_ids:Array[int] = []; #in lv0, for spawning player after "home"
 var level_initial_savepoint_ids:Array[int] = []; #id of goal where player first enters level
 var level_initial_player_powers:Array[int] = [];
