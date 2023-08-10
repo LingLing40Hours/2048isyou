@@ -398,12 +398,12 @@ func die():
 func set_layers(state, layer_one):
 	if layer_one:
 		set_collision_layer_value(1, state);
-	for i in range(4, 33):
+	for i in range(5, 33):
 		set_collision_layer_value(i, state);
 
 func set_masks(state):
 	set_collision_mask_value(1, state);
-	for i in range(4, 33):
+	for i in range(5, 33):
 		set_collision_mask_value(i, state);
 
 func set_physics(state):

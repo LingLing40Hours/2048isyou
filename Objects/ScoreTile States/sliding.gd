@@ -42,7 +42,8 @@ func enter():
 	target_distance = (slide_target - actor.position).length();
 	#print("target distance: ", target_distance);
 	
-	#disable collision if in snap mode so pusher can follow through with slide
+	#turn off latter layers (5-32) when sliding to avoid obstructing baddie
+	#disable collision with player if in snap mode so player can follow through with slide
 	actor.set_layers(false, GV.player_snap and not actor.is_player);
 	
 	#play sound

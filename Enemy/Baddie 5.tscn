@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmktkn4qjlhbs"]
+
+[ext_resource type="Script" path="res://Enemy/Baddie 5.gd" id="1_s1jta"]
+[ext_resource type="Texture2D" uid="uid://bwk0yn4jrrqtg" path="res://Sprites/2_12d.png" id="3_482un"]
+[ext_resource type="Texture2D" uid="uid://dd1a3yq88b4vd" path="res://Sprites/2_0md.png" id="3_cxh0i"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n14sa"]
+size = Vector2(40, 40)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xaqmw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_482un")
+}],
+"loop": true,
+"name": &"chase",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_cxh0i")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Baddie 5" type="CharacterBody2D"]
+collision_layer = 4294967280
+collision_mask = 8
+script = ExtResource("1_s1jta")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 9.53674e-07)
+shape = SubResource("RectangleShape2D_n14sa")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 96)
+collision_mask = 8
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xaqmw")
+animation = &"idle"

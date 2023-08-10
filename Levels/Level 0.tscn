@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_lbtfe"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_fpe11"]
 [ext_resource type="PackedScene" uid="uid://die53co3fbgij" path="res://Enemy/Baddie 4.tscn" id="8_q5bss"]
-[ext_resource type="PackedScene" uid="uid://dmktkn4qjlhbs" path="res://Enemy/ray_cast_2d.tscn" id="9_w18hv"]
+[ext_resource type="PackedScene" uid="uid://dmktkn4qjlhbs" path="res://Enemy/Baddie 5.tscn" id="9_w18hv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y1ucs"]
 size = Vector2(159, 80)
@@ -120,7 +120,7 @@ position = Vector2(60, 220)
 power = 2
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(1304, 792)
+position = Vector2(1300, 820)
 is_player = true
 power = 0
 
@@ -756,7 +756,7 @@ position = Vector2(340, 660)
 power = 2
 
 [node name="ScoreTile97" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(1392, 128)
+position = Vector2(1300, 460)
 power = 2
 
 [node name="ScoreTile106" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
@@ -818,14 +818,14 @@ id = 2
 spawn_point = Vector2(620, 160)
 
 [node name="Goal6" parent="SavePoints" instance=ExtResource("6_fpe11")]
-position = Vector2(320, 276)
+position = Vector2(320, 280)
 rotation = -3.14159
 to_level = 11
 id = 5
 spawn_point = Vector2(320, 340)
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_fpe11")]
-position = Vector2(320, 276)
+position = Vector2(320, 280)
 to_level = 11
 id = 4
 spawn_point = Vector2(320, 220)
@@ -836,11 +836,6 @@ spawn_point = Vector2(320, 220)
 position = Vector2(1072, 296)
 speed = 10
 
-[node name="CharacterBody2D" parent="Baddies" instance=ExtResource("9_w18hv")]
-position = Vector2(1418, 920)
-collision_layer = 3758096376
-collision_mask = 536870914
-
 [node name="Baddie 5" parent="Baddies" instance=ExtResource("3_unses")]
 position = Vector2(1304, 232)
 vx = -240.0
@@ -849,6 +844,9 @@ vx = -240.0
 position = Vector2(1488, 460)
 up_direction = Vector2(0, 1)
 vy = 1.0
+
+[node name="Baddie 6" parent="Baddies" instance=ExtResource("9_w18hv")]
+position = Vector2(1380, 920)
 
 [connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
 [connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]

@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var ray_cast = get_node("Ray_Cast_2D")
+@onready var ray_cast = get_node("RayCast2D")
 @onready var game:Node2D = $"/root/Game"
 
 
