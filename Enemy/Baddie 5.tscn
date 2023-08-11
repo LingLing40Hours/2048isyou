@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmktkn4qjlhbs"]
+[gd_scene load_steps=6 format=3 uid="uid://bn6hebkuibv6r"]
 
 [ext_resource type="Script" path="res://Enemy/Baddie 5.gd" id="1_s1jta"]
 [ext_resource type="Texture2D" uid="uid://bwk0yn4jrrqtg" path="res://Sprites/2_12d.png" id="3_482un"]

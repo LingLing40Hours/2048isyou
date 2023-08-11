@@ -33,3 +33,5 @@ func _physics_process(delta):
 					collider.die();
 		else:
 			get_node("AnimatedSprite2D").play("idle")
+	else:
+		get_node("AnimatedSprite2D").play("idle")
