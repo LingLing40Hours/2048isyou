@@ -47,9 +47,9 @@ func _input(event):
 #defer this until previous level has been freed
 func add_level(n):
 	var level:Node2D;
-	if GV.reverting and GV.current_savepoints:
+	if GV.reverting and GV.current_savepoint_ids:
 		print("LOAD FROM SAVEPOINT");
-		GV.savepoint_id = GV.current_savepoints.pop_back().id;
+		GV.savepoint_id = GV.current_savepoint_ids.pop_back();
 		GV.level_last_savepoint_ids[n] = GV.savepoint_id;
 		var packed_level = GV.current_savepoint_saves.pop_back();
 		level_saves[n] = packed_level; #rollback level save to savepoint
@@ -64,7 +64,7 @@ func add_level(n):
 			snapshot.level = level;
 		
 		GV.current_level_from_save = true;
-	elif GV.reverting: #and current_savepoints empty
+	elif GV.reverting: #and current_savepoint_ids empty
 		print("LOAD FROM INITIAL");
 		level_saves[n] = null;
 		#clear last savepoint id
@@ -119,7 +119,7 @@ func change_level(n):
 				GV.temp_player_snapshots[location.x].baddies[location.y] = baddie;
 	else: #clear saves for old level
 		current_level.player_snapshots.clear();
-		GV.current_savepoints.clear();
+		GV.current_savepoint_ids.clear();
 		GV.current_savepoint_saves.clear();
 		GV.current_snapshot_sizes.clear();
 		GV.current_savepoint_powers.clear();
@@ -178,7 +178,7 @@ func save_level(savepoint_id):
 	if savepoint_id == -1:
 		save_path = "res://Saves/Level%d.tscn" % GV.current_level_index;
 	else:
-		save_path = "res://Saves/Level%d_%d.tscn" % [GV.current_level_index, GV.current_savepoints.size()];
+		save_path = "res://Saves/Level%d_%d.tscn" % [GV.current_level_index, GV.current_savepoint_ids.size()];
 	
 	#save and store in array(s)
 	ResourceSaver.save(packed_level, save_path);

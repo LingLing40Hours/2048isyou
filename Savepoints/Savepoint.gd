@@ -65,7 +65,7 @@ func save_id_and_player_value(player):
 	GV.savepoint_id = id;
 	GV.level_last_savepoint_ids[GV.current_level_index] = id;
 	game.current_level.player_saved = player;
-	GV.current_savepoints.push_back(self);
+	GV.current_savepoint_ids.push_back(id);
 	#current_savepoint_saves gets save in game.save_level()
 	GV.current_snapshot_sizes.push_back(game.current_level.player_snapshots.size());
 	GV.current_savepoint_powers.push_back(player.power);

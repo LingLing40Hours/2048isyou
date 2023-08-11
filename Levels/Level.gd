@@ -53,8 +53,11 @@ func _input(event):
 					snapshot.checkout();
 				
 				#if undid past savepoint, remove the savepoint save, reset savepoint status
-				if GV.current_savepoints and player_snapshots.size() < GV.current_snapshot_sizes.back():
-					GV.current_savepoints.pop_back().saved = false;
+				if GV.current_savepoint_ids and player_snapshots.size() < GV.current_snapshot_sizes.back():
+					var id = GV.current_savepoint_ids.pop_back();
+					for savepoint in savepoints.get_children():
+						if savepoint.id == id:
+							savepoint.saved = false;
 					GV.current_savepoint_saves.pop_back();
 					GV.current_snapshot_sizes.pop_back();
 					GV.current_savepoint_powers.pop_back();
@@ -63,8 +66,8 @@ func _input(event):
 					GV.current_savepoint_snapshot_locations_new.pop_back();
 					
 					#update last savepoint id
-					if GV.current_savepoints:
-						GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoints.back().id;
+					if GV.current_savepoint_ids:
+						GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoint_ids.back();
 					else:
 						GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
 					
