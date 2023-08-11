@@ -1,5 +1,7 @@
+class_name Goal
 extends SavePoint
 
+@onready var tile_centers = $TileCenters;
 @export var to_level:int = 0;
 
 

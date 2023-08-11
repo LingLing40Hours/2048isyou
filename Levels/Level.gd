@@ -3,7 +3,6 @@ extends Node2D
 
 #unlocker areas must not be collision layer1, else they interfere with tile movement
 
-@onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
 @onready var savepoints:Node2D = $SavePoints;
@@ -14,6 +13,7 @@ var players = []; #if player, add here in _ready()
 
 #the first player to enter any savepoint, whose value will be respawned
 #on save, other players will become regular tiles
+@export var resolution_t:Vector2i = GV.RESOLUTION_T;
 @export var player_saved:ScoreTile;
 
 var player_snapshots:Array[PlayerSnapshot] = [];
@@ -70,6 +70,8 @@ func _input(event):
 					
 		elif event.is_action_pressed("revert"):
 			on_revert();
+		elif event.is_action_pressed("copy"):
+			on_copy();
 
 
 func save():
@@ -120,3 +122,45 @@ func remove_last_snapshot_if_not_meaningful():
 			player_snapshots.pop_back();
 			current_snapshot.remove();
 			print("OVERWRITE LAST SNAPSHOT");
+
+func on_copy():
+	if GV.abilities["copy"]:
+		#declare and init level array
+		var level_array = [];
+		for row_itr in resolution_t.y:
+			var row = [];
+			row.resize(resolution_t.x);
+			row.fill(GV.StuffIds.EMPTY);
+			level_array.push_back(row);
+		
+		#store non-baddie stuff ids
+		for tile in scoretiles.get_children():
+			var pos_t = GV.world_to_pos_t(tile.position);
+			var id;
+			if tile.power == -1:
+				id = GV.StuffIds.ZERO;
+			elif tile.power == 0 and tile.ssign == -1:
+				id = GV.StuffIds.NEG_ONE;
+			else:
+				id = tile.power * tile.ssign;
+			level_array[pos_t.y][pos_t.x] = id;
+		
+		for savepoint in savepoints.get_children():
+			if savepoint is Goal:
+				for node in savepoint.tile_centers.get_children():
+					var pos_t = GV.world_to_pos_t(node.global_position);
+					#bound check
+					if pos_t.x >= 0 and pos_t.x < resolution_t.x and pos_t.y >= 0 and pos_t.y < resolution_t.y:
+						level_array[pos_t.y][pos_t.x] = GV.StuffIds.GOAL;
+			else:
+				var pos_t = GV.world_to_pos_t(savepoint.position);
+				level_array[pos_t.y][pos_t.x] = GV.StuffIds.SAVEPOINT;
+		
+		for row_itr in resolution_t.y:
+			for col_itr in resolution_t.x:
+				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
+				if id != -1:
+					level_array[row_itr][col_itr] = -id - 40;
+		
+		#add to clipboard
+		DisplayServer.clipboard_set(str(level_array));

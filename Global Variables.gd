@@ -98,7 +98,22 @@ var abilities = {
 	#"merge" : true,
 	"split" : true,
 	"shift" : true,
+	"copy" : true,
 };
+
+#stuff ids
+enum StuffIds {
+	ZERO = -20,
+	NEG_ONE = -21,
+	EMPTY = -22,
+	SAVEPOINT = -23,
+	GOAL = -24,
+	BLACK_WALL = -40,
+	MEMBRANE = -41,
+	BLUE_WALL = -42,
+	RED_WALL = -43,
+};
+
 
 
 func _ready():
@@ -174,3 +189,6 @@ func combinations_dp(n, k) -> int:
 	var ans = 1 if (k == 0 or k == n) else (combinations_dp(n-1, k) + combinations_dp(n-1, k-1));
 	combinations[n][k] = ans;
 	return ans;
+
+func world_to_pos_t(pos:Vector2) -> Vector2i:
+	return Vector2i(pos/TILE_WIDTH);

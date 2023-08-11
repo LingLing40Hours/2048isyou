@@ -16,3 +16,17 @@ texture = ExtResource("1_8p28r")
 
 [node name="CollisionPolygon2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_k4s8o")
+
+[node name="TileCenters" type="Node2D" parent="."]
+
+[node name="Node2D" type="Node2D" parent="TileCenters"]
+position = Vector2(-20, -20)
+
+[node name="Node2D2" type="Node2D" parent="TileCenters"]
+position = Vector2(20, -20)
+
+[node name="Node2D3" type="Node2D" parent="TileCenters"]
+position = Vector2(-20, 20)
+
+[node name="Node2D4" type="Node2D" parent="TileCenters"]
+position = Vector2(20, 20)
