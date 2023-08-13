@@ -107,16 +107,8 @@ func change_level(n):
 	call_deferred("add_level", n);
 	GV.current_level_index = n;
 	
-	if GV.reverting: #save player snapshots, update all snapshot_location refs
+	if GV.reverting: #save player snapshots
 		GV.temp_player_snapshots = current_level.player_snapshots.duplicate();
-		for tile in current_level.scoretiles.get_children():
-			for location in tile.snapshot_locations:
-				GV.temp_player_snapshots[location.x].tiles[location.y] = tile;
-			for location_new in tile.snapshot_locations_new:
-				GV.temp_player_snapshots[location_new.x].tiles_new[location_new.y] = tile;
-		for baddie in current_level.baddies.get_children():
-			for location in baddie.snapshot_locations:
-				GV.temp_player_snapshots[location.x].baddies[location.y] = baddie;
 	else: #clear saves for old level
 		current_level.player_snapshots.clear();
 		GV.current_savepoint_ids.clear();
@@ -126,6 +118,13 @@ func change_level(n):
 		GV.current_savepoint_ssigns.clear();
 		GV.current_savepoint_snapshot_locations.clear();
 		GV.current_savepoint_snapshot_locations_new.clear();
+		
+		#clear snapshot locations
+		for scoretile in current_level.scoretiles.get_children():
+			scoretile.snapshot_locations.clear();
+			scoretile.snapshot_locations_new.clear();
+		for baddie in current_level.baddies.get_children():
+			baddie.snapshot_locations.clear();
 
 func change_level_faded(n):
 	if (n >= GV.LEVEL_COUNT):

@@ -124,7 +124,7 @@ func remove_last_snapshot_if_not_meaningful():
 		if not current_snapshot.meaningful():
 			player_snapshots.pop_back();
 			current_snapshot.remove();
-			print("OVERWRITE LAST SNAPSHOT");
+			#print("OVERWRITE LAST SNAPSHOT");
 
 func on_copy():
 	if GV.abilities["copy"]:

@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_lbtfe"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_fpe11"]
 [ext_resource type="PackedScene" uid="uid://die53co3fbgij" path="res://Enemy/Baddie 4.tscn" id="8_q5bss"]
-[ext_resource type="PackedScene" uid="uid://bn6hebkuibv6r" path="res://Enemy/Baddie 5.tscn" id="9_w18hv"]
+[ext_resource type="PackedScene" uid="uid://dmktkn4qjlhbs" path="res://Enemy/Baddie 5.tscn" id="9_w18hv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y1ucs"]
 size = Vector2(159, 80)

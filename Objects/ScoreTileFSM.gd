@@ -10,8 +10,8 @@ extends CharacterBody2D
 @export var debug:bool = false;
 
 #ref locations in snapshot arrays, must be copied in custom duplicate
-var snapshot_locations:Array[Vector2i] = [];
-var snapshot_locations_new:Array[Vector2i] = [];
+@export var snapshot_locations:Array[Vector2i] = [];
+@export var snapshot_locations_new:Array[Vector2i] = [];
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var img:Sprite2D = Sprite2D.new();
@@ -37,6 +37,14 @@ var invincible:bool = false; #give player some spawn protection
 func _ready():
 	if !owner: #tile is a snapshot duplicate, set owner
 		owner = game.current_level;
+	
+	#update ref at last snapshot location
+	if snapshot_locations:
+		var location = snapshot_locations.back();
+		game.current_level.player_snapshots[location.x].tiles[location.y] = self;
+	if snapshot_locations_new:
+		var location_new = snapshot_locations_new.back();
+		game.current_level.player_snapshots[location_new.x].tiles_new[location_new.y] = self;
 	
 	#settings
 	if is_player:
@@ -201,10 +209,6 @@ func slide(dir:Vector2) -> bool:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
 					return false;
 				if collider.get_state() not in ["tile", "snap"]:
-					if debug:
-						print("slide failed: collider in state ", collider.get_state());
-						for it in range(1, 33):
-							print("layer ", it, ": ", collider.get_collision_layer_value(it));
 					return false;
 				
 				if not collider.is_player:

@@ -499,3 +499,15 @@ func is_snapshot_valid(snapshot):
 				#reset savepoint.saved to false, but don't perform save if player is on savepoint
 				#so that a revert after this goes to previous savepoint
 '''
+
+''' under change_level, if GV.reverting
+		#update all snapshot_location refs
+		for tile in current_level.scoretiles.get_children():
+			for location in tile.snapshot_locations:
+				GV.temp_player_snapshots[location.x].tiles[location.y] = tile;
+			for location_new in tile.snapshot_locations_new:
+				GV.temp_player_snapshots[location_new.x].tiles_new[location_new.y] = tile;
+		for baddie in current_level.baddies.get_children():
+			for location in baddie.snapshot_locations:
+				GV.temp_player_snapshots[location.x].baddies[location.y] = baddie;
+'''
