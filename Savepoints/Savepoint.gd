@@ -3,7 +3,7 @@ extends Area2D
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var spawned:bool = false;
-var saved:bool = false;
+@export var saved:bool = false;
 
 @export var id:int = 0; #unique id for each savepoint, except connected goals' ids must match
 @export var spawn_point:Vector2;

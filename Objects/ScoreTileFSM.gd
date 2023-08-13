@@ -35,6 +35,9 @@ var invincible:bool = false; #give player some spawn protection
 
 
 func _ready():
+	if !owner: #tile is a snapshot duplicate, set owner
+		owner = game.current_level;
+	
 	#settings
 	if is_player:
 		if splitted:

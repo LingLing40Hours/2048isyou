@@ -1,8 +1,6 @@
 extends Baddie
 
 @onready var ray_cast = $RayCast2D;
-@onready var game:Node2D = $"/root/Game";
-
 
 @export var speed = 50;
 @export var distance_limit:float = 200;
