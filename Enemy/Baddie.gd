@@ -6,7 +6,7 @@ var packed_baddie:PackedScene;
 var snapshotted:bool = false;
 @export var snapshot_locations:Array[Vector2i] = [];
 
-@onready var game:Node2D = $"root/Game";
+@onready var game:Node2D = $"/root/Game";
 
 
 func _ready():
