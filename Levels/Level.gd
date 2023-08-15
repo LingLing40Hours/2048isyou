@@ -35,7 +35,7 @@ func _input(event):
 		elif event.is_action_pressed("restart"):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
-			#print("NEW SNAPSHOT");
+			print("NEW SNAPSHOT");
 			remove_last_snapshot_if_not_meaningful();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);

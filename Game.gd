@@ -98,12 +98,16 @@ func add_level(n):
 	if GV.reverting and GV.current_level_from_save:
 		var scoretiles = current_level.get_node("ScoreTiles");
 		var baddies = current_level.get_node("Baddies");
+		var tiles_snapshot_locations = GV.current_savepoint_tiles_snapshot_locations.pop_back();
+		var tiles_snapshot_locations_new = GV.current_savepoint_tiles_snapshot_locations_new.pop_back();
+		var baddies_snapshot_locations = GV.current_savepoint_baddies_snapshot_locations.pop_back();
+		
 		for tile_itr in scoretiles.get_child_count():
 			var tile = scoretiles.get_child(tile_itr);
-			tile.snapshot_locations = GV.temp_tiles_snapshot_locations[tile_itr];
-			tile.snapshot_locations_new = GV.temp_tiles_snapshot_locations_new[tile_itr];
+			tile.snapshot_locations = tiles_snapshot_locations[tile_itr];
+			tile.snapshot_locations_new = tiles_snapshot_locations_new[tile_itr];
 		for baddie_itr in baddies.get_child_count():
-			baddies.get_child(baddie_itr).snapshot_locations = GV.temp_baddies_snapshot_locations[baddie_itr];
+			baddies.get_child(baddie_itr).snapshot_locations = baddies_snapshot_locations[baddie_itr];
 	
 	add_child(level);
 	GV.changing_level = false;
@@ -133,9 +137,9 @@ func change_level(n):
 		GV.temp_player_snapshots.clear();
 		GV.temp_player_snapshot_locations.clear();
 		GV.temp_player_snapshot_locations_new.clear();
-		GV.temp_tiles_snapshot_locations.clear();
-		GV.temp_tiles_snapshot_locations_new.clear();
-		GV.temp_baddies_snapshot_locations.clear();
+		GV.current_savepoint_tiles_snapshot_locations.clear();
+		GV.current_savepoint_tiles_snapshot_locations_new.clear();
+		GV.current_savepoint_baddies_snapshot_locations.clear();
 		
 		#clear snapshot locations
 		for scoretile in current_level.scoretiles.get_children():

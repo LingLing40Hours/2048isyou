@@ -102,15 +102,9 @@ func _ready():
 
 func _physics_process(_delta):
 	if debug:
-		#print("state: ", get_state());
+		print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
-		var collider = $Ray1.get_collider();
-		if not physics_on:
-			set_physics(true);
-			physics_on = true;
-		if collider and is_same(snapshot_locations, collider.snapshot_locations):
-			print("ARRAY REFS SAME");
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):

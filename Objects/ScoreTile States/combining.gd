@@ -4,6 +4,7 @@ var frame_count:int;
 
 
 func enter():
+	#print("COMBINING");
 	#reset frame count
 	frame_count = 0;
 	

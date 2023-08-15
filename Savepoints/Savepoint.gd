@@ -67,13 +67,15 @@ func save_id_and_player_value(player):
 	GV.temp_player_snapshot_locations = player.snapshot_locations;
 	GV.temp_player_snapshot_locations_new = player.snapshot_locations_new;
 
-	GV.temp_tiles_snapshot_locations.clear();
-	GV.temp_tiles_snapshot_locations_new.clear();
+	var tiles_snapshot_locations = [];
+	var tiles_snapshot_locations_new = [];
 	for tile in game.current_level.scoretiles.get_children():
 		if tile != player:
-			GV.temp_tiles_snapshot_locations.push_back(tile.snapshot_locations);
-			GV.temp_tiles_snapshot_locations_new.push_back(tile.snapshot_locations_new);
+			tiles_snapshot_locations.push_back(tile.snapshot_locations);
+			tiles_snapshot_locations_new.push_back(tile.snapshot_locations_new);
+	GV.current_savepoint_tiles_snapshot_locations.push_back(tiles_snapshot_locations);
+	GV.current_savepoint_tiles_snapshot_locations_new.push_back(tiles_snapshot_locations_new);
 	
-	GV.temp_baddies_snapshot_locations.clear();
+	var baddies_snapshot_locations = [];
 	for baddie in game.current_level.baddies.get_children():
-		GV.temp_baddies_snapshot_locations.push_back(baddie.snapshot_locations);
+		GV.current_savepoint_baddies_snapshot_locations.push_back(baddies_snapshot_locations);

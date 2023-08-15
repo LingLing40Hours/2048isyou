@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 12;
-var current_level_index:int = 0;
+var current_level_index:int = 11;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -28,9 +28,9 @@ var current_savepoint_powers = [];
 var current_savepoint_ssigns = [];
 var temp_player_snapshot_locations = []; #to reinstate after player spawns
 var temp_player_snapshot_locations_new = [];
-var temp_tiles_snapshot_locations = [];
-var temp_tiles_snapshot_locations_new = [];
-var temp_baddies_snapshot_locations = [];
+var current_savepoint_tiles_snapshot_locations = []; #2d array of array refs
+var current_savepoint_tiles_snapshot_locations_new = [];
+var current_savepoint_baddies_snapshot_locations = [];
 
 var level_last_savepoint_ids:Array[int] = []; #in lv0, for spawning player after "home"
 var level_initial_savepoint_ids:Array[int] = []; #id of goal where player first enters level
@@ -55,8 +55,8 @@ const COMBINING_MERGE_RATIO:float = 1/2.7;
 
 const INPUT_REPEAT_DELAY:float = 0.1; #when movement held down, delay (s) between action calls
 
-const COMBINING_FRAME_COUNT:int = 6; #9;
-const SPLITTING_FRAME_COUNT:int = 6; #9;
+const COMBINING_FRAME_COUNT:int = 1; #6; #9;
+const SPLITTING_FRAME_COUNT:int = 1; #6; #9;
 
 enum ScaleAnim {
 	DUANG=0,
