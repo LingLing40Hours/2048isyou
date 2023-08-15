@@ -32,6 +32,7 @@ func _ready():
 	#testing
 
 
+
 func _input(event):
 	if event.is_action_pressed("change_move_mode") and GV.abilities["move_mode"]:
 		change_move_mode(not GV.player_snap);
@@ -47,6 +48,7 @@ func _input(event):
 #defer this until previous level has been freed
 func add_level(n):
 	var level:Node2D;
+	
 	if GV.reverting and GV.current_savepoint_ids:
 		print("LOAD FROM SAVEPOINT");
 		GV.savepoint_id = GV.current_savepoint_ids.pop_back();
@@ -92,6 +94,17 @@ func add_level(n):
 		current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
 		player_saved.free();
 	
+	#migrate old snapshot locations
+	if GV.reverting and GV.current_level_from_save:
+		var scoretiles = current_level.get_node("ScoreTiles");
+		var baddies = current_level.get_node("Baddies");
+		for tile_itr in scoretiles.get_child_count():
+			var tile = scoretiles.get_child(tile_itr);
+			tile.snapshot_locations = GV.temp_tiles_snapshot_locations[tile_itr];
+			tile.snapshot_locations_new = GV.temp_tiles_snapshot_locations_new[tile_itr];
+		for baddie_itr in baddies.get_child_count():
+			baddies.get_child(baddie_itr).snapshot_locations = GV.temp_baddies_snapshot_locations[baddie_itr];
+	
 	add_child(level);
 	GV.changing_level = false;
 	
@@ -116,8 +129,13 @@ func change_level(n):
 		GV.current_snapshot_sizes.clear();
 		GV.current_savepoint_powers.clear();
 		GV.current_savepoint_ssigns.clear();
-		GV.current_savepoint_snapshot_locations.clear();
-		GV.current_savepoint_snapshot_locations_new.clear();
+
+		GV.temp_player_snapshots.clear();
+		GV.temp_player_snapshot_locations.clear();
+		GV.temp_player_snapshot_locations_new.clear();
+		GV.temp_tiles_snapshot_locations.clear();
+		GV.temp_tiles_snapshot_locations_new.clear();
+		GV.temp_baddies_snapshot_locations.clear();
 		
 		#clear snapshot locations
 		for scoretile in current_level.scoretiles.get_children():

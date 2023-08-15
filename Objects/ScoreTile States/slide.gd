@@ -12,6 +12,10 @@ func inPhysicsProcess(_delta):
 	var vdir = Input.get_axis("move_up", "move_down");
 	var dir:Vector2 = Vector2(hdir, vdir);
 	
+	#signal (before curr snapshot becomes meaningful)
+	if dir != Vector2.ZERO:
+		actor.start_action.emit();
+	
 	#accelerate
 	if not GV.changing_level:
 		actor.velocity += dir * GV.PLAYER_SLIDE_SPEED;

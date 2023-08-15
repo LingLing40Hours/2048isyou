@@ -171,6 +171,11 @@ position = Vector2(1600, 640)
 rotation = -1.5708
 spawn_point = Vector2(60, 640)
 
+[node name="Goal4" parent="SavePoints" instance=ExtResource("6_lb8ip")]
+position = Vector2(440, 680)
+rotation = -1.5708
+spawn_point = Vector2(60, 640)
+
 [node name="Baddies" type="Node2D" parent="."]
 
 [node name="Baddie 6" parent="Baddies" instance=ExtResource("6_7fl4i")]

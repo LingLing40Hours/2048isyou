@@ -26,8 +26,11 @@ var current_snapshot_sizes = []; #size of player_snapshots (at saved savepoints)
 var temp_player_snapshots = []; #keep player snapshots when reverting
 var current_savepoint_powers = [];
 var current_savepoint_ssigns = [];
-var current_savepoint_snapshot_locations = []; #to reinstate after player spawns
-var current_savepoint_snapshot_locations_new = [];
+var temp_player_snapshot_locations = []; #to reinstate after player spawns
+var temp_player_snapshot_locations_new = [];
+var temp_tiles_snapshot_locations = [];
+var temp_tiles_snapshot_locations_new = [];
+var temp_baddies_snapshot_locations = [];
 
 var level_last_savepoint_ids:Array[int] = []; #in lv0, for spawning player after "home"
 var level_initial_savepoint_ids:Array[int] = []; #id of goal where player first enters level

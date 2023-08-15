@@ -53,7 +53,7 @@ func add_new_tile(tile):
 	
 	#save snapshot location
 	tile.snapshot_locations_new.push_back(Vector2i(index, new_tiles.size() - 1));
-	#print("new snapshot location at ", Vector2i(index, new_tiles.size() - 1));
+	print("new snapshot location at ", Vector2i(index, new_tiles.size() - 1));
 
 #not a slide of 1+ players
 func meaningful() -> bool:
@@ -113,7 +113,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		var dup = duplicates[object_index];
 		var locations = dup.snapshot_locations;
 		if locations:
-			var location:Vector2i = locations[locations.size() - 1];
+			var location:Vector2i = locations.back();
 			var last_snapshot = level.player_snapshots[location.x];
 			last_snapshot.get(objects_name)[location.y] = dup;
 			#print("UPDATED REF at ", location);
@@ -122,7 +122,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		if dup is ScoreTile:
 			var locations_new = dup.snapshot_locations_new;
 			if locations_new:
-				var location_new:Vector2i = locations_new[locations_new.size() - 1];
+				var location_new:Vector2i = locations_new.back();
 				var last_snapshot = level.player_snapshots[location_new.x];
 				last_snapshot.get("new_tiles")[location_new.y] = dup;
 				#print("UPDATED NEW REF at ", location_new);
