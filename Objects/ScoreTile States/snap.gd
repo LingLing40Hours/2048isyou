@@ -7,24 +7,28 @@ func enter():
 	next_state = null;
 	
 	actor.velocity = Vector2.ZERO;
-	actor.slide_dir = Vector2.ZERO;
+	actor.slide_dir = Vector2i.ZERO;
 
 	#snap
 	actor.snap_range(GV.PLAYER_SNAP_RANGE);
 	
 	#do premove (if premoved)
-	if actor.next_move.is_valid():
-		actor.next_move.call(actor.next_dir);
-		actor.next_move = Callable();
+	if actor.next_moves:
+		var moved = actor.next_moves.front().call(actor.next_dirs.pop_front());
+		if moved:
+			actor.next_moves.pop_front(); #pop afterwards so call can check if it's a premove
+		else: #move failed, clear all premoves
+			actor.next_moves.clear();
+			actor.next_dirs.clear();
 	
 func handleInput(_event):
 	if next_state != null or GV.changing_level:
 		return;
 	
 	actor.get_next_action();
-	if actor.next_move.is_valid():
-		actor.next_move.call(actor.next_dir);
-		actor.next_move = Callable();
+	if actor.next_moves:
+		actor.next_moves.front().call(actor.next_dirs.pop_front());
+		actor.next_moves.pop_front(); #pop afterwards so call can check if it's a premove
 
 func changeParentState():
 	return next_state;

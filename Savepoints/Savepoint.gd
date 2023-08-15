@@ -3,7 +3,7 @@ extends Area2D
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var spawned:bool = false;
-var player:ScoreTile = null; #will be invalid after player splits
+var player_spawned:ScoreTile = null; #will be invalid after player splits
 @export var saved:bool = false;
 
 @export var id:int = 0; #unique id for each savepoint, except connected goals' ids must match
@@ -36,7 +36,7 @@ func _on_body_entered(body):
 func _on_player_start_action():
 	if not GV.changing_level and not saved and spawned: #save level
 		game.current_level.remove_last_snapshot_if_not_meaningful();
-		save_id_and_player_value(player);
+		save_id_and_player_value(player_spawned);
 		
 		game.save_level(id);
 		saved = true;
@@ -44,7 +44,8 @@ func _on_player_start_action():
 func spawn_player(): #spawns player at spawn_point
 	#print("SPAWN PLAYER AT SAVEPOINT ", id);
 	spawned = true;
-	player = score_tile.instantiate();
+	var player = score_tile.instantiate();
+	player_spawned = player;
 	player.is_player = true;
 	player.power = GV.current_savepoint_powers.pop_back();
 	player.ssign = GV.current_savepoint_ssigns.pop_back();

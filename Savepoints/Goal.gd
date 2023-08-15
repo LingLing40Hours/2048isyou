@@ -30,6 +30,7 @@ func spawn_player(): #spawns player at spawn_point
 	print(id, " SPAWN PLAYER");
 	spawned = true;
 	var player = score_tile.instantiate();
+	player_spawned = player;
 	player.is_player = true;
 	player.power = GV.current_savepoint_powers.back();
 	player.ssign = GV.current_savepoint_ssigns.back();

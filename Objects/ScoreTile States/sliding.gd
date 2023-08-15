@@ -30,8 +30,8 @@ func enter():
 	actor.velocity = actor.slide_dir * slide_speed;
 	
 	#find target in tile coords
-	var pos_t = actor.position/GV.TILE_WIDTH - Vector2(0.5, 0.5);
-	var target_t = pos_t + actor.slide_dir;
+	var pos_t:Vector2 = actor.position/GV.TILE_WIDTH - Vector2(0.5, 0.5);
+	var target_t:Vector2 = pos_t + Vector2(actor.slide_dir);
 	if actor.slide_dir.x:
 		target_t.x = floorf(target_t.x) if actor.slide_dir.x > 0 else ceilf(target_t.x);
 	else:
@@ -72,7 +72,7 @@ func inPhysicsProcess(delta):
 		slide_done = true;
 
 func handleInput(_event):
-	if actor.next_move.is_null(): #check for premove
+	if actor.is_player:
 		actor.get_next_action();
 
 func changeParentState():

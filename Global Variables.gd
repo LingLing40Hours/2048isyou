@@ -86,10 +86,10 @@ var SHIFT_DISTANCE_TO_SPEED_MAX:float;
 var player_snap:bool = true; #move mode
 
 var directions = {
-	"left" : Vector2(-1, 0),
-	"right" : Vector2(1, 0),
-	"up" : Vector2(0, -1),
-	"down" : Vector2(0, 1),
+	"left" : Vector2i(-1, 0),
+	"right" : Vector2i(1, 0),
+	"up" : Vector2i(0, -1),
+	"down" : Vector2i(0, 1),
 };
 
 var abilities = {

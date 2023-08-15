@@ -72,8 +72,7 @@ func update_target_parameters():
 	#print("SHIFT DISTANCE: ", distance);
 
 func handleInput(_event):
-	if actor.next_move.is_null(): #check for premove
-		actor.get_next_action();
+	actor.get_next_action();
 
 func changeParentState():
 	if actor.velocity == Vector2.ZERO:

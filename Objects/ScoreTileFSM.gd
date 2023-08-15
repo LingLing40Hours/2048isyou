@@ -24,9 +24,9 @@ var shift_ray:RayCast2D = null;
 
 var physics_on:bool = true;
 var physics_enabler_count:int = 0;
-var slide_dir:Vector2 = Vector2.ZERO;
-var next_dir:Vector2 = Vector2.ZERO; #for premoving
-var next_move:Callable = Callable(); #allow early input when sliding/shifting
+var slide_dir:Vector2i = Vector2i.ZERO;
+var next_dirs:Array[Vector2i] = []; #for premoving
+var next_moves:Array[Callable] = []; #allow early input when sliding/shifting
 var func_slide:Callable = Callable(self, "slide");
 var func_split:Callable = Callable(self, "split");
 var func_shift:Callable = Callable(self, "shift");
@@ -102,9 +102,11 @@ func _ready():
 
 func _physics_process(_delta):
 	if debug:
-		print("state: ", get_state());
+		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
+		#print(pusher);
+		print(next_dirs);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
@@ -126,36 +128,35 @@ func update_texture(s:Sprite2D, score_pow, score_sign, dark):
 	
 	s.texture = load(texture_path + ".png");
 
-func get_ray(dir:Vector2) -> RayCast2D:
-	if dir == Vector2(1, 0):
+func get_ray(dir:Vector2i) -> RayCast2D:
+	if dir == Vector2i(1, 0):
 		return $Ray1;
-	elif dir == Vector2(0, -1):
+	elif dir == Vector2i(0, -1):
 		return $Ray2;
-	elif dir == Vector2(-1, 0):
+	elif dir == Vector2i(-1, 0):
 		return $Ray3;
-	elif dir == Vector2(0, 1):
+	elif dir == Vector2i(0, 1):
 		return $Ray4;
 	else:
 		return null;
 
-func get_shape(dir:Vector2) -> ShapeCast2D:
-	if dir == Vector2(1, 0):
+func get_shape(dir:Vector2i) -> ShapeCast2D:
+	if dir == Vector2i(1, 0):
 		return $Shape1;
-	elif dir == Vector2(0, -1):
+	elif dir == Vector2i(0, -1):
 		return $Shape2;
-	elif dir == Vector2(-1, 0):
+	elif dir == Vector2i(-1, 0):
 		return $Shape3;
-	elif dir == Vector2(0, 1):
+	elif dir == Vector2i(0, 1):
 		return $Shape4;
 	else:
 		return null;
 
-#if input, sets next_move and next_dir
+#if input, pushes to next_moves and next_dirs
 func get_next_action():
 	var event_name:String = "";
 	var action:Callable;
 	var s_dir:String;
-	#var dir:Vector2 = Vector2.ZERO;
 	
 	#find movement type
 	if Input.is_action_pressed("cc"):
@@ -183,11 +184,11 @@ func get_next_action():
 		#check if movement just pressed
 		event_name += s_dir;
 		if Input.is_action_just_pressed(event_name):
-			next_dir = GV.directions[s_dir];
-			next_move = action;
+			next_dirs.push_back(GV.directions[s_dir]);
+			next_moves.push_back(action);
 
 
-func slide(dir:Vector2) -> bool:
+func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
 		return false;
 	
@@ -206,8 +207,8 @@ func slide(dir:Vector2) -> bool:
 		var shape = get_shape(dir);
 		#if splitted, tile was newly added, shapecast hasn't updated
 		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
-		#if next_move is valid, premoved, last shapecast update may have caught a tile corner
-		if splitted or (pusher != null and pusher.splitted) or next_move.is_valid():
+		#if next_moves nonempty, premoved, last shapecast update may have caught a tile corner
+		if splitted or (pusher != null and pusher.splitted) or next_moves:
 			shape.force_shapecast_update();
 		
 		for i in shape.get_collision_count():
@@ -252,7 +253,7 @@ func slide(dir:Vector2) -> bool:
 	return true;
 
 
-func split(dir:Vector2) -> bool:
+func split(dir:Vector2i) -> bool:
 	if power <= 0: #1, -1, 0 cannot split
 		return false;
 	if get_state() != "snap":
@@ -264,7 +265,7 @@ func split(dir:Vector2) -> bool:
 	
 	#get shapecast in direction
 	var shape = get_shape(dir);
-	if next_move.is_valid():
+	if next_moves:
 		shape.force_shapecast_update();
 	
 	for i in shape.get_collision_count():
@@ -299,7 +300,7 @@ func split(dir:Vector2) -> bool:
 	return true;
 
 
-func shift(dir:Vector2) -> bool:
+func shift(dir:Vector2i) -> bool:
 	if get_state() != "snap":
 		return false;
 	if not GV.abilities["shift"]:

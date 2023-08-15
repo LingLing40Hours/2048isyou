@@ -86,17 +86,17 @@ func _physics_process(delta):
 				state = States.IDLE;
 
 
-func slide(slide_dir:Vector2, collide_with_player:bool) -> bool:
+func slide(slide_dir:Vector2i, collide_with_player:bool) -> bool:
 	if state != States.IDLE:
 		return false;
 		
 	#find ray in slide direction
 	var ray:RayCast2D;
-	if slide_dir == Vector2(1, 0):
+	if slide_dir == Vector2i(1, 0):
 		ray = $Ray1;
-	elif slide_dir == Vector2(0, -1):
+	elif slide_dir == Vector2i(0, -1):
 		ray = $Ray2;
-	elif slide_dir == Vector2(-1, 0):
+	elif slide_dir == Vector2i(-1, 0):
 		ray = $Ray3;
 	else:
 		ray = $Ray4;

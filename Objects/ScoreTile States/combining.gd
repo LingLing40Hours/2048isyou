@@ -16,7 +16,7 @@ func inPhysicsProcess(_delta):
 	frame_count += 1;
 
 func handleInput(_event):
-	if actor.next_move.is_null(): #check for premove
+	if actor.is_player:
 		actor.get_next_action();
 
 func changeParentState():

@@ -30,7 +30,10 @@ func _ready():
 	change_move_mode(GV.player_snap);
 	
 	#testing
-
+	var vi = Vector2i(1,1);
+	var f:float = 0.5;
+	var test = f*vi;
+	print(test);
 
 
 func _input(event):
