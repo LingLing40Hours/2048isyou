@@ -506,8 +506,32 @@ func is_snapshot_valid(snapshot):
 			for location in tile.snapshot_locations:
 				GV.temp_player_snapshots[location.x].tiles[location.y] = tile;
 			for location_new in tile.snapshot_locations_new:
-				GV.temp_player_snapshots[location_new.x].tiles_new[location_new.y] = tile;
+				GV.temp_player_snapshots[location_new.x].new_tiles[location_new.y] = tile;
 		for baddie in current_level.baddies.get_children():
 			for location in baddie.snapshot_locations:
 				GV.temp_player_snapshots[location.x].baddies[location.y] = baddie;
+'''
+
+''' previously in savepoint.spawn_player()
+	#update ref in last snapshot location(s)
+	if player.snapshot_locations:
+		var location = player.snapshot_locations.back();
+		game.current_level.player_snapshots[location.x].tiles[location.y] = player;
+	if player.snapshot_locations_new:
+		var location_new = player.snapshot_locations_new.back();
+		game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = player;
+'''
+
+''' pack does not duplicate member arrays
+	var packed_tile = load("res://Objects/ScoreTile.tscn");
+	var test = packed_tile.instantiate();
+	test.snapshot_locations.push_back(Vector2i(1,1));
+	print(test.snapshot_locations);
+	packed_tile.pack(test);
+	test = packed_tile.instantiate();
+	test.snapshot_locations.push_back(Vector2i(2,2));
+	print(test.snapshot_locations);
+	test.free();
+	test = packed_tile.instantiate();
+	print(test.snapshot_locations);
 '''

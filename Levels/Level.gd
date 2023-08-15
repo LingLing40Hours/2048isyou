@@ -35,7 +35,7 @@ func _input(event):
 		elif event.is_action_pressed("restart"):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
-			print("NEW SNAPSHOT");
+			#print("NEW SNAPSHOT");
 			remove_last_snapshot_if_not_meaningful();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);
@@ -62,8 +62,6 @@ func _input(event):
 					GV.current_snapshot_sizes.pop_back();
 					GV.current_savepoint_powers.pop_back();
 					GV.current_savepoint_ssigns.pop_back();
-					GV.current_savepoint_snapshot_locations.pop_back();
-					GV.current_savepoint_snapshot_locations_new.pop_back();
 					
 					#update last savepoint id
 					if GV.current_savepoint_ids:

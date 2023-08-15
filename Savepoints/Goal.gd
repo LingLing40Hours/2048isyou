@@ -26,9 +26,6 @@ func _on_body_entered(body):
 
 		#save level after cleanup work after overlayer turns black
 
-func _on_body_exited(_body):
-	pass;
-
 func spawn_player(): #spawns player at spawn_point
 	print(id, " SPAWN PLAYER");
 	spawned = true;

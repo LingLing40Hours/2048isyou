@@ -1,6 +1,8 @@
 class_name ScoreTile
 extends CharacterBody2D
 
+signal start_action; #should be emitted before current snapshot becomes meaningful
+
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
 
@@ -10,8 +12,8 @@ extends CharacterBody2D
 @export var debug:bool = false;
 
 #ref locations in snapshot arrays, must be copied in custom duplicate
-@export var snapshot_locations:Array[Vector2i] = [];
-@export var snapshot_locations_new:Array[Vector2i] = [];
+var snapshot_locations:Array[Vector2i] = [];
+var snapshot_locations_new:Array[Vector2i] = [];
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var img:Sprite2D = Sprite2D.new();
@@ -38,13 +40,22 @@ func _ready():
 	if !owner: #tile is a snapshot duplicate, set owner
 		owner = game.current_level;
 	
-	#update ref at last snapshot location
-	if snapshot_locations:
+	#remove extra snapshot locations, update ref at last snapshot location
+	while snapshot_locations:
 		var location = snapshot_locations.back();
-		game.current_level.player_snapshots[location.x].tiles[location.y] = self;
-	if snapshot_locations_new:
+		if location.x >= game.current_level.player_snapshots.size():
+			snapshot_locations.pop_back();
+		else:
+			game.current_level.player_snapshots[location.x].tiles[location.y] = self;
+			break;
+	while snapshot_locations_new:
 		var location_new = snapshot_locations_new.back();
-		game.current_level.player_snapshots[location_new.x].tiles_new[location_new.y] = self;
+		if location_new.x >= game.current_level.player_snapshots.size():
+			snapshot_locations_new.pop_back();
+		else:
+			print(snapshot_locations_new, position);
+			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
+			break;
 	
 	#settings
 	if is_player:
@@ -91,9 +102,15 @@ func _ready():
 
 func _physics_process(_delta):
 	if debug:
-		#print("physics_on: ", physics_on);
 		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
+		#print("snapshot locs: ", snapshot_locations);
+		var collider = $Ray1.get_collider();
+		if not physics_on:
+			set_physics(true);
+			physics_on = true;
+		if collider and is_same(snapshot_locations, collider.snapshot_locations):
+			print("ARRAY REFS SAME");
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
@@ -233,6 +250,9 @@ func slide(dir:Vector2) -> bool:
 			else:
 				next_state = $FSM.states.sliding;
 	
+	#signal
+	start_action.emit();
+	
 	slide_dir = dir;
 	$FSM.curState.next_state = next_state;
 	return true;
@@ -277,6 +297,9 @@ func split(dir:Vector2) -> bool:
 			else: #obstructed
 				return false;
 	
+	#signal
+	start_action.emit();
+	
 	slide_dir = dir;
 	$FSM.curState.next_state = $FSM.states.splitting;
 	return true;
@@ -298,6 +321,9 @@ func shift(dir:Vector2) -> bool:
 			var collider = ray.get_collider();
 			if collider is ScoreTile or collider.is_in_group("wall"):
 				return false;
+	
+	#signal
+	start_action.emit();
 	
 	slide_dir = dir;
 	shift_ray = ray;

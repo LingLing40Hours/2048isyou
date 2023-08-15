@@ -66,9 +66,10 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(140, 60)
+debug = true
 
 [node name="ScoreTile287" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
-position = Vector2(380, 780)
+position = Vector2(420, 1140)
 is_player = true
 power = 0
 

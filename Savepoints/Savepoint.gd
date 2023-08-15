@@ -3,6 +3,7 @@ extends Area2D
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var spawned:bool = false;
+var player:ScoreTile = null; #will be invalid after player splits
 @export var saved:bool = false;
 
 @export var id:int = 0; #unique id for each savepoint, except connected goals' ids must match
@@ -13,7 +14,6 @@ var spawned:bool = false;
 func _ready():
 	init_spawn_point();
 	connect("body_entered", _on_body_entered);
-	connect("body_exited", _on_body_exited);
 	
 	if id == GV.savepoint_id:
 		spawn_player();
@@ -32,11 +32,11 @@ func _on_body_entered(body):
 		game.save_level(id);
 		saved = true;
 
-func _on_body_exited(body):
-	#check position to ensure body wasn't freed in add_level
-	if body.is_in_group("player") and body.position != position and not GV.changing_level and not saved and spawned: #save level
+#if player was spawned, don't save until player starts action
+func _on_player_start_action():
+	if not GV.changing_level and not saved and spawned: #save level
 		game.current_level.remove_last_snapshot_if_not_meaningful();
-		save_id_and_player_value(body);
+		save_id_and_player_value(player);
 		
 		game.save_level(id);
 		saved = true;
@@ -44,22 +44,16 @@ func _on_body_exited(body):
 func spawn_player(): #spawns player at spawn_point
 	#print("SPAWN PLAYER AT SAVEPOINT ", id);
 	spawned = true;
-	var player = score_tile.instantiate();
+	player = score_tile.instantiate();
 	player.is_player = true;
 	player.power = GV.current_savepoint_powers.pop_back();
 	player.ssign = GV.current_savepoint_ssigns.pop_back();
-	player.snapshot_locations = GV.current_savepoint_snapshot_locations.pop_back().duplicate();
-	player.snapshot_locations_new = GV.current_savepoint_snapshot_locations_new.pop_back().duplicate();
-	#update ref in last snapshot location(s)
-	if player.snapshot_locations:
-		var location = player.snapshot_locations.back();
-		game.current_level.player_snapshots[location.x].tiles[location.y] = player;
-	if player.snapshot_locations_new:
-		var location_new = player.snapshot_locations_new.back();
-		game.current_level.player_snapshots[location_new.x].tiles_new[location_new.y] = player;
+	player.snapshot_locations = GV.temp_player_snapshot_locations;
+	player.snapshot_locations_new = GV.temp_player_snapshot_locations_new;
 	player.position = spawn_point;
 	#player.debug = true;
 	game.current_level.get_node("ScoreTiles").add_child(player); #lv not ready yet, scoretiles not init
+	player.start_action.connect(_on_player_start_action);
 
 func save_id_and_player_value(player):
 	GV.savepoint_id = id;
@@ -70,5 +64,16 @@ func save_id_and_player_value(player):
 	GV.current_snapshot_sizes.push_back(game.current_level.player_snapshots.size());
 	GV.current_savepoint_powers.push_back(player.power);
 	GV.current_savepoint_ssigns.push_back(player.ssign);
-	GV.current_savepoint_snapshot_locations.push_back(player.snapshot_locations.duplicate());
-	GV.current_savepoint_snapshot_locations_new.push_back(player.snapshot_locations_new.duplicate());
+	GV.temp_player_snapshot_locations = player.snapshot_locations;
+	GV.temp_player_snapshot_locations_new = player.snapshot_locations_new;
+
+	GV.temp_tiles_snapshot_locations.clear();
+	GV.temp_tiles_snapshot_locations_new.clear();
+	for tile in game.current_level.scoretiles.get_children():
+		if tile != player:
+			GV.temp_tiles_snapshot_locations.push_back(tile.snapshot_locations);
+			GV.temp_tiles_snapshot_locations_new.push_back(tile.snapshot_locations_new);
+	
+	GV.temp_baddies_snapshot_locations.clear();
+	for baddie in game.current_level.baddies.get_children():
+		GV.temp_baddies_snapshot_locations.push_back(baddie.snapshot_locations);

@@ -37,7 +37,6 @@ to undo"
 metadata/_edit_lock_ = true
 
 [node name="Unlocker" type="Area2D" parent="Background/Undo"]
-collision_layer = 0
 monitoring = false
 monitorable = false
 metadata/_edit_lock_ = true
