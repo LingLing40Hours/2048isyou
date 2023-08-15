@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bn6hebkuibv6r"]
+[gd_scene load_steps=7 format=3 uid="uid://bn6hebkuibv6r"]
 
 [ext_resource type="Script" path="res://Enemy/Baddie 5.gd" id="1_s1jta"]
 [ext_resource type="Texture2D" uid="uid://bwk0yn4jrrqtg" path="res://Sprites/2_12d.png" id="3_482un"]
@@ -26,13 +26,15 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0lqpq"]
+size = Vector2(41, 41)
+
 [node name="Baddie 5" type="CharacterBody2D" groups=["baddie"]]
 collision_layer = 4294967280
 collision_mask = 8
 script = ExtResource("1_s1jta")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 9.53674e-07)
 shape = SubResource("RectangleShape2D_n14sa")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
@@ -42,3 +44,11 @@ collision_mask = 8
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xaqmw")
 animation = &"idle"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_0lqpq")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

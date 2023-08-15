@@ -120,7 +120,7 @@ position = Vector2(60, 220)
 power = 2
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(1300, 820)
+position = Vector2(332, 992)
 is_player = true
 power = 0
 
@@ -760,7 +760,7 @@ position = Vector2(1300, 460)
 power = 2
 
 [node name="ScoreTile106" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(1300, 740)
+position = Vector2(486, 988)
 power = 2
 
 [node name="ScoreTile101" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
@@ -841,12 +841,12 @@ position = Vector2(1304, 232)
 vx = -240.0
 
 [node name="Baddie 4" parent="Baddies" instance=ExtResource("4_gmonc")]
-position = Vector2(1488, 460)
+position = Vector2(616, 976)
 up_direction = Vector2(0, 1)
 vy = 1.0
 
 [node name="Baddie 6" parent="Baddies" instance=ExtResource("9_w18hv")]
-position = Vector2(1380, 920)
+position = Vector2(1000, 968)
 
 [connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
 [connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
