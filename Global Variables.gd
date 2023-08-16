@@ -57,7 +57,7 @@ const COMBINING_MERGE_RATIO:float = 1/2.7;
 
 const INPUT_REPEAT_DELAY_INITIAL:float = 0.3; #when movement held down, delay (s) between action calls
 const INPUT_REPEAT_DELAY_SHRINK_FACTOR:float = 0.85; #every time input repeats, delay time decreases
-const INPUT_REPEAT_DELAY_MIN:float = 0.1;
+const INPUT_REPEAT_DELAY_MIN:float = 0.16;
 
 const COMBINING_FRAME_COUNT:int = 1; #6; #9;
 const SPLITTING_FRAME_COUNT:int = 1; #6; #9;
