@@ -9,8 +9,8 @@ var img:Sprite2D;
 var anim_new_power:int;
 var anim_new_ssign:int;
 var anim_scale_type:int;
-var anim_old_z:int;
-var anim_new_z:int;
+var anim_old_z:int; #z_index of old img during animation
+var anim_new_z:int; #z_index of new img during animation
 var anim_scale_speed:float;
 var anim_fade_speed:float;
 var anim_curr_angle:float;

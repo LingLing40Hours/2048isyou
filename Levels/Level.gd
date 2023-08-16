@@ -29,7 +29,9 @@ func _ready():
 		
 
 func _input(event):
-	if not GV.changing_level:
+	if event.is_action_pressed("copy"):
+		on_copy();
+	elif not GV.changing_level:
 		if event.is_action_pressed("home"):
 			on_home();
 		elif event.is_action_pressed("restart"):
@@ -71,8 +73,6 @@ func _input(event):
 					
 		elif event.is_action_pressed("revert"):
 			on_revert();
-		elif event.is_action_pressed("copy"):
-			on_copy();
 
 
 func save():
