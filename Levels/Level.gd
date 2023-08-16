@@ -167,8 +167,8 @@ func on_restart():
 		GV.changing_level = true;
 		GV.reverting = false;
 		GV.savepoint_id = GV.level_initial_savepoint_ids[GV.current_level_index];
-		GV.current_savepoint_powers = [GV.level_initial_player_powers[GV.current_level_index]];
-		GV.current_savepoint_ssigns = [GV.level_initial_player_ssigns[GV.current_level_index]];
+		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
+		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);
 
 func on_revert():

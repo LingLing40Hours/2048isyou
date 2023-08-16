@@ -20,6 +20,8 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 #note non-export variables are not saved in packed scene
 const PLAYER_SNAPSHOT_BADDIE_RANGE:float = 448;
 var savepoint_id:int = -1; #id of savepoint at which player will spawn (after lv change)
+var player_power:int; #saved for instantiation at dest goal
+var player_ssign:int;
 var current_savepoint_ids = []; #ids of saved savepoints
 var current_savepoint_saves = []; #packed scene of level (at saved savepoints)
 var current_snapshot_sizes = []; #size of player_snapshots (at saved savepoints)
