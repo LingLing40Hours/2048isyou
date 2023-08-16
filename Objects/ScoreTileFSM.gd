@@ -157,27 +157,25 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 		return null;
 
 #if input, pushes to next_moves and next_dirs
-func get_next_action(event):
-	game.current_level.get_last_input(event);
-	
-	var action:Callable = get("func_" + game.current_level.last_input_modifier);
-	
+func get_next_action():
 	#check if movement pressed
 	if game.current_level.last_input_move:
+		#get event name
 		var prefix = game.current_level.last_input_modifier;
 		if prefix == "slide":
 			prefix = "move";
 		var event_name = prefix + "_" + game.current_level.last_input_move;
-		#check if action just pressed
+		
+		#check if just pressed
 		if Input.is_action_just_pressed(event_name):
+			var action:Callable = get("func_" + game.current_level.last_input_modifier);
 			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 			next_moves.push_back(action);
 
 func repeat_input():
-	var action:Callable = get("func_" + game.current_level.last_input_modifier);
-	
 	#check if movement pressed
 	if game.current_level.last_input_move:
+		var action:Callable = get("func_" + game.current_level.last_input_modifier);
 		next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 		next_moves.push_back(action);
 

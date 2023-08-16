@@ -1,6 +1,7 @@
 extends State
 
 var frame_count:int;
+@onready var game:Node2D = $"/root/Game";
 
 
 func enter():
@@ -15,9 +16,10 @@ func enter():
 func inPhysicsProcess(_delta):
 	frame_count += 1;
 
-func handleInput(event):
+func handleInput(_event):
 	if actor.is_player:
-		actor.get_next_action(event);
+		await game.current_level.updated_last_input;
+		actor.get_next_action();
 
 func changeParentState():
 	if frame_count == GV.COMBINING_FRAME_COUNT:

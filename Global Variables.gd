@@ -55,9 +55,9 @@ const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies be
 const TILE_SLIDE_SPEED:float = 320;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const INPUT_REPEAT_DELAY_INITIAL:float = 0.5; #when movement held down, delay (s) between action calls
+const INPUT_REPEAT_DELAY_INITIAL:float = 0.3; #when movement held down, delay (s) between action calls
 const INPUT_REPEAT_DELAY_SHRINK_FACTOR:float = 0.85; #every time input repeats, delay time decreases
-const INPUT_REPEAT_DELAY_MIN:float = 0.3;
+const INPUT_REPEAT_DELAY_MIN:float = 0.1;
 
 const COMBINING_FRAME_COUNT:int = 1; #6; #9;
 const SPLITTING_FRAME_COUNT:int = 1; #6; #9;

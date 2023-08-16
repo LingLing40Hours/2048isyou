@@ -3,6 +3,8 @@ extends Node2D
 
 #unlocker areas must not be collision layer1, else they interfere with tile movement
 
+signal updated_last_input;
+
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
 @onready var savepoints:Node2D = $SavePoints;
@@ -24,7 +26,6 @@ var input_repeat_delay_timer:Timer;
 var input_repeat_count:int = 0;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
-var last_input_gotten:bool = false;
 
 
 func _init():
@@ -41,9 +42,6 @@ func _ready():
 		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 
-func _physics_process(_delta):
-	last_input_gotten = false;
-
 func _on_input_repeat_delay_timer_timeout():
 	print("HERE");
 	input_repeat_count += 1;
@@ -52,9 +50,6 @@ func _on_input_repeat_delay_timer_timeout():
 	print(wait_time);
 
 func get_last_input(event):
-	if last_input_gotten:
-		return;
-	
 	var nothing_changed:bool = false;
 	var modifier_changed:bool = false;
 	
@@ -95,9 +90,11 @@ func get_last_input(event):
 			input_repeat_count += 1;
 			input_repeat_delay_timer.start(GV.INPUT_REPEAT_DELAY_INITIAL);
 	
-	last_input_gotten = true;
+	updated_last_input.emit();
 
 func _input(event):
+	get_last_input(event);
+	
 	if event.is_action_pressed("copy"):
 		on_copy();
 	elif not GV.changing_level:
