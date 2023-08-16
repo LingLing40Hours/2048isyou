@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cy3daaugnn180"]
+[gd_scene load_steps=12 format=3 uid="uid://cy3daaugnn180"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_s0cd0"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
 [ext_resource type="AudioStream" uid="uid://h4d75muo7lh1" path="res://Audio/merge.wav" id="3_1s3s7"]
+[ext_resource type="PackedScene" uid="uid://bo3irtp3tcnv2" path="res://GUI/pause_menu.tscn" id="3_s88ok"]
 [ext_resource type="AudioStream" uid="uid://4acf1v8r2emv" path="res://Audio/snap.wav" id="4_erghs"]
 [ext_resource type="AudioStream" uid="uid://qtimgux1b0st" path="res://Audio/split_b.wav" id="5_erxfs"]
 [ext_resource type="AudioStream" uid="uid://cuqvb804wfuvi" path="res://Audio/shift_long_reverbless.wav" id="6_2ro13"]
@@ -60,6 +61,7 @@ _data = {
 }
 
 [node name="Game" type="Node2D"]
+process_mode = 3
 script = ExtResource("1_s0cd0")
 
 [node name="Overlay" type="CanvasLayer" parent="."]
@@ -79,15 +81,12 @@ libraries = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUI"]
 layout_direction = 3
-anchors_preset = 9
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 8.0
+grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_jtwee")
-
-[node name="Control" type="Control" parent="GUI/HBoxContainer"]
-custom_minimum_size = Vector2(8, 0)
-layout_mode = 2
 
 [node name="RightSideBar" type="VBoxContainer" parent="GUI/HBoxContainer"]
 layout_mode = 2
@@ -100,6 +99,9 @@ layout_mode = 2
 [node name="MoveMode" type="Label" parent="GUI/HBoxContainer/RightSideBar"]
 layout_mode = 2
 theme = ExtResource("2_jtwee")
+
+[node name="PauseMenu" parent="GUI" instance=ExtResource("3_s88ok")]
+layout_direction = 2
 
 [node name="Audio" type="Node2D" parent="."]
 
@@ -115,6 +117,7 @@ volume_db = -2.0
 stream = ExtResource("5_erxfs")
 
 [node name="Shift" type="AudioStreamPlayer2D" parent="Audio"]
+position = Vector2(-256, 80)
 stream = ExtResource("6_2ro13")
 volume_db = -4.0
 

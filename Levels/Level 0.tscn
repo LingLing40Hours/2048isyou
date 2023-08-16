@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_lbtfe"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_fpe11"]
 [ext_resource type="PackedScene" uid="uid://die53co3fbgij" path="res://Enemy/Baddie 4.tscn" id="8_q5bss"]
-[ext_resource type="PackedScene" uid="uid://dmktkn4qjlhbs" path="res://Enemy/Baddie 5.tscn" id="9_w18hv"]
+[ext_resource type="PackedScene" uid="uid://bn6hebkuibv6r" path="res://Enemy/Baddie 5.tscn" id="9_w18hv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y1ucs"]
 size = Vector2(159, 80)
@@ -19,12 +19,14 @@ size = Vector2(159, 80)
 size = Vector2(80, 119)
 
 [node name="Level 0" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_qtly1")
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = -10
+offset_top = 35.0
 offset_right = 1600.0
-offset_bottom = 1200.0
+offset_bottom = 1235.0
 color = Color(0.345098, 0.345098, 0.345098, 1)
 
 [node name="Move" type="Label" parent="Background"]
@@ -757,7 +759,7 @@ position = Vector2(1300, 460)
 power = 2
 
 [node name="ScoreTile106" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
-position = Vector2(486, 988)
+position = Vector2(420, 1016)
 power = 2
 
 [node name="ScoreTile101" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
@@ -838,12 +840,12 @@ position = Vector2(1304, 232)
 vx = -240.0
 
 [node name="Baddie 4" parent="Baddies" instance=ExtResource("4_gmonc")]
-position = Vector2(616, 976)
+position = Vector2(652, 888)
 up_direction = Vector2(0, 1)
 vy = 1.0
 
 [node name="Baddie 6" parent="Baddies" instance=ExtResource("9_w18hv")]
-position = Vector2(1000, 968)
+position = Vector2(896, 992)
 
 [connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
 [connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
