@@ -71,8 +71,8 @@ func update_target_parameters():
 		distance = GV.RESOLUTION.x;
 	#print("SHIFT DISTANCE: ", distance);
 
-func handleInput(_event):
-	actor.get_next_action();
+func handleInput(event):
+	actor.get_next_action(event);
 
 func changeParentState():
 	if actor.velocity == Vector2.ZERO:

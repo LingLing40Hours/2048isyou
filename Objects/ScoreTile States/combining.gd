@@ -15,9 +15,9 @@ func enter():
 func inPhysicsProcess(_delta):
 	frame_count += 1;
 
-func handleInput(_event):
+func handleInput(event):
 	if actor.is_player:
-		actor.get_next_action();
+		actor.get_next_action(event);
 
 func changeParentState():
 	if frame_count == GV.COMBINING_FRAME_COUNT:

@@ -21,11 +21,11 @@ func enter():
 			actor.next_moves.clear();
 			actor.next_dirs.clear();
 	
-func handleInput(_event):
+func handleInput(event):
 	if next_state != null or GV.changing_level:
 		return;
 	
-	actor.get_next_action();
+	actor.get_next_action(event);
 	if actor.next_moves:
 		actor.next_moves.front().call(actor.next_dirs.pop_front());
 		actor.next_moves.pop_front(); #pop afterwards so call can check if it's a premove

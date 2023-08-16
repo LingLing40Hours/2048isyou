@@ -535,3 +535,40 @@ func is_snapshot_valid(snapshot):
 	test = packed_tile.instantiate();
 	print(test.snapshot_locations);
 '''
+
+'''
+#if input, pushes to next_moves and next_dirs
+func get_next_action():
+	var event_name:String = "";
+	var action:Callable;
+	var s_dir:String;
+	
+	#find movement type
+	if Input.is_action_pressed("cc"):
+		action = func_split;
+		event_name += "split_";
+	elif Input.is_action_pressed("shift"):
+		action = func_shift;
+		event_name += "shift_";
+	else:
+		action = func_slide;
+		event_name += "move_";
+	
+	#find direction
+	if Input.is_action_pressed("move_left"):
+		s_dir = "left";
+	elif Input.is_action_pressed("move_right"):
+		s_dir = "right";
+	elif Input.is_action_pressed("move_up"):
+		s_dir = "up";
+	elif Input.is_action_pressed("move_down"):
+		s_dir = "down";
+	
+	#check if movement pressed
+	if s_dir:
+		#check if movement just pressed
+		event_name += s_dir;
+		if Input.is_action_just_pressed(event_name):
+			next_dirs.push_back(GV.directions[s_dir]);
+			next_moves.push_back(action);
+'''

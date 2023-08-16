@@ -37,7 +37,11 @@ var invincible:bool = false; #give player some spawn protection
 
 
 func _ready():
-	if !owner: #tile is a snapshot duplicate, set owner
+	#connect input delay timer
+	game.current_level.input_repeat_delay_timer.timeout.connect(repeat_input);
+	
+	#if tile is a snapshot duplicate, set owner
+	if !owner:
 		owner = game.current_level;
 	
 	#remove extra snapshot locations, update ref at last snapshot location
@@ -153,40 +157,29 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 		return null;
 
 #if input, pushes to next_moves and next_dirs
-func get_next_action():
-	var event_name:String = "";
-	var action:Callable;
-	var s_dir:String;
+func get_next_action(event):
+	game.current_level.get_last_input(event);
 	
-	#find movement type
-	if Input.is_action_pressed("cc"):
-		action = func_split;
-		event_name += "split_";
-	elif Input.is_action_pressed("shift"):
-		action = func_shift;
-		event_name += "shift_";
-	else:
-		action = func_slide;
-		event_name += "move_";
-	
-	#find direction
-	if Input.is_action_pressed("move_left"):
-		s_dir = "left";
-	elif Input.is_action_pressed("move_right"):
-		s_dir = "right";
-	elif Input.is_action_pressed("move_up"):
-		s_dir = "up";
-	elif Input.is_action_pressed("move_down"):
-		s_dir = "down";
+	var action:Callable = get("func_" + game.current_level.last_input_modifier);
 	
 	#check if movement pressed
-	if s_dir:
-		#check if movement just pressed
-		event_name += s_dir;
+	if game.current_level.last_input_move:
+		var prefix = game.current_level.last_input_modifier;
+		if prefix == "slide":
+			prefix = "move";
+		var event_name = prefix + "_" + game.current_level.last_input_move;
+		#check if action just pressed
 		if Input.is_action_just_pressed(event_name):
-			next_dirs.push_back(GV.directions[s_dir]);
+			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 			next_moves.push_back(action);
 
+func repeat_input():
+	var action:Callable = get("func_" + game.current_level.last_input_modifier);
+	
+	#check if movement pressed
+	if game.current_level.last_input_move:
+		next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
+		next_moves.push_back(action);
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:

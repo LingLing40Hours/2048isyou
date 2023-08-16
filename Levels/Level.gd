@@ -19,14 +19,83 @@ var players = []; #if player, add here in _ready()
 var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
+#for input repeat delay
+var input_repeat_delay_timer:Timer;
+var input_repeat_count:int = 0;
+var last_input_modifier:String = "slide";
+var last_input_move:String;
+var last_input_gotten:bool = false;
 
+
+func _init():
+	#create input delay timer
+	input_repeat_delay_timer = Timer.new();
+	input_repeat_delay_timer.one_shot = false;
+	input_repeat_delay_timer.timeout.connect(_on_input_repeat_delay_timer_timeout);
+	add_child(input_repeat_delay_timer);
+	
 func _ready():
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv
 		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
+
+func _physics_process(_delta):
+	last_input_gotten = false;
+
+func _on_input_repeat_delay_timer_timeout():
+	print("HERE");
+	input_repeat_count += 1;
+	var wait_time = max(GV.INPUT_REPEAT_DELAY_MIN, input_repeat_delay_timer.wait_time * GV.INPUT_REPEAT_DELAY_SHRINK_FACTOR);
+	input_repeat_delay_timer.start(wait_time);
+	print(wait_time);
+
+func get_last_input(event):
+	if last_input_gotten:
+		return;
+	
+	var nothing_changed:bool = false;
+	var modifier_changed:bool = false;
+	
+	#last input modifier
+	if event.is_action_pressed("cc"):
+		last_input_modifier = "split";
+		modifier_changed = true;
+	elif event.is_action_pressed("shift"):
+		last_input_modifier = "shift";
+		modifier_changed = true;
+	elif event.is_action_released("cc") or event.is_action_released("shift"):
+		last_input_modifier = "slide";
+		modifier_changed = true;
+	
+	#last input move
+	elif event.is_action_pressed("move_left"):
+		last_input_move = "left";
+	elif event.is_action_pressed("move_right"):
+		last_input_move = "right";
+	elif event.is_action_pressed("move_up"):
+		last_input_move = "up";
+	elif event.is_action_pressed("move_down"):
+		last_input_move = "down";
+	elif event.is_action_released("move_left") or \
+		event.is_action_released("move_right") or \
+		event.is_action_released("move_up") or \
+		event.is_action_released("move_down"):
+		last_input_move = "";
+	else:
+		nothing_changed = true;
+	
+	var move_changed:bool = not modifier_changed and not nothing_changed;
+	if (modifier_changed and last_input_move) or move_changed: #change is meaningful
+		input_repeat_count = 0;
+		input_repeat_delay_timer.stop();
 		
+		if last_input_move: #input is meaningful
+			input_repeat_count += 1;
+			input_repeat_delay_timer.start(GV.INPUT_REPEAT_DELAY_INITIAL);
+	
+	last_input_gotten = true;
 
 func _input(event):
 	if event.is_action_pressed("copy"):

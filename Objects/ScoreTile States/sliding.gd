@@ -71,9 +71,9 @@ func inPhysicsProcess(delta):
 		actor.position = slide_target;
 		slide_done = true;
 
-func handleInput(_event):
+func handleInput(event):
 	if actor.is_player:
-		actor.get_next_action();
+		actor.get_next_action(event);
 
 func changeParentState():
 	if slide_done:
