@@ -3,7 +3,8 @@ extends Node2D
 
 #unlocker areas must not be collision layer1, else they interfere with tile movement
 
-signal updated_last_input;
+signal input_repeat_delay_timeout;
+signal processed_last_input;
 
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
@@ -22,18 +23,13 @@ var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
 #for input repeat delay
-var input_repeat_delay_timer:Timer;
+var input_repeat_delay_wait_frames:int;
+var input_repeat_delay_frames_left:int;
 var input_repeat_count:int = 0;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
+var last_action_finished:bool = false;
 
-
-func _init():
-	#create input delay timer
-	input_repeat_delay_timer = Timer.new();
-	input_repeat_delay_timer.one_shot = false;
-	input_repeat_delay_timer.timeout.connect(_on_input_repeat_delay_timer_timeout);
-	add_child(input_repeat_delay_timer);
 	
 func _ready():
 	set_level_name();
@@ -42,14 +38,22 @@ func _ready():
 		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 
-func _on_input_repeat_delay_timer_timeout():
-	print("HERE");
-	input_repeat_count += 1;
-	var wait_time = max(GV.INPUT_REPEAT_DELAY_MIN, input_repeat_delay_timer.wait_time * GV.INPUT_REPEAT_DELAY_SHRINK_FACTOR);
-	input_repeat_delay_timer.start(wait_time);
-	print(wait_time);
+func _physics_process(_delta):
+	print(input_repeat_delay_frames_left);
+	if input_repeat_delay_frames_left:
+		input_repeat_delay_frames_left -= 1;
+		if not input_repeat_delay_frames_left or last_action_finished:
+			on_input_repeat_delay_timeout();
+			input_repeat_delay_timeout.emit();
 
-func get_last_input(event):
+func on_input_repeat_delay_timeout():
+	input_repeat_count += 1;
+	input_repeat_delay_wait_frames -= GV.INPUT_REPEAT_DELAY_SHRINK_SPEED;
+	input_repeat_delay_frames_left = input_repeat_delay_wait_frames;
+	last_action_finished = false;
+
+#updates last_input_mod/move, starts input repeat delay, then emits signal
+func process_last_input(event):
 	var nothing_changed:bool = false;
 	var modifier_changed:bool = false;
 	
@@ -84,16 +88,18 @@ func get_last_input(event):
 	var move_changed:bool = not modifier_changed and not nothing_changed;
 	if (modifier_changed and last_input_move) or move_changed: #change is meaningful
 		input_repeat_count = 0;
-		input_repeat_delay_timer.stop();
+		input_repeat_delay_frames_left = 0;
 		
 		if last_input_move: #input is meaningful
 			input_repeat_count += 1;
-			input_repeat_delay_timer.start(GV.INPUT_REPEAT_DELAY_INITIAL);
+			input_repeat_delay_wait_frames = GV.INPUT_REPEAT_DELAY_INITIAL;
+			input_repeat_delay_frames_left = GV.INPUT_REPEAT_DELAY_INITIAL;
+			last_action_finished = false;
 	
-	updated_last_input.emit();
+	processed_last_input.emit();
 
 func _input(event):
-	get_last_input(event);
+	process_last_input(event);
 	
 	if event.is_action_pressed("copy"):
 		on_copy();

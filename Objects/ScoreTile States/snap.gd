@@ -6,6 +6,7 @@ var next_state:Node2D;
 
 func enter():
 	next_state = null;
+	game.current_level.last_action_finished = true;
 	
 	actor.velocity = Vector2.ZERO;
 	actor.slide_dir = Vector2i.ZERO;
@@ -26,7 +27,7 @@ func handleInput(_event):
 	if next_state != null or GV.changing_level:
 		return;
 	
-	await game.current_level.updated_last_input;
+	await game.current_level.processed_last_input;
 	actor.get_next_action();
 	if actor.next_moves:
 		actor.next_moves.front().call(actor.next_dirs.pop_front());

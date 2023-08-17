@@ -38,7 +38,7 @@ var invincible:bool = false; #give player some spawn protection
 
 func _ready():
 	#connect input delay timer
-	game.current_level.input_repeat_delay_timer.timeout.connect(repeat_input);
+	game.current_level.input_repeat_delay_timeout.connect(repeat_input);
 	
 	#if tile is a snapshot duplicate, set owner
 	if !owner:
