@@ -4,7 +4,7 @@ extends Node2D
 #unlocker areas must not be collision layer1, else they interfere with tile movement
 
 signal input_repeat_delay_timeout;
-signal processed_last_input;
+signal processed_move_input;
 
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
@@ -24,7 +24,8 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 #for input repeat delay
 var input_repeat_delay_wait_frames:int;
-var input_repeat_delay_frames_left:int;
+var input_repeat_delay_frames_left:int; #0 timeouted, -1 stopped
+var input_repeat_delay_shrink_speed:int;
 var input_repeat_count:int = 0;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
@@ -39,21 +40,31 @@ func _ready():
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
 
 func _physics_process(_delta):
-	print(input_repeat_delay_frames_left);
-	if input_repeat_delay_frames_left:
+	#print(input_repeat_delay_frames_left);
+	#decrement counter
+	if input_repeat_delay_frames_left > 0:
 		input_repeat_delay_frames_left -= 1;
-		if not input_repeat_delay_frames_left or last_action_finished:
-			on_input_repeat_delay_timeout();
-			input_repeat_delay_timeout.emit();
+		if not input_repeat_delay_frames_left and last_action_finished:
+			new_input_repeat();
 
-func on_input_repeat_delay_timeout():
+func on_player_enter_snap(prev_state):
+	if prev_state == null:
+		return;
+	last_action_finished = true;
+	if not input_repeat_delay_frames_left:
+		new_input_repeat();
+
+func new_input_repeat():
+	#print(input_repeat_delay_wait_frames, " frames TIMEOUT");
 	input_repeat_count += 1;
-	input_repeat_delay_wait_frames -= GV.INPUT_REPEAT_DELAY_SHRINK_SPEED;
+	input_repeat_delay_wait_frames = max(0, input_repeat_delay_wait_frames - input_repeat_delay_shrink_speed);
 	input_repeat_delay_frames_left = input_repeat_delay_wait_frames;
+	input_repeat_delay_shrink_speed += GV.INPUT_REPEAT_DELAY_SHRINK_ACCEL;
+	input_repeat_delay_timeout.emit();
 	last_action_finished = false;
 
 #updates last_input_mod/move, starts input repeat delay, then emits signal
-func process_last_input(event):
+func process_move_input(event) -> bool:
 	var nothing_changed:bool = false;
 	var modifier_changed:bool = false;
 	
@@ -77,29 +88,34 @@ func process_last_input(event):
 		last_input_move = "up";
 	elif event.is_action_pressed("move_down"):
 		last_input_move = "down";
-	elif event.is_action_released("move_left") or \
-		event.is_action_released("move_right") or \
-		event.is_action_released("move_up") or \
-		event.is_action_released("move_down"):
+	elif	(event.is_action_released("move_left") and last_input_move == "left") or \
+			(event.is_action_released("move_right") and last_input_move == "right") or \
+			(event.is_action_released("move_up") and last_input_move == "up") or \
+			(event.is_action_released("move_down") and last_input_move == "down"):
 		last_input_move = "";
 	else:
 		nothing_changed = true;
 	
 	var move_changed:bool = not modifier_changed and not nothing_changed;
-	if (modifier_changed and last_input_move) or move_changed: #change is meaningful
+	var meaningful:bool = (modifier_changed and last_input_move) or move_changed;
+	
+	if meaningful:
+		#stop counter
 		input_repeat_count = 0;
-		input_repeat_delay_frames_left = 0;
+		input_repeat_delay_frames_left = -1;
 		
 		if last_input_move: #input is meaningful
 			input_repeat_count += 1;
+			input_repeat_delay_shrink_speed = GV.INPUT_REPEAT_DELAY_SHRINK_SPEED;
 			input_repeat_delay_wait_frames = GV.INPUT_REPEAT_DELAY_INITIAL;
-			input_repeat_delay_frames_left = GV.INPUT_REPEAT_DELAY_INITIAL;
+			input_repeat_delay_frames_left = input_repeat_delay_wait_frames;
 			last_action_finished = false;
 	
-	processed_last_input.emit();
+	processed_move_input.emit();
+	return meaningful;
 
 func _input(event):
-	process_last_input(event);
+	process_move_input(event);
 	
 	if event.is_action_pressed("copy"):
 		on_copy();
@@ -109,7 +125,7 @@ func _input(event):
 		elif event.is_action_pressed("restart"):
 			on_restart();
 		elif event.is_action_pressed("move"): #new snapshot
-			print("NEW SNAPSHOT");
+			#print("NEW SNAPSHOT");
 			remove_last_snapshot_if_not_meaningful();
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);

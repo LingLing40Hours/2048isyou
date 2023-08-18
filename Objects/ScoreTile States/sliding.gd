@@ -11,6 +11,8 @@ var stop_margin:float;
 
 
 func enter():
+	#assert(actor.slide_dir != Vector2i.ZERO);
+	
 	#add to snapshot
 	if actor.splitted:
 		game.current_level.current_snapshot.add_new_tile(actor);
@@ -73,7 +75,7 @@ func inPhysicsProcess(delta):
 
 func handleInput(_event):
 	if actor.is_player:
-		await game.current_level.processed_last_input;
+		await game.current_level.processed_move_input;
 		actor.get_next_action();
 
 func changeParentState():

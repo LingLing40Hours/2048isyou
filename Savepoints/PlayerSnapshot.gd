@@ -53,7 +53,7 @@ func add_new_tile(tile):
 	
 	#save snapshot location
 	tile.snapshot_locations_new.push_back(Vector2i(index, new_tiles.size() - 1));
-	print("new snapshot location at ", Vector2i(index, new_tiles.size() - 1));
+	#print("new snapshot location at ", tile.snapshot_locations_new.back());
 
 #not a slide of 1+ players
 func meaningful() -> bool:

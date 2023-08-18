@@ -1,7 +1,8 @@
 class_name ScoreTile
 extends CharacterBody2D
 
-signal start_action; #should be emitted before current snapshot becomes meaningful
+signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
+signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
@@ -37,8 +38,8 @@ var invincible:bool = false; #give player some spawn protection
 
 
 func _ready():
-	#connect input delay timer
-	game.current_level.input_repeat_delay_timeout.connect(repeat_input);
+	#connect signal
+	enter_snap.connect(game.current_level.on_player_enter_snap);
 	
 	#if tile is a snapshot duplicate, set owner
 	if !owner:
@@ -57,7 +58,6 @@ func _ready():
 		if location_new.x >= game.current_level.player_snapshots.size():
 			snapshot_locations_new.pop_back();
 		else:
-			print(snapshot_locations_new, position);
 			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
 			break;
 	
@@ -106,11 +106,11 @@ func _ready():
 
 func _physics_process(_delta):
 	if debug:
-		#print("state: ", get_state());
+		print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
 		#print(pusher);
-		print(next_dirs);
+		#print(next_dirs);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
@@ -158,7 +158,7 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 
 #if input, pushes to next_moves and next_dirs
 func get_next_action():
-	#check if movement pressed
+	#check if movement held
 	if game.current_level.last_input_move:
 		#get event name
 		var prefix = game.current_level.last_input_modifier;
@@ -173,11 +173,18 @@ func get_next_action():
 			next_moves.push_back(action);
 
 func repeat_input():
-	#check if movement pressed
+	#don't repeat input if there are unconsumed premoves or not in snap mode
+	if next_moves or get_state() != "snap":
+		return;
+	
+	#check if movement held
 	if game.current_level.last_input_move:
+		#print("REPEAT INPUT");
 		var action:Callable = get("func_" + game.current_level.last_input_modifier);
-		next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
-		next_moves.push_back(action);
+		#next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
+		#next_moves.push_back(action);
+		action.call(GV.directions[game.current_level.last_input_move]);
+		
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
@@ -436,6 +443,9 @@ func set_physics(state):
 
 #doesn't affect layers or masks or physics
 func player_settings():
+	#connect signal
+	game.current_level.input_repeat_delay_timeout.connect(repeat_input);
+	
 	#add to player list
 	#print("add index: ", game.current_level.players.size());
 	game.current_level.players.push_back(self);
@@ -456,6 +466,9 @@ func player_settings():
 
 #doesn't affect layers or masks or physics
 func tile_settings():
+	#disconnect signal
+	game.current_level.input_repeat_delay_timeout.disconnect(repeat_input);
+	
 	#remove from player list
 	remove_from_players();
 		

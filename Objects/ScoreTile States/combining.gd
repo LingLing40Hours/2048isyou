@@ -18,7 +18,7 @@ func inPhysicsProcess(_delta):
 
 func handleInput(_event):
 	if actor.is_player:
-		await game.current_level.processed_last_input;
+		await game.current_level.processed_move_input;
 		actor.get_next_action();
 
 func changeParentState():
