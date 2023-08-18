@@ -34,6 +34,13 @@ func enter():
 	player.position = actor.position;
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
+	
+	#player inherits actor's premoves
+	player.next_moves = actor.next_moves.duplicate();
+	player.next_dirs = actor.next_dirs.duplicate();
+	actor.next_moves.clear();
+	actor.next_dirs.clear();
+	
 	actor.get_parent().add_child(player);
 	player.enable_physics_immediately();
 	player.slide(actor.slide_dir); #guaranteed to return true

@@ -31,4 +31,9 @@ func changeParentState():
 	return null;
 
 func exit():
+	#inherit partner's premoves
+	if actor.is_player:
+		actor.next_moves = actor.partner.next_moves;
+		actor.next_dirs = actor.partner.next_dirs;
+	
 	actor.partner = null;
