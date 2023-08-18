@@ -130,35 +130,7 @@ func _input(event):
 			current_snapshot = PlayerSnapshot.new(self);
 			player_snapshots.push_back(current_snapshot);
 		elif event.is_action_pressed("undo"):
-			if GV.abilities["undo"] and player_snapshots:
-				var snapshot = player_snapshots.pop_back();
-				if snapshot.meaningful():
-					#print("USING CURR SNAPSHOT");
-					snapshot.reset_baddie_flags();
-					snapshot.checkout();
-				elif player_snapshots:
-					#print("USING PREV SNAPSHOT");
-					snapshot.remove();
-					snapshot = player_snapshots.pop_back();
-					snapshot.checkout();
-				
-				#if undid past savepoint, remove the savepoint save, reset savepoint status
-				if GV.current_savepoint_ids and player_snapshots.size() < GV.current_snapshot_sizes.back():
-					var id = GV.current_savepoint_ids.pop_back();
-					for savepoint in savepoints.get_children():
-						if savepoint.id == id:
-							savepoint.saved = false;
-					GV.current_savepoint_saves.pop_back();
-					GV.current_snapshot_sizes.pop_back();
-					GV.current_savepoint_powers.pop_back();
-					GV.current_savepoint_ssigns.pop_back();
-					
-					#update last savepoint id
-					if GV.current_savepoint_ids:
-						GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoint_ids.back();
-					else:
-						GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
-					
+			on_undo();
 		elif event.is_action_pressed("revert"):
 			on_revert();
 
@@ -189,6 +161,36 @@ func on_restart():
 		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);
+
+func on_undo():
+	if GV.abilities["undo"] and player_snapshots:
+		var snapshot = player_snapshots.pop_back();
+		if snapshot.meaningful():
+			#print("USING CURR SNAPSHOT");
+			snapshot.reset_baddie_flags();
+			snapshot.checkout();
+		elif player_snapshots:
+			#print("USING PREV SNAPSHOT");
+			snapshot.remove();
+			snapshot = player_snapshots.pop_back();
+			snapshot.checkout();
+		
+		#if undid past savepoint, remove the savepoint save, reset savepoint status
+		if GV.current_savepoint_ids and player_snapshots.size() < GV.current_snapshot_sizes.back():
+			var id = GV.current_savepoint_ids.pop_back();
+			for savepoint in savepoints.get_children():
+				if savepoint.id == id:
+					savepoint.saved = false;
+			GV.current_savepoint_saves.pop_back();
+			GV.current_snapshot_sizes.pop_back();
+			GV.current_savepoint_powers.pop_back();
+			GV.current_savepoint_ssigns.pop_back();
+			
+			#update last savepoint id
+			if GV.current_savepoint_ids:
+				GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoint_ids.back();
+			else:
+				GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
 
 func on_revert():
 	if GV.abilities["revert"]: #if savepoint save exists load it else do a discount restart
