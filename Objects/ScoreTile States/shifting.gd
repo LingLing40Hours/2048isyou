@@ -10,6 +10,9 @@ var to_area:Area2D;
 
 #assume player is aligned
 func enter():
+	#add to snapshot
+	game.current_level.current_snapshot.add_tile(actor);
+	
 	#extend ray
 	ray_target = actor.shift_ray.target_position;
 	actor.shift_ray.target_position = actor.slide_dir * GV.SHIFT_RAY_LENGTH;
