@@ -29,7 +29,7 @@ func handleInput(_event):
 	if next_state != null or GV.changing_level:
 		return;
 	
-	await game.current_level.processed_move_input;
+	await game.current_level.processed_action_input;
 	actor.get_next_action();
 	if actor.next_moves:
 		actor.next_moves.front().call(actor.next_dirs.pop_front());

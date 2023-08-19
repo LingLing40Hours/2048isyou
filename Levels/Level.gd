@@ -3,8 +3,8 @@ extends Node2D
 
 #unlocker areas must not be collision layer1, else they interfere with tile movement
 
-signal input_repeat_delay_timeout;
-signal processed_move_input;
+signal repeat_input(input_type);
+signal processed_action_input;
 
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
@@ -23,10 +23,8 @@ var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
 #for input repeat delay
-var input_repeat_delay_wait_frames:int;
-var input_repeat_delay_frames_left:int; #0 timeouted, -1 stopped
-var input_repeat_delay_shrink_speed:int;
-var input_repeat_count:int = 0;
+var atimer:AccelTimer = AccelTimer.new();
+var last_input_type:int;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
 var last_action_finished:bool = false;
@@ -38,33 +36,44 @@ func _ready():
 	if not GV.current_level_from_save: #first time entering lv
 		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
+	
+	#connect signals
+	atimer.timeout.connect(_on_atimer_timeout);
+	repeat_input.connect(_on_repeat_input);
+	
+	#add timer
+	add_child(atimer);
 
-func _physics_process(_delta):
-	#print(input_repeat_delay_frames_left);
-	#decrement counter
-	if input_repeat_delay_frames_left > 0:
-		input_repeat_delay_frames_left -= 1;
-		if not input_repeat_delay_frames_left and last_action_finished:
-			new_input_repeat();
+func _on_atimer_timeout():
+	if last_input_type != GV.InputType.MOVE or last_action_finished:
+		atimer.repeat();
+		if last_input_type == GV.InputType.MOVE:
+			new_snapshot();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
 
-func on_player_enter_snap(prev_state):
-	if prev_state == null:
+func _on_player_enter_snap(prev_state):
+	if prev_state == null: #initial enter snap
 		return;
+	
 	last_action_finished = true;
-	if not input_repeat_delay_frames_left:
-		new_input_repeat();
+	if atimer.is_timeouted():
+		atimer.repeat();
+		if last_input_type == GV.InputType.MOVE:
+			new_snapshot();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
 
-func new_input_repeat():
-	#print(input_repeat_delay_wait_frames, " frames TIMEOUT");
-	input_repeat_count += 1;
-	input_repeat_delay_wait_frames = max(0, input_repeat_delay_wait_frames - input_repeat_delay_shrink_speed);
-	input_repeat_delay_frames_left = input_repeat_delay_wait_frames;
-	input_repeat_delay_shrink_speed += GV.INPUT_REPEAT_DELAY_SHRINK_ACCEL;
-	input_repeat_delay_timeout.emit();
-	last_action_finished = false;
+func _on_repeat_input(input_type:int):
+	if input_type != GV.InputType.UNDO:
+		return;
+	
+	on_undo();
+	if not player_snapshots:
+		atimer.stop();
 
 #updates last_input_mod/move, starts input repeat delay, then emits signal
-func process_move_input(event) -> bool:
+func process_action_input(event) -> bool:
 	var nothing_changed:bool = false;
 	var modifier_changed:bool = false;
 	
@@ -99,40 +108,41 @@ func process_move_input(event) -> bool:
 	var move_changed:bool = not modifier_changed and not nothing_changed;
 	var meaningful:bool = (modifier_changed and last_input_move) or move_changed;
 	
-	if meaningful:
-		#stop counter
-		input_repeat_count = 0;
-		input_repeat_delay_frames_left = -1;
+	if meaningful: #event is meaningful
+		atimer.stop();
 		
-		if last_input_move: #input is meaningful
-			input_repeat_count += 1;
-			input_repeat_delay_shrink_speed = GV.INPUT_REPEAT_DELAY_SHRINK_SPEED;
-			input_repeat_delay_wait_frames = GV.INPUT_REPEAT_DELAY_INITIAL;
-			input_repeat_delay_frames_left = input_repeat_delay_wait_frames;
+		if last_input_move: #action input is meaningful
+			atimer.start(GV.INPUT_REPEAT_DELAY_F0, GV.INPUT_REPEAT_DELAY_DF, GV.INPUT_REPEAT_DELAY_DDF, 0);
+			last_input_type = GV.InputType.MOVE;
 			last_action_finished = false;
 	
-	processed_move_input.emit();
+	processed_action_input.emit();
 	return meaningful;
 
 func _input(event):
-	process_move_input(event);
+	process_action_input(event);
 	
 	if event.is_action_pressed("copy"):
 		on_copy();
+		atimer.stop();
 	elif not GV.changing_level:
 		if event.is_action_pressed("home"):
 			on_home();
+			atimer.stop();
 		elif event.is_action_pressed("restart"):
 			on_restart();
+			atimer.stop();
 		elif event.is_action_pressed("move"): #new snapshot
-			#print("NEW SNAPSHOT");
-			remove_last_snapshot_if_not_meaningful();
-			current_snapshot = PlayerSnapshot.new(self);
-			player_snapshots.push_back(current_snapshot);
+			new_snapshot();
 		elif event.is_action_pressed("undo"):
 			on_undo();
+			atimer.start(GV.INPUT_REPEAT_DELAY_F0, GV.INPUT_REPEAT_DELAY_DF, GV.INPUT_REPEAT_DELAY_DDF, GV.INPUT_REPEAT_DELAY_FMIN);
+			last_input_type = GV.InputType.UNDO;
+		elif event.is_action_released("undo"):
+			atimer.stop();
 		elif event.is_action_pressed("revert"):
 			on_revert();
+			atimer.stop();
 
 
 func save():
@@ -161,6 +171,12 @@ func on_restart():
 		GV.player_power = GV.level_initial_player_powers[GV.current_level_index];
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);
+
+func new_snapshot():
+	#print("NEW SNAPSHOT");
+	remove_last_snapshot_if_not_meaningful();
+	current_snapshot = PlayerSnapshot.new(self);
+	player_snapshots.push_back(current_snapshot);
 
 func on_undo():
 	if GV.abilities["undo"] and player_snapshots:
@@ -221,7 +237,7 @@ func on_copy():
 		for row_itr in resolution_t.y:
 			var row = [];
 			row.resize(resolution_t.x);
-			row.fill(GV.StuffIds.EMPTY);
+			row.fill(GV.StuffId.EMPTY);
 			level_array.push_back(row);
 		
 		#store non-baddie stuff ids
@@ -229,9 +245,9 @@ func on_copy():
 			var pos_t = GV.world_to_pos_t(tile.position);
 			var id;
 			if tile.power == -1:
-				id = GV.StuffIds.ZERO;
+				id = GV.StuffId.ZERO;
 			elif tile.power == 0 and tile.ssign == -1:
-				id = GV.StuffIds.NEG_ONE;
+				id = GV.StuffId.NEG_ONE;
 			else:
 				id = tile.power * tile.ssign;
 			level_array[pos_t.y][pos_t.x] = id;
@@ -242,10 +258,10 @@ func on_copy():
 					var pos_t = GV.world_to_pos_t(node.global_position);
 					#bound check
 					if pos_t.x >= 0 and pos_t.x < resolution_t.x and pos_t.y >= 0 and pos_t.y < resolution_t.y:
-						level_array[pos_t.y][pos_t.x] = GV.StuffIds.GOAL;
+						level_array[pos_t.y][pos_t.x] = GV.StuffId.GOAL;
 			else:
 				var pos_t = GV.world_to_pos_t(savepoint.position);
-				level_array[pos_t.y][pos_t.x] = GV.StuffIds.SAVEPOINT;
+				level_array[pos_t.y][pos_t.x] = GV.StuffId.SAVEPOINT;
 		
 		for row_itr in resolution_t.y:
 			for col_itr in resolution_t.x:

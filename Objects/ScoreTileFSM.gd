@@ -39,7 +39,7 @@ var invincible:bool = false; #give player some spawn protection
 
 func _ready():
 	#connect signal
-	enter_snap.connect(game.current_level.on_player_enter_snap);
+	enter_snap.connect(game.current_level._on_player_enter_snap);
 	
 	#if tile is a snapshot duplicate, set owner
 	if !owner:
@@ -172,18 +172,14 @@ func get_next_action():
 			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 			next_moves.push_back(action);
 
-func repeat_input():
-	#don't repeat input if there are unconsumed premoves or not in snap mode
-	if next_moves or get_state() != "snap":
+#assume level.last_input is valid
+func _on_repeat_input(input_type:int):
+	#don't repeat input if there are unconsumed premoves
+	if input_type != GV.InputType.MOVE or get_state() != "snap" or next_moves:
 		return;
 	
-	#check if movement held
-	if game.current_level.last_input_move:
-		#print("REPEAT INPUT");
-		var action:Callable = get("func_" + game.current_level.last_input_modifier);
-		#next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
-		#next_moves.push_back(action);
-		action.call(GV.directions[game.current_level.last_input_move]);
+	var action:Callable = get("func_" + game.current_level.last_input_modifier);
+	action.call(GV.directions[game.current_level.last_input_move]);
 		
 
 func slide(dir:Vector2i) -> bool:
@@ -444,7 +440,7 @@ func set_physics(state):
 #doesn't affect layers or masks or physics
 func player_settings():
 	#connect signal
-	game.current_level.input_repeat_delay_timeout.connect(repeat_input);
+	game.current_level.repeat_input.connect(_on_repeat_input);
 	
 	#add to player list
 	#print("add index: ", game.current_level.players.size());
@@ -467,7 +463,7 @@ func player_settings():
 #doesn't affect layers or masks or physics
 func tile_settings():
 	#disconnect signal
-	game.current_level.input_repeat_delay_timeout.disconnect(repeat_input);
+	game.current_level.repeat_input.disconnect(_on_repeat_input);
 	
 	#remove from player list
 	remove_from_players();

@@ -55,9 +55,15 @@ const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies be
 const TILE_SLIDE_SPEED:float = 320;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const INPUT_REPEAT_DELAY_INITIAL:int = 16; #when movement held down, delay (frames) between action calls
-const INPUT_REPEAT_DELAY_SHRINK_SPEED:int = 1; #every time input repeats, delay time decreases
-const INPUT_REPEAT_DELAY_SHRINK_ACCEL:int = 1;
+const INPUT_REPEAT_DELAY_F0:int = 16; #when movement held down, delay (frames) between action calls
+const INPUT_REPEAT_DELAY_DF:int = -1; #every time input repeats, delay time decreases
+const INPUT_REPEAT_DELAY_DDF:int = -1;
+const INPUT_REPEAT_DELAY_FMIN:int = 10;
+
+enum InputType {
+	MOVE=0,
+	UNDO
+}
 
 const COMBINING_FRAME_COUNT:int = 1; #6; #9;
 const SPLITTING_FRAME_COUNT:int = 1; #6; #9;
@@ -109,7 +115,7 @@ var abilities = {
 };
 
 #stuff ids
-enum StuffIds {
+enum StuffId {
 	ZERO = -20,
 	NEG_ONE = -21,
 	EMPTY = -22,
