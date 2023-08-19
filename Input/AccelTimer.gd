@@ -12,7 +12,6 @@ var min_frames_total:int;
 
 
 func _physics_process(_delta):
-	print(frames_left);
 	if frames_left > 0:
 		frames_left -= 1;
 		if not frames_left:

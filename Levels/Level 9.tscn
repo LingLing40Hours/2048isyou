@@ -3189,24 +3189,24 @@ spawn_point = Vector2(800, 540)
 
 [node name="Baddie 2" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(180, 260)
+vx = 180.0
+vy = 0.0
 
 [node name="Baddie 6" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(1420, 940)
 vx = -180.0
+vy = 0.0
 
 [node name="Baddie 3" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(300, 580)
-vx = 0.0
-vy = -180.0
 
 [node name="Baddie 5" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(1300, 620)
-vx = 0.0
-vy = 180.0
+vy = -180.0
 
 [node name="Baddie 4" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(300, 980)
-vy = 180.0
+vx = 180.0
 
 [node name="Baddie 7" parent="Baddies" instance=ExtResource("7_i2hsu")]
 position = Vector2(1300, 220)

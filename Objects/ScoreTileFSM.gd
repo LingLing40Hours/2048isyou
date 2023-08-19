@@ -62,6 +62,9 @@ func _ready():
 			break;
 	
 	#settings
+	if power == 12:
+		is_player = true;
+	
 	if is_player:
 		if splitted:
 			set_layers(false, true);
