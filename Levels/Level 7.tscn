@@ -73,6 +73,10 @@ power = 3
 position = Vector2(1300, 620)
 power = 2
 
+[node name="ScoreTile32" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1300, 660)
+power = -1
+
 [node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 140)
 power = 11
