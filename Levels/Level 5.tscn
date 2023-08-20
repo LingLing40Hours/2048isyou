@@ -3,10 +3,11 @@
 [ext_resource type="Script" path="res://Levels/Level 5.gd" id="1_htpu8"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_eeqjb"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="3_0xw50"]
-[ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Objects/Goal_2x2_Level.tscn" id="4_n2und"]
+[ext_resource type="PackedScene" uid="uid://cx3ycayrp8gyl" path="res://Savepoints/Goal_2x2_Level.tscn" id="4_n2und"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_qcnej"]
 
 [node name="Level 5" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_htpu8")
 
 [node name="Background" type="ColorRect" parent="."]

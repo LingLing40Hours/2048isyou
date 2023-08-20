@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bs18ouhqw13ql" path="res://Enemy/Baddie 2.tscn" id="7_i2hsu"]
 
 [node name="Level 9" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_0tdh4")
 
 [node name="Background" type="ColorRect" parent="."]

@@ -14,6 +14,7 @@
 size = Vector2(480, 40)
 
 [node name="Level 1" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_o5law")
 
 [node name="Background" type="ColorRect" parent="."]

@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_lb8ip"]
 
 [node name="Level 7" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_uhj3u")
 
 [node name="Background" type="ColorRect" parent="."]

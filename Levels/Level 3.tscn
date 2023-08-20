@@ -12,6 +12,7 @@
 size = Vector2(654, 32)
 
 [node name="Level 3" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_wvf4a")
 
 [node name="Background" type="ColorRect" parent="."]

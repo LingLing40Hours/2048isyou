@@ -11,6 +11,7 @@
 size = Vector2(200, 80)
 
 [node name="Level 6" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_t8gj1")
 
 [node name="Background" type="ColorRect" parent="."]

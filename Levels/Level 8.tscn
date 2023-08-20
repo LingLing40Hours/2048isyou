@@ -1,13 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://cacy7xg2rjarb"]
+[gd_scene load_steps=8 format=3 uid="uid://cacy7xg2rjarb"]
 
 [ext_resource type="Script" path="res://Levels/Level 8.gd" id="1_6ts27"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_3fj3s"]
+[ext_resource type="Script" path="res://Levels/Button.gd" id="3_uu2u2"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_y3btf"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_20i30"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_mucte"]
 [ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_dswkw"]
 
 [node name="Level 8" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_6ts27")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -36,6 +38,18 @@ theme = ExtResource("2_3fj3s")
 theme_override_font_sizes/font_size = 50
 text = "World's Second Hardest Maze"
 metadata/_edit_lock_ = true
+
+[node name="Button" type="Button" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.01
+anchor_bottom = 0.01
+offset_left = 1435.0
+offset_top = 14.0
+offset_right = 1550.0
+offset_bottom = 90.0
+text = "FIND_PATH"
+script = ExtResource("3_uu2u2")
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("3_y3btf")

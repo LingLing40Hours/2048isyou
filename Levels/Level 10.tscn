@@ -4,12 +4,13 @@
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_krwqn"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_xyo2m"]
 [ext_resource type="PackedScene" uid="uid://drayn2lsacylt" path="res://Objects/Freedom.tscn" id="4_q8v3e"]
-[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Objects/Goal_1x2_Concave.tscn" id="6_sy5ff"]
-[ext_resource type="PackedScene" uid="uid://loay1bssxd25" path="res://Objects/Savepoint_1x1_Level.tscn" id="7_jyyit"]
+[ext_resource type="PackedScene" uid="uid://dhpuql3q1weiw" path="res://Savepoints/Goal_1x2_Concave.tscn" id="6_sy5ff"]
+[ext_resource type="PackedScene" uid="uid://loay1bssxd25" path="res://Savepoints/Savepoint_1x1_Level.tscn" id="7_jyyit"]
 [ext_resource type="PackedScene" uid="uid://bs18ouhqw13ql" path="res://Enemy/Baddie 2.tscn" id="7_v6r6u"]
 [ext_resource type="PackedScene" uid="uid://ccfedk60ha7ud" path="res://Enemy/Baddie 1.tscn" id="8_genkh"]
 
 [node name="Level 10" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_g4a75")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -205,119 +206,90 @@ id = 40
 
 [node name="Baddie 71" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(160, 160)
-vy = 180.0
 
 [node name="Baddie 72" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1440, 160)
-vy = 180.0
 
 [node name="Baddie 73" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(480, 160)
-vy = 180.0
 
 [node name="Baddie 74" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1120, 160)
-vy = 180.0
 
 [node name="Baddie 75" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(800, 160)
-vy = 180.0
 
 [node name="Baddie 76" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(160, 480)
-vy = 180.0
 
 [node name="Baddie 77" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1440, 480)
-vy = 180.0
 
 [node name="Baddie 78" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(480, 480)
-vy = 180.0
 
 [node name="Baddie 79" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1120, 480)
-vy = 180.0
 
 [node name="Baddie 80" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(800, 480)
-vy = 180.0
 
 [node name="Baddie 81" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(160, 800)
-vy = 180.0
 
 [node name="Baddie 82" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1440, 800)
-vy = 180.0
 
 [node name="Baddie 83" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(480, 800)
-vy = 180.0
 
 [node name="Baddie 84" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1120, 800)
-vy = 180.0
 
 [node name="Baddie 85" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(800, 800)
-vy = 180.0
 
 [node name="Baddie 86" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(160, 1120)
-vy = 180.0
 
 [node name="Baddie 87" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1440, 1120)
-vy = 180.0
 
 [node name="Baddie 88" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(480, 1120)
-vy = 180.0
 
 [node name="Baddie 89" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1120, 1120)
-vy = 180.0
 
 [node name="Baddie 90" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(800, 1120)
-vy = 180.0
 
 [node name="Baddie 91" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(320, 960)
-vy = 180.0
 
 [node name="Baddie 92" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(640, 960)
-vy = 180.0
 
 [node name="Baddie 93" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1280, 960)
-vy = 180.0
 
 [node name="Baddie 94" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(960, 960)
-vy = 180.0
 
 [node name="Baddie 95" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(320, 640)
-vy = 180.0
 
 [node name="Baddie 96" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(640, 640)
-vy = 180.0
 
 [node name="Baddie 97" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1280, 640)
-vy = 180.0
 
 [node name="Baddie 98" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(960, 640)
-vy = 180.0
 
 [node name="Baddie 99" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(320, 320)
-vy = 180.0
 
 [node name="Baddie 103" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(320, 160)
@@ -476,15 +448,12 @@ vy = -180.0
 
 [node name="Baddie 100" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(640, 320)
-vy = 180.0
 
 [node name="Baddie 101" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(1280, 320)
-vy = 180.0
 
 [node name="Baddie 102" parent="Baddies" instance=ExtResource("7_v6r6u")]
 position = Vector2(960, 320)
-vy = 180.0
 
 [node name="Baddie 1" parent="Baddies" instance=ExtResource("8_genkh")]
 position = Vector2(240, 80)

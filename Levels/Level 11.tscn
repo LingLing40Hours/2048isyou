@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="7_e26lk"]
 
 [node name="Level 11" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_cc0xk")
 
 [node name="Background" type="ColorRect" parent="."]
