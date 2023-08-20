@@ -19,9 +19,10 @@ var snapshot_locations_new:Array[Vector2i] = [];
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
-var pusher:ScoreTile;
+var pusher:ScoreTile; #player at start of line, not immediate neighbor
 var partner:ScoreTile;
 var shift_ray:RayCast2D = null;
+var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 at end)
 
 var physics_on:bool = true;
 var physics_enabler_count:int = 0;
@@ -189,6 +190,21 @@ func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
 		return false;
 	
+	#reset tile push count
+	tile_push_count = 0;
+	
+	#increment pusher tile count
+	if is_instance_valid(pusher):
+		pusher.tile_push_count += 1;
+		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
+			return false;
+	
+	#find if at push limit
+	var at_push_limit:bool = false;
+	var push_count:int = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
+	if push_count == GV.abilities["tile_push_limit"]:
+		at_push_limit = true;
+	
 	#determine whether to slide or merge or, if obstructed, idle
 	var next_state:Node2D;
 	var xaligned = is_xaligned();
@@ -220,8 +236,12 @@ func slide(dir:Vector2i) -> bool:
 				if collider.get_state() not in ["tile", "snap"]:
 					return false;
 				
+				#set collider pusher
 				if not collider.is_player:
-					collider.pusher = self;
+					if is_instance_valid(pusher):
+						collider.pusher = pusher;
+					else:
+						collider.pusher = self;
 				
 				if collider.is_player and collider.slide(dir): #receding player
 					next_state = $FSM.states.sliding;
@@ -229,7 +249,11 @@ func slide(dir:Vector2i) -> bool:
 					partner = collider;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
-				elif is_player and collider.slide(dir): #try to slide collider
+				elif at_push_limit and collider.power == -1: #merge with 0
+					partner = collider;
+					collider.partner = self;
+					next_state = $FSM.states.merging1;
+				elif collider.slide(dir): #try to slide collider
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
 				elif collider.power == -1: #merge with 0
@@ -239,8 +263,13 @@ func slide(dir:Vector2i) -> bool:
 				else:
 					collider.pusher = null;
 					return false;
-			else:
+			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
+	
+	#check pusher tile count
+	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
+	if push_count > GV.abilities["tile_push_limit"]:
+		return false;
 	
 	#signal
 	start_action.emit();

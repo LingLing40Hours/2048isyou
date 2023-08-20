@@ -9,7 +9,7 @@ var RESOLUTION:Vector2 = Vector2(1600, 1200);
 var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
 
 var LEVEL_COUNT:int = 12;
-var current_level_index:int = 8;
+var current_level_index:int = 7;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -112,6 +112,7 @@ var abilities = {
 	"split" : true,
 	"shift" : true,
 	"copy" : true,
+	"tile_push_limit" : 1,
 };
 
 #stuff ids
