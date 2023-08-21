@@ -3,6 +3,9 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <unordered_set>
+#include <stdbool.h>
+#include <unordered_map>
 using namespace std;
 
 
@@ -23,10 +26,33 @@ struct Node
     // ZERO = -20, NEG_ONE = -21, EMPTY = -22, SAVEPOINT = -23, GOAL = -24,
     // BLACK_WALL = -40, MEMBRANE = -41, BLUE_WALL = -42, RED_WALL = -43
     int type;
-};
-std::vector<std::vector<Node>> Nodes; 
 
-int stuff_id[30][40] =
+    std::vector<std::vector<int>> level;
+};
+
+// Custom hash function for 2D int vector
+struct Vector2dHash {
+    std::size_t operator()(const std::vector<std::vector<int>>& arr) const {
+        std::size_t hash_value = 0;
+        for (const auto& row : arr) {
+            for (int num : row) {
+                hash_value ^= std::hash<int>{}(num) + 0x9e3779b9 + (hash_value << 6) + (hash_value >> 2);
+            }
+        }
+        return hash_value;
+    }
+};
+
+// Custom equality comparison function for 2D int arrays
+struct VectorEqual {
+    bool operator()(const std::vector<std::vector<int>>& arr1, const std::vector<std::vector<int>>& arr2) const {
+        return arr1 == arr2;
+    }
+};
+
+std::unordered_map<std::vector<std::vector<int>>, bool, Vector2dHash, VectorEqual> levels;
+
+std::vector<std::vector<int>> stuff_ids =
 {{-40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40, -40}, 
 {-40, -22, -22, -22, -22, -22, -22, 1, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -40},
  {-40, -22, 1, 1, 1, 1, -22, 1, -22, 1, 1, 1, -22, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -22, -40},
@@ -61,113 +87,72 @@ int stuff_id[30][40] =
 
 struct Nodes_queue
 {
-    bool operator()(Node first_node, Node second_node)
+    bool operator()(Node* first_node, Node* second_node)
     {
-        return first_node.f > second_node.f;
+        return first_node->f > second_node->f;
     }
 };
 
 // ****************** helper function ******************
 
-void Nodes_clear(int stuff_id[30][40])
-{   
-    Nodes.resize(30);
-    for (int row_counter = 0; row_counter < 30; ++row_counter)
-    {
-        
-        Nodes[row_counter].resize(40);
-        for (int column_counter = 0; column_counter < 40; ++column_counter)
-        {
-
-            
-            Nodes[row_counter][column_counter].f = 999;
-            Nodes[row_counter][column_counter].g = 999;
-            Nodes[row_counter][column_counter].h = 0;
-
-            Nodes[row_counter][column_counter].y = row_counter;
-            Nodes[row_counter][column_counter].x = column_counter;
-
-            Nodes[row_counter][column_counter].last_one = NULL;
-
-            Nodes[row_counter][column_counter].type = stuff_id[row_counter][column_counter];
-        }
-        
-    }
-}
-
-// return the player node and goal node
-std::pair<Node, Node> findStartAndEndPos(int stuff_id[30][40])
+int heuristic(pair<int, int> start, pair<int, int> end)
 {
-    Node node_player;
-    Node node_goal;
-
-    for (int row_counter = 0; row_counter < 30; ++row_counter)
-    {
-        for (int column_counter = 0; column_counter < 40; ++column_counter)
-        {
-            if (Nodes[row_counter][column_counter].type == 0)
-            {
-                node_player = Nodes[row_counter][column_counter];
-            }
-            else if (Nodes[row_counter][column_counter].type == -24)
-            {
-                node_goal = Nodes[row_counter][column_counter];
-            }
-
-        }
-    }
-
-    return std::make_pair(node_player, node_goal);
+    return abs(start.first - end.first) + abs(start.second - end.second);
 }
 
 
-int heuristic(Node first_node, Node second_node)
-{
-    return abs(first_node.x - second_node.x) + abs(first_node.y - second_node.y);
-}
-
-
-vector<Node> findPath(int stuff_id[30][40])
+vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limit, pair<int, int> start, pair<int, int> end)
 {
     vector<Node> ans; // ans
-    
-    Nodes_clear(stuff_id);
-    
-    
-    std::pair<Node, Node> nodes_pair = findStartAndEndPos(stuff_id);
 
+    //cout<<"P: "<<node_player.y<<", "<<node_player.x<<endl;
+    //cout<<"G: "<<node_goal.y<<", "<<node_goal.x<<endl;
     
-    Node node_player = nodes_pair.first;
-    Node node_goal = nodes_pair.second;
 
-    cout<<"P: "<<node_player.y<<", "<<node_player.x<<endl;
-    cout<<"G: "<<node_goal.y<<", "<<node_goal.x<<endl;
-    
-    Nodes[node_player.y][node_player.x].g = 0;
-    
-    Nodes[node_player.y][node_player.x].h = heuristic(node_player, node_goal);
-    Nodes[node_player.y][node_player.x].f = Nodes[node_player.y][node_player.x].g + Nodes[node_player.y][node_player.x].h;
+    Node start_node;
+    Node* local_node = & start_node;
+    local_node->g = 0;
+    local_node->h = heuristic(start, end);
+    local_node->f = start_node.g + start_node.h;
+    local_node->y = start.first;
+    local_node->x = start.second;
+    local_node->last_one = NULL;
+    local_node->type = stuff_id[start.first][start.second];
+    local_node->level = stuff_id;
 
-    std::priority_queue<Node, std::vector<Node>, Nodes_queue> nodes_queue;
-    nodes_queue.push(Nodes[node_player.y][node_player.x]);
+
+    std::priority_queue<Node*, std::vector<Node*>, Nodes_queue> nodes_queue;
+    nodes_queue.push(local_node);
+    
     
     while (nodes_queue.size() > 0)
     {
+        /*Node* node_to_delete = nodes_queue.top();
         
-        Node local_node = nodes_queue.top();
+        if (node_to_delete->y != start.first || node_to_delete->x != start.second)
+        {
+            // copy new node
+            *local_node = *node_to_delete;
+            // delete new node
+            //delete node_to_delete;
+        }
+        */
         // not go backwards
+        local_node = nodes_queue.top();
         nodes_queue.pop();
 
+        
         // first time reach the goal
-        if (local_node.x == node_goal.x && local_node.y == node_goal.y)
+        if (local_node->x == end.second && local_node->y == end.first)
         {
-            while (local_node.x != node_player.x || local_node.y != node_player.y)
+            while (local_node->x != start.second || local_node->y != start.first)
             {
-                ans.push_back(local_node);
+                cout<<"local: "<<local_node->y<<" - "<< local_node->x<<endl;
+                ans.push_back(*local_node);
 
-                local_node = *(local_node.last_one);
+                local_node = local_node->last_one;
             }
-
+            cout<<"no!";
             std::reverse(ans.begin(), ans.end());
             return ans;
         }
@@ -176,66 +161,101 @@ vector<Node> findPath(int stuff_id[30][40])
         int neighbour_node_x;
         int neighbour_node_y;
         //cout<<"local: "<<local_node.y<<" - "<< local_node.x<<endl;
-        
+
         // +- x
         for (int i = -1; i < 2; i+=2)
         {
-            neighbour_node_x = local_node.x + i;
-            neighbour_node_y = local_node.y;
-            //cout<<"x: "<<neighbour_node_x<<" y: "<<neighbour_node_y<<endl;
+            neighbour_node_x = local_node->x + i;
+            neighbour_node_y = local_node->y;
 
             // check vaild column index or not 
             if (neighbour_node_x > 39 || neighbour_node_x < 0)
                 continue;
-            if (Nodes[neighbour_node_y][neighbour_node_x].type != -22 && Nodes[neighbour_node_y][neighbour_node_x].type != -24)
+            if (local_node->level[neighbour_node_y][neighbour_node_x] != -22 && local_node->level[neighbour_node_y][neighbour_node_x] != -24)
                 continue;
 
-            // update neighbour node information and push it into nodes_queue
-            if (Nodes[neighbour_node_y][neighbour_node_x].g > (local_node.g + 1))
-            {
-                Nodes[neighbour_node_y][neighbour_node_x].g = local_node.g + 1;
-                Nodes[neighbour_node_y][neighbour_node_x].h = heuristic(Nodes[neighbour_node_y][neighbour_node_x], node_goal);
-                Nodes[neighbour_node_y][neighbour_node_x].f = Nodes[neighbour_node_y][neighbour_node_x].g + 
-                                                                    Nodes[neighbour_node_y][neighbour_node_x].h;
-                Nodes[neighbour_node_y][neighbour_node_x].last_one = &(Nodes[local_node.y][local_node.x]);
-                nodes_queue.push(Nodes[neighbour_node_y][neighbour_node_x]);
-            } 
+            // create a new level layout base on new neighbour node
+            std::vector<std::vector<int>> level_copy;
+            level_copy = local_node->level;
+
+            level_copy[neighbour_node_y][neighbour_node_x - i] = -22;
+            level_copy[neighbour_node_y][neighbour_node_x] = 0;
+            
+            if (levels[level_copy])
+                continue;
+            //cout<<"yes!! "<<endl;
+            levels[level_copy] = true;
+
+            Node* neighbour_node = new Node;
+
+            
+            neighbour_node->level = level_copy;
+
+            neighbour_node->g = local_node->g + 1;
+            neighbour_node->h = heuristic(make_pair(neighbour_node_y, neighbour_node_x), end);
+            neighbour_node->f = neighbour_node->g + neighbour_node->h;
+
+            neighbour_node->y = neighbour_node_y;
+            neighbour_node->x = neighbour_node_x;
+            
+            neighbour_node->last_one = local_node;
+            neighbour_node->type = level_copy[neighbour_node_y][neighbour_node_x];
+            //cout<<"x: "<<neighbour_node_x<<" y: "<<neighbour_node_y<<endl;
+            nodes_queue.push(neighbour_node);
+            
         }
         // +- y
         for (int i = -1; i < 2; i+=2)
         {
-            neighbour_node_y = local_node.y + i;
-            neighbour_node_x = local_node.x;
+            neighbour_node_y = local_node->y + i;
+            neighbour_node_x = local_node->x;
 
             // check vaild column index or not 
             if (neighbour_node_y > 29 || neighbour_node_y < 0)
                 continue;
-            if (Nodes[neighbour_node_y][neighbour_node_x].type != -22 && Nodes[neighbour_node_y][neighbour_node_x].type != -24)
+            if (local_node->level[neighbour_node_y][neighbour_node_x] != -22 && local_node->level[neighbour_node_y][neighbour_node_x] != -24)
                 continue;
 
+            // create a new level layout base on new neighbour node
+            std::vector<std::vector<int>> level_copy;
+            level_copy = local_node->level;
+
+            level_copy[neighbour_node_y - i][neighbour_node_x] = -22;
+            level_copy[neighbour_node_y][neighbour_node_x] = 0;
+            
+           if (levels[level_copy])
+                continue;
+            //cout<<"yes!! "<<endl;
+            levels[level_copy] = true;
+            
             // update neighbour node information and push it into nodes_queue
-            if (Nodes[neighbour_node_y][neighbour_node_x].g > (local_node.g + 1))
-            {
-                Nodes[neighbour_node_y][neighbour_node_x].g = local_node.g + 1;
-                Nodes[neighbour_node_y][neighbour_node_x].h = heuristic(Nodes[neighbour_node_y][neighbour_node_x], node_goal);
-                Nodes[neighbour_node_y][neighbour_node_x].f = Nodes[neighbour_node_y][neighbour_node_x].g + 
-                                                                    Nodes[neighbour_node_y][neighbour_node_x].h;
-                Nodes[neighbour_node_y][neighbour_node_x].last_one = &(Nodes[local_node.y][local_node.x]);
-                nodes_queue.push(Nodes[neighbour_node_y][neighbour_node_x]);
-            }
+            Node* neighbour_node = new Node;
+            
+            neighbour_node->level = level_copy;
+
+            neighbour_node->g = local_node->g + 1;
+            neighbour_node->h = heuristic(make_pair(neighbour_node_y, neighbour_node_x), end);
+            neighbour_node->f = neighbour_node->g + neighbour_node->h;
+
+            neighbour_node->y = neighbour_node_y;
+            neighbour_node->x = neighbour_node_x;
+            
+            neighbour_node->last_one = local_node;
+            neighbour_node->type = level_copy[neighbour_node_y][neighbour_node_x];
+            //cout<<"x: "<<neighbour_node_x<<" y: "<<neighbour_node_y<<endl;
+            nodes_queue.push(neighbour_node);
         }
 
     
     }
-
 
     return ans;
 }
 
 int main() {
 
-    vector<Node> a = findPath(stuff_id);
-
+    vector<Node> a = findPath(stuff_ids, 1, make_pair(28, 8), make_pair(10, 34));
+    cout<<"size: "<<a.size()<<endl;
     for (int i = 0; i < a.size(); i++)
     {
         cout<<a[i].y<<", "<<a[i].x<<endl;
