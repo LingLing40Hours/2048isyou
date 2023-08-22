@@ -240,7 +240,20 @@ func on_copy():
 			row.fill(GV.StuffId.EMPTY);
 			level_array.push_back(row);
 		
-		#store non-baddie stuff ids
+		#store tilemap stuff ids
+		for row_itr in resolution_t.y:
+			for col_itr in resolution_t.x:
+				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
+				if id == 0:
+					level_array[row_itr][col_itr] = GV.StuffId.BLACK_WALL;
+				elif id == 1:
+					level_array[row_itr][col_itr] = GV.StuffId.MEMBRANE;
+				elif id == 2:
+					level_array[row_itr][col_itr] = GV.StuffId.BLUE_WALL;
+				elif id == 3:
+					level_array[row_itr][col_itr] = GV.StuffId.RED_WALL;
+		
+		#store savepoint stuff ids (there's no overlap with tilemap)
 		for savepoint in savepoints.get_children():
 			if savepoint is Goal:
 				for node in savepoint.tile_centers.get_children():
@@ -252,12 +265,7 @@ func on_copy():
 				var pos_t = GV.world_to_pos_t(savepoint.position);
 				level_array[pos_t.y][pos_t.x] = GV.StuffId.SAVEPOINT;
 		
-		for row_itr in resolution_t.y:
-			for col_itr in resolution_t.x:
-				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
-				if id != -1:
-					level_array[row_itr][col_itr] = -id - 40;
-		
+		#store tile stuff ids (add value id as offset)
 		for tile in scoretiles.get_children():
 			var pos_t = GV.world_to_pos_t(tile.position);
 			var id;
@@ -266,8 +274,8 @@ func on_copy():
 			elif tile.power == 0 and tile.ssign == -1:
 				id = GV.StuffId.NEG_ONE;
 			else:
-				id = tile.power * tile.ssign;
-			level_array[pos_t.y][pos_t.x] = id;
+				id = tile.power * tile.ssign + GV.StuffId.POW_OFFSET;
+			level_array[pos_t.y][pos_t.x] += id;
 		
 		#add to clipboard
 		DisplayServer.clipboard_set(str(level_array));

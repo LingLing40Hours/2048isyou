@@ -117,15 +117,16 @@ var abilities = {
 
 #stuff ids
 enum StuffId {
-	ZERO = -20,
-	NEG_ONE = -21,
-	EMPTY = -22,
-	SAVEPOINT = -23,
-	GOAL = -24,
-	BLACK_WALL = -40,
-	MEMBRANE = -41,
-	BLUE_WALL = -42,
-	RED_WALL = -43,
+	RED_WALL = -3,
+	BLUE_WALL = -2,
+	BLACK_WALL = -1,
+	ZERO = 1,
+	NEG_ONE = 31,
+	POW_OFFSET = 16,
+	EMPTY = 0,
+	MEMBRANE = 32,
+	SAVEPOINT = 64,
+	GOAL = 96,
 };
 
 
