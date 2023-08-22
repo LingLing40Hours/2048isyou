@@ -241,17 +241,6 @@ func on_copy():
 			level_array.push_back(row);
 		
 		#store non-baddie stuff ids
-		for tile in scoretiles.get_children():
-			var pos_t = GV.world_to_pos_t(tile.position);
-			var id;
-			if tile.power == -1:
-				id = GV.StuffId.ZERO;
-			elif tile.power == 0 and tile.ssign == -1:
-				id = GV.StuffId.NEG_ONE;
-			else:
-				id = tile.power * tile.ssign;
-			level_array[pos_t.y][pos_t.x] = id;
-		
 		for savepoint in savepoints.get_children():
 			if savepoint is Goal:
 				for node in savepoint.tile_centers.get_children():
@@ -268,6 +257,17 @@ func on_copy():
 				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
 				if id != -1:
 					level_array[row_itr][col_itr] = -id - 40;
+		
+		for tile in scoretiles.get_children():
+			var pos_t = GV.world_to_pos_t(tile.position);
+			var id;
+			if tile.power == -1:
+				id = GV.StuffId.ZERO;
+			elif tile.power == 0 and tile.ssign == -1:
+				id = GV.StuffId.NEG_ONE;
+			else:
+				id = tile.power * tile.ssign;
+			level_array[pos_t.y][pos_t.x] = id;
 		
 		#add to clipboard
 		DisplayServer.clipboard_set(str(level_array));
