@@ -8,6 +8,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 @onready var game:Node2D = $"/root/Game";
 
 @export var is_player:bool = false;
+@export var is_hostile:bool = false;
 @export var power:int = 1;
 @export var ssign:int = 1;
 @export var debug:bool = false;
