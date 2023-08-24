@@ -63,7 +63,7 @@ struct VectorEqual {
     }
 };
 
-std::unordered_map<std::vector<std::vector<int>>, bool, Vector2dHash, VectorEqual> levels;
+std::unordered_map<std::vector<std::vector<int>>, int, Vector2dHash, VectorEqual> levels;
 
 std::vector<std::vector<int>> stuff_ids =
 /*
@@ -228,12 +228,10 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
             if (neighbour_node_x >= stuff_id[0].size() || neighbour_node_x < 0)
                 continue;
             // can not move in walls
-            if (neighbour_node_type == -40 || 
-                neighbour_node_type == -42 ||
-                neighbour_node_type == -43)
+            if (neighbour_node_type == -1 || 
+                neighbour_node_type == -2 ||
+                neighbour_node_type == -3)
                 continue;
-
-            
 
             int current_x;
             int current_y;
@@ -301,7 +299,7 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
                 // shift all tiles before the merge position
                 for (int i = 0; i < merge_counter; i++)
                 {
-                    level_copy[current_y][local_node->x + merge_counter - i] = level_copy[current_y][local_node->x + merge_counter - (i + 1)];
+                    level_copy[current_y][local_node->x + (merge_counter - i) * delta_x] = level_copy[current_y][local_node->x + (merge_counter - (i + 1)) * delta_x];
                 }
                 level_copy[current_y][local_node->x] = 0;
                 
@@ -313,13 +311,11 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
             }
 
             
-            if (levels[level_copy])
-            {
-                cout<<"yes?? "<<endl;
-                continue;
-            }
             
-            levels[level_copy] = true;
+            if (levels[level_copy] < local_node->g + 1 && levels[level_copy])
+                continue;
+
+            levels[level_copy] = local_node->g + 1;
 
             Node* neighbour_node = new Node;
 
@@ -355,9 +351,9 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
             if (neighbour_node_y >= stuff_id.size() || neighbour_node_y < 0)
                 continue;
             // can not move in walls
-            if (neighbour_node_type == -40 || 
-                neighbour_node_type == -42 ||
-                neighbour_node_type == -43)
+            if (neighbour_node_type == -1 || 
+                neighbour_node_type == -2 ||
+                neighbour_node_type == -3)
                 continue;
 
             int current_x;
@@ -427,7 +423,7 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
                 // shift all tiles before the merge position
                 for (int i = 0; i < merge_counter; i++)
                 {
-                    level_copy[local_node->y + merge_counter - i][current_x] = level_copy[local_node->y + merge_counter - (i + 1)][current_x];
+                    level_copy[local_node->y + (merge_counter - i) * delta_y][current_x] = level_copy[local_node->y + (merge_counter - (i + 1)) * delta_y][current_x];
                 }
                 level_copy[local_node->y][current_x] = 0;
                 
@@ -438,12 +434,10 @@ vector<Node> findPath(std::vector<std::vector<int>> stuff_id, int tile_push_limi
                     level_copy[next_y][next_x] = current_type;
             }
 
-            if (levels[level_copy])
-            {
-                cout<<"yes!! "<<endl;
+            if (levels[level_copy] < local_node->g + 1 && levels[level_copy])
                 continue;
-            }
-            levels[level_copy] = true;
+
+            levels[level_copy] = local_node->g + 1;
             
             // update neighbour node information and push it into nodes_queue
             Node* neighbour_node = new Node;
