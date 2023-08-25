@@ -3,7 +3,6 @@ extends CharacterBody2D
 
 signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
 signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
-signal exit_snap;
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
