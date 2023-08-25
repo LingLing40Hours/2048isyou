@@ -12,6 +12,11 @@ func enter():
 	#start animation
 	var animator = ScoreTileAnimator.new(actor.power, actor.ssign, GV.ScaleAnim.DUANG, 4, 3);
 	actor.add_child(animator);
+	
+	#inherit partner's premoves
+	if actor.is_player:
+		actor.next_moves = actor.partner.next_moves;
+		actor.next_dirs = actor.partner.next_dirs;
 
 func inPhysicsProcess(_delta):
 	frame_count += 1;
@@ -31,9 +36,4 @@ func changeParentState():
 	return null;
 
 func exit():
-	#inherit partner's premoves
-	if actor.is_player:
-		actor.next_moves = actor.partner.next_moves;
-		actor.next_dirs = actor.partner.next_dirs;
-	
 	actor.partner = null;

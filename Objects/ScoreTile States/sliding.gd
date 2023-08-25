@@ -14,10 +14,11 @@ func enter():
 	#assert(actor.slide_dir != Vector2i.ZERO);
 	
 	#add to snapshot
-	if actor.splitted:
-		game.current_level.current_snapshot.add_new_tile(actor);
-	else:
-		game.current_level.current_snapshot.add_tile(actor);
+	if not actor.is_hostile and (!is_instance_valid(actor.pusher) or not actor.pusher.is_hostile):
+		if actor.splitted:
+			game.current_level.current_snapshot.add_new_tile(actor);
+		else:
+			game.current_level.current_snapshot.add_tile(actor);
 	
 	#set slide parameters
 	if actor.is_player:

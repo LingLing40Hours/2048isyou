@@ -52,8 +52,9 @@ func _on_atimer_timeout():
 		repeat_input.emit(last_input_type);
 		last_action_finished = false;
 
+#repeat if input held down
 func _on_player_enter_snap(prev_state):
-	if prev_state == null: #initial enter snap
+	if prev_state == null: #initial ready doesn't count
 		return;
 	
 	last_action_finished = true;
@@ -279,3 +280,5 @@ func on_copy():
 		
 		#add to clipboard
 		DisplayServer.clipboard_set(str(level_array));
+		
+		return level_array;

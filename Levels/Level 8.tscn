@@ -83,17 +83,18 @@ position = Vector2(1020, 620)
 power = -1
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("5_mucte")]
-position = Vector2(16, 1104)
+position = Vector2(140, 1140)
 is_player = true
 power = 0
 
 [node name="SavePoints" type="Node2D" parent="."]
 
 [node name="Goal4" parent="SavePoints" instance=ExtResource("6_dswkw")]
-position = Vector2(-280, 744)
+position = Vector2(0, 1120)
 rotation = 1.5708
 id = 2
 spawn_point = Vector2(60, 1120)
+metadata/_edit_lock_ = true
 
 [node name="Goal5" parent="SavePoints" instance=ExtResource("6_dswkw")]
 position = Vector2(240, 1200)

@@ -5,7 +5,7 @@ signal timeout;
 
 var repeat_count:int;
 var frames_total:int;
-var frames_left:int;
+var frames_left:int = -1; #stopped by default
 var d_frames_total:int;
 var dd_frames_total:int;
 var min_frames_total:int;

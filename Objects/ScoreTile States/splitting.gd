@@ -8,7 +8,8 @@ var player:ScoreTile;
 func enter():
 	#print("SPLITTING");
 	#add to snapshot
-	game.current_level.current_snapshot.add_tile(actor);
+	if not actor.is_hostile:
+		game.current_level.current_snapshot.add_tile(actor);
 	
 	#reset frame count
 	frame_count = 0;
@@ -16,6 +17,7 @@ func enter():
 	#update power, convert to tile
 	actor.power -= 1;
 	actor.is_player = false;
+	actor.is_hostile = false;
 	actor.set_masks(false);
 	actor.tile_settings();
 	

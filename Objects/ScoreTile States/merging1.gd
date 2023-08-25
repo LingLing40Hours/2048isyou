@@ -9,11 +9,12 @@ var slide_target:Vector2;
 
 func enter():
 	#add to snapshot
-	if actor.splitted:
-		game.current_level.current_snapshot.add_new_tile(actor);
-	else:
-		game.current_level.current_snapshot.add_tile(actor);
-	game.current_level.current_snapshot.add_tile(actor.partner);
+	if not actor.is_hostile and (!is_instance_valid(actor.pusher) or not actor.pusher.is_hostile):
+		if actor.splitted:
+			game.current_level.current_snapshot.add_new_tile(actor);
+		else:
+			game.current_level.current_snapshot.add_tile(actor);
+		game.current_level.current_snapshot.add_tile(actor.partner);
 	
 	#set slide parameters
 	slide_speed = GV.TILE_SLIDE_SPEED;
@@ -36,6 +37,11 @@ func inPhysicsProcess(delta):
 	#sliding into partner
 	slide_distance += slide_speed * delta;
 	actor.move_and_collide(actor.velocity * delta);
+
+func handleInput(_event):
+	if actor.is_player: #get premove
+		await game.current_level.processed_action_input;
+		actor.get_next_action();
 	
 func changeParentState():
 	if slide_distance >= GV.COMBINING_MERGE_RATIO * GV.TILE_WIDTH:

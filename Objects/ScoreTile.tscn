@@ -105,5 +105,7 @@ collision_mask = 4
 
 [node name="FSM" parent="." instance=ExtResource("2_6q1l5")]
 
+[node name="Pathfinder" type="Pathfinder" parent="."]
+
 [connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
 [connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]

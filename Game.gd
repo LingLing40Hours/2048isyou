@@ -52,7 +52,7 @@ func _input(event):
 				var next_state = "snap" if GV.player_snap else "slide";
 				player.change_state(next_state);
 	elif event.is_action_pressed("ui_cancel"):
-		game_paused = !game_paused
+		game_paused = !game_paused;
 
 #defer this until previous level has been freed
 func add_level(n):

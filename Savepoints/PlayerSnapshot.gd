@@ -57,7 +57,8 @@ func add_new_tile(tile):
 
 #not a slide of 1+ players
 func meaningful() -> bool:
-	return not tiles_all_player or new_tiles or enter_savepoint;
+	#return not tiles_all_player or new_tiles or enter_savepoint; #player sliding not meaningful
+	return tiles or new_tiles or enter_savepoint; #player sliding is meaningful
 
 func reset_baddie_flags():
 	for baddie in baddies:

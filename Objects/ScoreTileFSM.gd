@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
 signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
+signal exit_snap;
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
@@ -29,10 +30,10 @@ var physics_on:bool = true;
 var physics_enabler_count:int = 0;
 var slide_dir:Vector2i = Vector2i.ZERO;
 var next_dirs:Array[Vector2i] = []; #for premoving
-var next_moves:Array[Callable] = []; #allow early input when sliding/shifting
-var func_slide:Callable = Callable(self, "slide");
-var func_split:Callable = Callable(self, "split");
-var func_shift:Callable = Callable(self, "shift");
+var next_moves:Array[String] = []; #allow early input when sliding/shifting
+#var func_slide:Callable = Callable(self, "slide");
+#var func_split:Callable = Callable(self, "split");
+#var func_shift:Callable = Callable(self, "shift");
 
 var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode
@@ -107,7 +108,20 @@ func _ready():
 		else:
 			initial_state = "slide";
 	$FSM.setState($FSM.states[initial_state]);
-
+	
+func _input(event):
+	if event.is_action_pressed("debug"):
+		#test pathfinder
+		if is_player:
+			is_hostile = true;
+			game.current_level.repeat_input.disconnect(_on_repeat_input);
+			var pos_t = GV.world_to_pos_t(position);
+			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(5, 28), 1, true, 12);
+			print(path);
+			print("pos_t: ", pos_t);
+			for action in path:
+				next_dirs.push_back(Vector2i(action.x, action.y));
+				next_moves.push_back("split" if action.z else "slide");
 
 func _physics_process(_delta):
 	if debug:
@@ -173,9 +187,9 @@ func get_next_action():
 		
 		#check if just pressed
 		if Input.is_action_just_pressed(event_name):
-			var action:Callable = get("func_" + game.current_level.last_input_modifier);
+			#print("PREMOVE ADDED");
 			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
-			next_moves.push_back(action);
+			next_moves.push_back(game.current_level.last_input_modifier);
 
 #assume level.last_input is valid
 func _on_repeat_input(input_type:int):
@@ -189,6 +203,7 @@ func _on_repeat_input(input_type:int):
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
+		#print("SLIDE FAILED, state is ", get_state());
 		return false;
 	
 	#reset tile push count
@@ -237,7 +252,7 @@ func slide(dir:Vector2i) -> bool:
 				if collider.get_state() not in ["tile", "snap"]:
 					return false;
 				
-				#set collider pusher
+				#set collider pusher (required to call collider.slide())
 				if not collider.is_player:
 					if is_instance_valid(pusher):
 						collider.pusher = pusher;
@@ -248,10 +263,12 @@ func slide(dir:Vector2i) -> bool:
 					next_state = $FSM.states.sliding;
 				elif power in [-1, collider.power]: #merge as 0 or equal power
 					partner = collider;
+					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
 				elif at_push_limit and collider.power == -1: #merge with 0
 					partner = collider;
+					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
 				elif collider.slide(dir): #try to slide collider
@@ -259,6 +276,7 @@ func slide(dir:Vector2i) -> bool:
 					next_state = $FSM.states.sliding;
 				elif collider.power == -1: #merge with 0
 					partner = collider;
+					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
 				else:
@@ -368,6 +386,9 @@ func levelup():
 	else: #opposite sign same power merge
 		power = -1;
 	#print("POWER: ", power);
+	
+	#convert to hostile
+	is_hostile = partner.is_hostile;
 
 	#convert to player
 	if not is_player and (partner.is_player or power >= 12):
