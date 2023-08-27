@@ -81,14 +81,14 @@ enum ScaleAnim {
 	DWING
 };
 
-const DUANG_MODULATE:float = 0.2;
+const DUANG_START_MODULATE:float = 0.2;
 const DUANG_START_ANGLE:float = 1;
 const DUANG_FACTOR:float = 1/sin(DUANG_START_ANGLE);
 const DUANG_END_ANGLE:float = PI - DUANG_START_ANGLE;
 const DUANG_SPEED:float = 0.07;
 const DUANG_FADE_SPEED:float = 0.05;
 
-const FADE_ANGLE:float = 1;
+const FADE_START_ANGLE:float = 1;
 const DWING_START_ANGLE:float = 1;
 const DWING_FACTOR:float = sin(DWING_START_ANGLE);
 const DWING_END_ANGLE:float = PI - DWING_START_ANGLE;

@@ -84,13 +84,13 @@ func _physics_process(_delta):
 				finished = false;
 			
 			#duang
-			if img.modulate.a >= GV.DUANG_MODULATE and anim_curr_angle < anim_end_angle: #do duang
+			if img.modulate.a >= GV.DUANG_START_MODULATE and anim_curr_angle < anim_end_angle: #do duang
 				anim_curr_angle = min(anim_end_angle, anim_curr_angle + anim_scale_speed);
 				parent.img.scale = Vector2.ONE * GV.DUANG_FACTOR * sin(anim_curr_angle);
 				img.scale = parent.img.scale;
 				finished = false;
 		else:
-			if anim_curr_angle >= GV.FADE_ANGLE:
+			if anim_curr_angle >= GV.FADE_START_ANGLE:
 				#fade out parent.img
 				if parent.img.modulate.a != 0:
 					parent.img.modulate.a = max(0, parent.img.modulate.a - anim_fade_speed);
