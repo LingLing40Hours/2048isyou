@@ -572,3 +572,18 @@ func get_next_action():
 			next_dirs.push_back(GV.directions[s_dir]);
 			next_moves.push_back(action);
 '''
+
+''' wall grains
+	if n_wall < -0.98 or (n_wall > 0.2 and n_wall < 0.22):
+		$Walls.set_cell(0, Vector2i(tx, ty), 0, Vector2i.ZERO);
+	elif n_wall < -0.955 or (n_wall > 0 and n_wall < 0.025):
+		$Walls.set_cell(0, Vector2i(tx, ty), 1, Vector2i.ZERO);
+'''
+
+''' trick for pusher updating
+	#create and slide/merge player in slide_dir
+	player = actor.score_tile.instantiate();
+	if actor.partner != null:
+		actor.partner.pusher = player;
+		actor.partner = null;
+'''

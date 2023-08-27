@@ -90,6 +90,9 @@ position = Vector2(1340, 700)
 [node name="ScoreTile38" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 700)
 
+[node name="ScoreTile44" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1300, 540)
+
 [node name="ScoreTile39" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 740)
 
@@ -109,6 +112,18 @@ power = -1
 position = Vector2(1260, 380)
 power = -1
 
+[node name="ScoreTile45" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1340, 540)
+power = -1
+
+[node name="ScoreTile46" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1380, 540)
+power = -1
+
+[node name="ScoreTile43" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1260, 540)
+power = 4
+
 [node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 140)
 power = 11
@@ -121,9 +136,9 @@ position = Vector2(60, 180)
 power = -1
 
 [node name="ScoreTile31" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
-position = Vector2(1220, 380)
+position = Vector2(1220, 540)
 is_player = true
-power = 0
+power = 6
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(60, 220)

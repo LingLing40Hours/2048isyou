@@ -1,20 +1,28 @@
 extends Node
 
-var rng = RandomNumberGenerator.new();
 var factorials:Array[int] = [1];
 var combinations:Array[Array] = [[1]];
 
-var TILE_WIDTH:float = 40; #px
-var RESOLUTION:Vector2 = Vector2(1600, 1200);
-var RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
+#size-related stuff
+const TILE_WIDTH:float = 40; #px
+const RESOLUTION:Vector2 = Vector2(1600, 1200);
+const RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
+const CHUNK_WIDTH:int = 16; #tiles
 
-var LEVEL_COUNT:int = 12;
-var current_level_index:int = 8;
+#level-related stuff
+const LEVEL_COUNT:int = 13;
+var current_level_index:int = 12;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
 var reverting:bool = false; #if true, fade faster and don't show lv name
 #var through_goal:bool = false; #changing level via goal
+
+#procgen-related stuff
+const TILE_POW_MAX:int = 12;
+const TILE_GEN_POW_MAX:int = 11;
+const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
+const UNLOAD_OFFSCREEN_DT:int = CHUNK_WIDTH;
 
 #save-related stuff
 #note non-export variables are not saved in packed scene
@@ -47,7 +55,7 @@ const LEVEL_NAME_FADE_OUT_TIME:float = 1.2;
 
 const PLAYER_SPAWN_INVINCIBILITY_TIME:float = 0.25;
 const PLAYER_COLLIDER_SCALE:float = 0.98;
-var PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
+const PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction
 const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
@@ -87,7 +95,7 @@ const DWING_END_ANGLE:float = PI - DWING_START_ANGLE;
 const DWING_SPEED:float = 0.07;
 const DWING_FADE_SPEED:float = 0.05;
 
-var SHIFT_RAY_LENGTH:float = RESOLUTION.x;
+const SHIFT_RAY_LENGTH:float = RESOLUTION.x;
 const SHIFT_TIME:float = 6; #in frames
 const SHIFT_LERP_WEIGHT:float = 0.6;
 var SHIFT_LERP_WEIGHT_TOTAL:float = 0;
@@ -95,7 +103,7 @@ var SHIFT_DISTANCE_TO_SPEED_MAX:float;
 
 var player_snap:bool = true; #move mode
 
-var directions = {
+const directions = {
 	"left" : Vector2i(-1, 0),
 	"right" : Vector2i(1, 0),
 	"up" : Vector2i(0, -1),
@@ -131,8 +139,6 @@ enum StuffId {
 
 
 func _ready():
-	rng.randomize();
-	
 	level_scores.resize(LEVEL_COUNT);
 	level_scores.fill(0);
 	level_last_savepoint_ids.resize(LEVEL_COUNT);

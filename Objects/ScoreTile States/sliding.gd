@@ -89,6 +89,7 @@ func changeParentState():
 func exit():
 	#reset stuff
 	actor.pusher = null;
+	actor.pusheds.clear();
 	actor.snap_slid = false;
 	
 	#re-enable collisions

@@ -20,6 +20,7 @@ var snapshot_locations_new:Array[Vector2i] = [];
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
+var pusheds:Array[ScoreTile] = []; #tiles pushed by self; to update collider's pusher after player is instantiated in split
 var pusher:ScoreTile; #player at start of line, not immediate neighbor
 var partner:ScoreTile;
 var shift_ray:RayCast2D = null;
@@ -112,10 +113,10 @@ func _input(event):
 	if event.is_action_pressed("debug"):
 		#test pathfinder
 		if is_player:
-			is_hostile = true;
 			game.current_level.repeat_input.disconnect(_on_repeat_input);
+			game.current_level.new_snapshot();
 			var pos_t = GV.world_to_pos_t(position);
-			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(5, 28), 1, true, 12);
+			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(4, 4), 1, true, GV.TILE_POW_MAX);
 			print(path);
 			print("pos_t: ", pos_t);
 			for action in path:
@@ -124,10 +125,10 @@ func _input(event):
 
 func _physics_process(_delta):
 	if debug:
-		print("state: ", get_state());
+		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
-		#print(pusher);
+		#print("pusher: ", pusher);
 		#print(next_dirs);
 		pass;
 
@@ -213,6 +214,9 @@ func slide(dir:Vector2i) -> bool:
 		pusher.tile_push_count += 1;
 		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
 			return false;
+		
+		#join pusher.pusheds
+		pusher.pusheds.push_back(self);
 	
 	#find if at push limit
 	var at_push_limit:bool = false;
@@ -260,7 +264,7 @@ func slide(dir:Vector2i) -> bool:
 				
 				if collider.is_player and collider.slide(dir): #receding player
 					next_state = $FSM.states.sliding;
-				elif power in [-1, collider.power]: #merge as 0 or equal power
+				elif power in [-1, collider.power] and power < GV.TILE_POW_MAX: #merge as 0 or equal power
 					partner = collider;
 					collider.pusher = null;
 					collider.partner = self;
@@ -280,6 +284,7 @@ func slide(dir:Vector2i) -> bool:
 					next_state = $FSM.states.merging1;
 				else:
 					collider.pusher = null;
+					pusheds.clear(); #only necessary if self is pusher (pusher == null)
 					return false;
 			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
@@ -287,6 +292,7 @@ func slide(dir:Vector2i) -> bool:
 	#check pusher tile count
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
 	if push_count > GV.abilities["tile_push_limit"]:
+		pusheds.clear(); #only necessary if self is pusher (pusher == null)
 		return false;
 	
 	#signal
@@ -325,16 +331,24 @@ func split(dir:Vector2i) -> bool:
 				return false;
 			
 			if collider.is_player and collider.slide(dir): #recede split
-				pass;
-			if power - 1 == collider.power: #merge split
-				pass;
-			elif collider.slide(dir): #slide split
-				partner = collider; #to update collider's pusher after player is instantiated
+				continue;
+			elif power - 1 == collider.power and collider.power < GV.TILE_POW_MAX: #merge split
+				continue;
+				
+			#act as temporary pusher before splitted tile spawns
+			tile_push_count = 0;
+			collider.pusher = self;
+			
+			if collider.slide(dir): #slide split
 				collider.snap_slid = true;
-			elif collider.power == -1: #merge with 0
-				pass;
-			else: #obstructed
-				return false;
+			else:
+				collider.pusher = null;
+				pusheds.clear();
+				
+				if collider.power == -1: #merge with 0
+					pass;
+				else: #obstructed
+					return false;
 	
 	#signal
 	start_action.emit();

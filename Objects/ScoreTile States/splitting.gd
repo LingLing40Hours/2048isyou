@@ -27,9 +27,10 @@ func enter():
 	
 	#create and slide/merge player in slide_dir
 	player = actor.score_tile.instantiate();
-	if actor.partner != null:
-		actor.partner.pusher = player;
-		actor.partner = null;
+	player.pusheds = actor.pusheds.duplicate();
+	actor.pusheds.clear();
+	for tile in player.pusheds:
+		tile.pusher = player;
 	#player.debug = true;
 	player.is_player = true;
 	player.power = actor.power;
@@ -37,13 +38,14 @@ func enter():
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
 	
-	#player inherits actor's premoves
+	actor.get_parent().add_child(player);
+	
+	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
 	player.next_moves = actor.next_moves.duplicate();
 	player.next_dirs = actor.next_dirs.duplicate();
 	actor.next_moves.clear();
 	actor.next_dirs.clear();
 	
-	actor.get_parent().add_child(player);
 	player.enable_physics_immediately();
 	player.slide(actor.slide_dir); #guaranteed to return true
 	

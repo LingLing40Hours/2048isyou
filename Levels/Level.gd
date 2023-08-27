@@ -10,7 +10,6 @@ signal processed_action_input;
 @onready var scoretiles:Node2D = $ScoreTiles;
 @onready var savepoints:Node2D = $SavePoints;
 @onready var baddies:Node2D = $Baddies;
-@onready var freedom:Area2D = $Freedom;
 
 var players = []; #if player, add here in _ready()
 
@@ -271,7 +270,8 @@ func on_copy():
 			var pos_t = GV.world_to_pos_t(tile.position);
 			var id;
 			if tile.power == -1:
-				id = GV.StuffId.ZERO;
+				#id = GV.StuffId.ZERO;
+				id = GV.StuffId.EMPTY; #reduces astar branching
 			elif tile.power == 0 and tile.ssign == -1:
 				id = GV.StuffId.NEG_ONE;
 			else:

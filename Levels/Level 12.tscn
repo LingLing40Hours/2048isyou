@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://br4ktgm4grf6"]
+
+[ext_resource type="Script" path="res://Levels/Level 12.gd" id="1_qjfa5"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_mvoie"]
+[ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_io8wo"]
+[ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_agry4"]
+
+[node name="Level 12" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_qjfa5")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
+
+[node name="LevelName" type="Label" parent="Background"]
+modulate = Color(1, 1, 1, 0)
+z_index = 20
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -11.5
+offset_right = 88.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_mvoie")
+theme_override_font_sizes/font_size = 50
+text = "The Deep Dereferenced"
+metadata/_edit_lock_ = true
+
+[node name="Walls" type="TileMap" parent="." groups=["wall"]]
+tile_set = ExtResource("3_io8wo")
+format = 2
+
+[node name="ScoreTiles" type="Node2D" parent="."]
+
+[node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_agry4")]
+position = Vector2(20, 20)
+is_player = true
+power = 0
+
+[node name="SavePoints" type="Node2D" parent="."]
+
+[node name="Baddies" type="Node2D" parent="."]

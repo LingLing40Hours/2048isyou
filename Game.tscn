@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://Game.gd" id="1_s0cd0"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
-[ext_resource type="AudioStream" uid="uid://h4d75muo7lh1" path="res://Audio/merge.wav" id="3_1s3s7"]
 [ext_resource type="PackedScene" uid="uid://bo3irtp3tcnv2" path="res://GUI/pause_menu.tscn" id="3_s88ok"]
 [ext_resource type="AudioStream" uid="uid://4acf1v8r2emv" path="res://Audio/snap.wav" id="4_erghs"]
-[ext_resource type="AudioStream" uid="uid://qtimgux1b0st" path="res://Audio/split_b.wav" id="5_erxfs"]
+[ext_resource type="AudioStream" uid="uid://b8hg5w8h4n0ll" path="res://Audio/merge_short.wav" id="4_iaiik"]
 [ext_resource type="AudioStream" uid="uid://cuqvb804wfuvi" path="res://Audio/shift_long_reverbless.wav" id="6_2ro13"]
+[ext_resource type="AudioStream" uid="uid://ba2n6bmuyqoqa" path="res://Audio/split_b_short.wav" id="6_tkdwj"]
 
 [sub_resource type="Animation" id="Animation_o2tpm"]
 length = 0.001
@@ -105,20 +105,20 @@ layout_direction = 2
 
 [node name="Audio" type="Node2D" parent="."]
 
-[node name="Combine" type="AudioStreamPlayer2D" parent="Audio"]
-stream = ExtResource("3_1s3s7")
+[node name="Combine" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_iaiik")
 volume_db = -2.0
 
-[node name="Slide" type="AudioStreamPlayer2D" parent="Audio"]
+[node name="Slide" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("4_erghs")
-volume_db = -2.0
+volume_db = -3.0
 
-[node name="Split" type="AudioStreamPlayer2D" parent="Audio"]
-stream = ExtResource("5_erxfs")
+[node name="Split" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("6_tkdwj")
+volume_db = -0.7
 
-[node name="Shift" type="AudioStreamPlayer2D" parent="Audio"]
-position = Vector2(-256, 80)
+[node name="Shift" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("6_2ro13")
-volume_db = -4.0
+volume_db = -5.5
 
 [connection signal="animation_finished" from="Overlay/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
