@@ -34,6 +34,7 @@ func enter():
 	#player.debug = true;
 	player.is_player = true;
 	player.power = actor.power;
+	player.ssign = actor.ssign;
 	player.position = actor.position;
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
