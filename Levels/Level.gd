@@ -269,13 +269,13 @@ func on_copy():
 		for tile in scoretiles.get_children():
 			var pos_t = GV.world_to_pos_t(tile.position);
 			var id;
-			if tile.power == -1:
+			if tile.power == -1: #zero
 				#id = GV.StuffId.ZERO;
 				id = GV.StuffId.EMPTY; #reduces astar branching
-			elif tile.power == 0 and tile.ssign == -1:
-				id = GV.StuffId.NEG_ONE;
+			elif tile.power == 0: #plus/minus one
+				id = GV.StuffId.POS_ONE if tile.ssign == 1 else GV.StuffId.NEG_ONE;
 			else:
-				id = tile.power * tile.ssign + GV.StuffId.POW_OFFSET;
+				id = tile.power * tile.ssign + GV.StuffId.ZERO;
 			level_array[pos_t.y][pos_t.x] += id;
 		
 		#add to clipboard

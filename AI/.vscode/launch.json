@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/admin/Desktop/Practice Game/AI",
-      "program": "/Users/admin/Desktop/Practice Game/AI/build/Debug/outDebug"
+      "cwd": "/Users/admin/Desktop/2048isyou/AI",
+      "program": "/Users/admin/Desktop/2048isyou/AI/build/Debug/outDebug"
     }
   ]
 }

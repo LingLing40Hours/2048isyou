@@ -128,9 +128,9 @@ enum StuffId {
 	RED_WALL = -3,
 	BLUE_WALL = -2,
 	BLACK_WALL = -1,
-	ZERO = 1,
-	NEG_ONE = 31,
-	POW_OFFSET = 16,
+	ZERO = 16, #pow offset
+	NEG_ONE = 1,
+	POS_ONE = 31,
 	EMPTY = 0,
 	MEMBRANE = 32,
 	SAVEPOINT = 64,
