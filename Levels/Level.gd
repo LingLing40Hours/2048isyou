@@ -228,6 +228,7 @@ func remove_last_snapshot_if_not_meaningful():
 		if not current_snapshot.meaningful():
 			player_snapshots.pop_back();
 			current_snapshot.remove();
+			current_snapshot = null;
 			#print("OVERWRITE LAST SNAPSHOT");
 
 func on_copy():

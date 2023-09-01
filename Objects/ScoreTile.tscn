@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bs5pnnv5k17ao"]
+[gd_scene load_steps=10 format=3 uid="uid://bs5pnnv5k17ao"]
 
 [ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="1_4wq03"]
 [ext_resource type="PackedScene" uid="uid://b5xshtev3l7ey" path="res://Objects/scoretile_fsm.tscn" id="2_6q1l5"]
+[ext_resource type="PackedScene" uid="uid://d3h7le4mgbadw" path="res://Pathfinder/Pathfinder.tscn" id="3_cg1ru"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v04qv"]
 resource_local_to_scene = true
@@ -105,7 +106,7 @@ collision_mask = 4
 
 [node name="FSM" parent="." instance=ExtResource("2_6q1l5")]
 
-[node name="Pathfinder" type="Pathfinder" parent="."]
+[node name="Pathfinder" parent="." instance=ExtResource("3_cg1ru")]
 
 [connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
 [connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]

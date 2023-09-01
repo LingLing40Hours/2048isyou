@@ -1,5 +1,5 @@
 class_name PlayerSnapshot
-extends Node
+extends RefCounted
 #used to store an undoable player action
 #player/tile position/value before push/merge/split
 #baddie position and velocity (if knocked?)
@@ -88,7 +88,7 @@ func checkout(): #reset to snapshot
 	reset_objects("tiles", "tile_duplicates", "scoretiles");
 	reset_objects("baddies", "baddie_duplicates", "baddies");
 	
-	queue_free();
+	#queue_free();
 
 #removes changed objects (if they still exist) and adds their duplicates
 #category_name is name of node ref in level under which objects are organized
@@ -141,4 +141,4 @@ func remove():
 	for baddie in baddies:
 		baddie.snapshot_locations.pop_back();
 	
-	queue_free();
+	#queue_free();

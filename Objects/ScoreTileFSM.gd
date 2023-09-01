@@ -116,7 +116,7 @@ func _input(event):
 			game.current_level.repeat_input.disconnect(_on_repeat_input);
 			game.current_level.new_snapshot();
 			var pos_t = GV.world_to_pos_t(position);
-			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(4, 4), 500, 1, true, GV.TILE_POW_MAX);
+			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(9, 9));
 			print(path);
 			print("pos_t: ", pos_t);
 			for action in path:

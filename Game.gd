@@ -29,6 +29,10 @@ func _ready():
 	#init mode label
 	change_move_mode(GV.player_snap);
 	
+	#generate hash numbers
+	$Pathfinder.generate_hash_numbers(Vector2(8, 8));
+	print(GV.level_hash_numbers);
+	
 	#testing
 
 signal toggle_game_paused(is_paused : bool)

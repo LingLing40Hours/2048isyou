@@ -1,5 +1,19 @@
 extends Node
 
+const UINT8_MAX  = (1 << 8)  - 1 # 255
+const UINT16_MAX = (1 << 16) - 1 # 65535
+const UINT32_MAX = (1 << 32) - 1 # 4294967295
+
+const INT8_MIN  = -(1 << 7)  # -128
+const INT16_MIN = -(1 << 15) # -32768
+const INT32_MIN = -(1 << 31) # -2147483648
+const INT64_MIN = -(1 << 63) # -9223372036854775808
+
+const INT8_MAX  = (1 << 7)  - 1 # 127
+const INT16_MAX = (1 << 15) - 1 # 32767
+const INT32_MAX = (1 << 31) - 1 # 2147483647
+const INT64_MAX = (1 << 63) - 1 # 9223372036854775807
+
 var factorials:Array[int] = [1];
 var combinations:Array[Array] = [[1]];
 
@@ -11,7 +25,7 @@ const CHUNK_WIDTH:int = 16; #tiles
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
-var current_level_index:int = 12;
+var current_level_index:int = 11;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -23,6 +37,11 @@ const TILE_POW_MAX:int = 12;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
 const UNLOAD_OFFSCREEN_DT:int = CHUNK_WIDTH;
+
+#pathfinder-related stuff
+var level_hash_numbers:Array = [];
+var x_hash_numbers:Array = [];
+var y_hash_numbers:Array = [];
 
 #save-related stuff
 #note non-export variables are not saved in packed scene
