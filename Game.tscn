@@ -123,5 +123,9 @@ stream = ExtResource("6_2ro13")
 volume_db = -5.5
 
 [node name="Pathfinder" parent="." instance=ExtResource("8_qm8qv")]
+tile_pow_max = -225378064
+max_depth = 290
+tile_push_limit = -1450246048
+is_player = true
 
 [connection signal="animation_finished" from="Overlay/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

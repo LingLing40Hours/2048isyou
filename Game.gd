@@ -30,8 +30,7 @@ func _ready():
 	change_move_mode(GV.player_snap);
 	
 	#generate hash numbers
-	$Pathfinder.generate_hash_numbers(Vector2(8, 8));
-	print(GV.level_hash_numbers);
+	$Pathfinder.generate_hash_numbers(GV.RESOLUTION_T);
 	
 	#testing
 

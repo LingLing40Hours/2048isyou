@@ -27,7 +27,7 @@ var shift_ray:RayCast2D = null;
 var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 at end)
 
 var physics_on:bool = true;
-var physics_enabler_count:int = 0;
+var physics_enabler_count:int = 0; #turn physics off when this reaches 0
 var slide_dir:Vector2i = Vector2i.ZERO;
 var next_dirs:Array[Vector2i] = []; #for premoving
 var next_moves:Array[String] = []; #allow early input when sliding/shifting
@@ -36,8 +36,8 @@ var next_moves:Array[String] = []; #allow early input when sliding/shifting
 #var func_shift:Callable = Callable(self, "shift");
 
 var splitted:bool = false; #created from split, not settled yet
-var snap_slid:bool = false; #slid by player in snap mode
-var invincible:bool = false; #give player some spawn protection
+var snap_slid:bool = false; #slid by player in snap mode; if true, don't play snap sound bc it would overlap with that of player
+var invincible:bool = false; #spawn protection for player; see GV.PLAYER_SPAWN_INVINCIBILITY_TIME
 
 
 func _ready():
@@ -116,7 +116,8 @@ func _input(event):
 			game.current_level.repeat_input.disconnect(_on_repeat_input);
 			game.current_level.new_snapshot();
 			var pos_t = GV.world_to_pos_t(position);
-			var path = $Pathfinder.pathfind(0, game.current_level.on_copy(), pos_t, Vector2i(9, 9));
+			var path = $Pathfinder.pathfind(1, game.current_level.on_copy(), pos_t, Vector2i(9, 9));
+			print("path length: ", path.size());
 			print(path);
 			print("pos_t: ", pos_t);
 			for action in path:

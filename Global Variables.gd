@@ -39,9 +39,9 @@ const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
 const UNLOAD_OFFSCREEN_DT:int = CHUNK_WIDTH;
 
 #pathfinder-related stuff
-var level_hash_numbers:Array = [];
-var x_hash_numbers:Array = [];
-var y_hash_numbers:Array = [];
+#var level_hash_numbers:Array = [];
+#var x_hash_numbers:Array = [];
+#var y_hash_numbers:Array = [];
 
 #save-related stuff
 #note non-export variables are not saved in packed scene
