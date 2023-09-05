@@ -108,5 +108,11 @@ collision_mask = 4
 
 [node name="Pathfinder" parent="." instance=ExtResource("3_cg1ru")]
 
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+scale = Vector2(2.1, 2.1)
+
+[node name="Sprites" type="Node2D" parent="."]
+visible = false
+
 [connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
 [connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]

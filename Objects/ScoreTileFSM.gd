@@ -6,6 +6,8 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
+@onready var visibility_notifier := $VisibleOnScreenNotifier2D;
+@onready var sprites:Node2D = $Sprites;
 
 @export var is_player:bool = false;
 @export var is_hostile:bool = false;
@@ -41,7 +43,11 @@ var invincible:bool = false; #spawn protection for player; see GV.PLAYER_SPAWN_I
 
 
 func _ready():
-	#connect signal
+	#visibility
+	visibility_notifier.screen_entered.connect(sprites.show);
+	visibility_notifier.screen_exited.connect(sprites.hide);
+	
+	#enter snap
 	enter_snap.connect(game.current_level._on_player_enter_snap);
 	
 	#if tile is a snapshot duplicate, set owner
@@ -98,7 +104,7 @@ func _ready():
 	
 	#add sprite
 	update_texture(img, power, ssign, is_player);
-	add_child(img);
+	sprites.add_child(img);
 	
 	#set initial state
 	var initial_state = "tile";
@@ -125,7 +131,12 @@ func _input(event):
 				next_moves.push_back("split" if action.z else "slide");
 
 func _physics_process(_delta):
+	#debug_frame();
+	pass;
+
+func debug_frame():
 	if debug:
+		print("enter screen");
 		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);

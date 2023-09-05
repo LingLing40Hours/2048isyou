@@ -41,7 +41,7 @@ func _ready():
 	img.z_index = anim_new_z;
 	img.modulate.a = 0;
 	parent.update_texture(img, anim_new_power, anim_new_ssign, parent.is_player);
-	parent.add_child(img);
+	parent.sprites.add_child(img);
 	
 	#more anim parameters
 	if anim_scale_type == GV.ScaleAnim.DUANG:
