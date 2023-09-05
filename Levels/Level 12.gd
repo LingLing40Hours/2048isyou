@@ -63,6 +63,6 @@ func generate_tile(tx, ty):
 		tile.position = GV.TILE_WIDTH * Vector2(tx + 0.5, ty + 0.5);
 		tile.power = power;
 		tile.ssign = ssign;
-		#if Vector2i(tx, ty) ==Vector2i(2, 3):
+		#if Vector2i(tx, ty) == Vector2i(0, 1):
 		#	tile.debug = true;
 		scoretiles.add_child(tile);

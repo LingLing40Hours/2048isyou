@@ -131,6 +131,7 @@ func _physics_process(_delta):
 		#print("snapshot locs: ", snapshot_locations);
 		#print("pusher: ", pusher);
 		#print(next_dirs);
+		#print("physics on: ", physics_on);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, dark):
@@ -556,10 +557,10 @@ func remove_from_players():
 	#print("remove index: ", index);
 
 func is_xaligned():
-	return fmod(position.x, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+	return fmod(abs(position.x), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 
 func is_yaligned():
-	return fmod(position.y, GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+	return fmod(abs(position.y), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 
 #use range = GV.PLAYER_SNAP_RANGE to fix collider offset
 func snap_range(offset_range:float):
