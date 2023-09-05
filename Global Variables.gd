@@ -25,7 +25,7 @@ const CHUNK_WIDTH:int = 16; #tiles
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
-var current_level_index:int = 11;
+var current_level_index:int = 12;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -72,7 +72,11 @@ const LEVEL_NAME_FADE_IN_TIME:float = 1.6;
 const LEVEL_NAME_DISPLAY_TIME:float = 3;
 const LEVEL_NAME_FADE_OUT_TIME:float = 1.2;
 
+const TRACKING_CAM_LEAD_RATIO:float = 1.35; #target = pos + ratio * (track_pos - pos)
+const TRACKING_CAM_SLACK_RATIO:float = 0.15; #ratio applied to slack (tracking movement along the non-trigger axis)
+const TRACKING_CAM_TRANSITION_TIME:float = 1.28;
 const PLAYER_SPAWN_INVINCIBILITY_TIME:float = 0.25;
+
 const PLAYER_COLLIDER_SCALE:float = 0.98;
 const PLAYER_SNAP_RANGE:float = TILE_WIDTH * (1 - PLAYER_COLLIDER_SCALE);
 const PLAYER_MU:float = 0.16; #coefficient of friction

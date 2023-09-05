@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://br4ktgm4grf6"]
+[gd_scene load_steps=6 format=3 uid="uid://br4ktgm4grf6"]
 
 [ext_resource type="Script" path="res://Levels/Level 12.gd" id="1_qjfa5"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_mvoie"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_io8wo"]
 [ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_agry4"]
+[ext_resource type="PackedScene" uid="uid://ck3d8d70jxrvw" path="res://Camera/TrackingCam.tscn" id="5_cl1ic"]
 
 [node name="Level 12" type="Node2D"]
 process_mode = 1
 script = ExtResource("1_qjfa5")
+resolution_t = Vector2i(32, 24)
+min_x = -1600.0
+min_y = -1200.0
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = -10
@@ -50,3 +54,5 @@ power = 0
 [node name="SavePoints" type="Node2D" parent="."]
 
 [node name="Baddies" type="Node2D" parent="."]
+
+[node name="TrackingCam" parent="." instance=ExtResource("5_cl1ic")]

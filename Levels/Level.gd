@@ -6,18 +6,23 @@ extends Node2D
 signal repeat_input(input_type);
 signal processed_action_input;
 
+#the first player to enter any savepoint, whose value will be respawned
+#on save, other players will become regular tiles
+@export var player_saved:ScoreTile;
+@export var resolution_t:Vector2i = GV.RESOLUTION_T;
+@export var min_x:float = 0;
+@export var min_y:float = 0;
+@export var max_x:float = GV.RESOLUTION.x;
+@export var max_y:float = GV.RESOLUTION.y;
+
 @onready var game:Node2D = $"/root/Game";
 @onready var scoretiles:Node2D = $ScoreTiles;
 @onready var savepoints:Node2D = $SavePoints;
 @onready var baddies:Node2D = $Baddies;
 
+var resolution:Vector2;
+
 var players = []; #if player, add here in _ready()
-
-#the first player to enter any savepoint, whose value will be respawned
-#on save, other players will become regular tiles
-@export var resolution_t:Vector2i = GV.RESOLUTION_T;
-@export var player_saved:ScoreTile;
-
 var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
@@ -28,6 +33,10 @@ var last_input_modifier:String = "slide";
 var last_input_move:String;
 var last_action_finished:bool = false;
 
+
+func _enter_tree():
+	#set resolution
+	resolution = Vector2(resolution_t * GV.TILE_WIDTH);
 	
 func _ready():
 	set_level_name();

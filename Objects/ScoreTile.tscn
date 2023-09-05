@@ -107,10 +107,6 @@ collision_mask = 4
 [node name="FSM" parent="." instance=ExtResource("2_6q1l5")]
 
 [node name="Pathfinder" parent="." instance=ExtResource("3_cg1ru")]
-tile_pow_max = 0
-max_depth = 0
-tile_push_limit = 0
-is_player = false
 
 [connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
 [connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]
