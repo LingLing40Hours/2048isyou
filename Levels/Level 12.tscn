@@ -10,8 +10,9 @@
 process_mode = 1
 script = ExtResource("1_qjfa5")
 resolution_t = Vector2i(32, 24)
-min_x = -1600.0
-min_y = -1200.0
+min_x = -3200.0
+min_y = -2400.0
+max_x = 3200.0
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = -10
