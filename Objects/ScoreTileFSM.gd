@@ -43,6 +43,7 @@ var invincible:bool = false; #spawn protection for player; see GV.PLAYER_SPAWN_I
 
 
 func _ready():
+	print("READY");
 	#visibility
 	visibility_notifier.screen_entered.connect(sprites.show);
 	visibility_notifier.screen_exited.connect(sprites.hide);
@@ -568,18 +569,18 @@ func remove_from_players():
 	#print("remove index: ", index);
 
 func is_xaligned():
-	return fmod(abs(position.x), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+	return fmod(absf(position.x), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 
 func is_yaligned():
-	return fmod(abs(position.y), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
+	return fmod(absf(position.y), GV.TILE_WIDTH) == GV.TILE_WIDTH/2;
 
 #use range = GV.PLAYER_SNAP_RANGE to fix collider offset
 func snap_range(offset_range:float):
-	var pos_t:Vector2i = position/GV.TILE_WIDTH;
-	var offset:Vector2 = position - (Vector2(pos_t) + Vector2(0.5, 0.5)) * GV.TILE_WIDTH;
-	if offset.x and abs(offset.x) <= offset_range:
+	var pos_t:Vector2i = GV.world_to_pos_t(position);
+	var offset:Vector2 = position - GV.pos_t_to_world(pos_t);
+	if offset.x and absf(offset.x) <= offset_range:
 		position.x -= offset.x;
-	if offset.y and abs(offset.y) <= offset_range:
+	if offset.y and absf(offset.y) <= offset_range:
 		position.y -= offset.y;
 
 func duplicate_custom() -> ScoreTile:

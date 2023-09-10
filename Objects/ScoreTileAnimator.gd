@@ -65,7 +65,7 @@ func _ready():
 
 func _physics_process(_delta):
 	if halted: #fade out img
-		img.modulate.a = max(0, img.modulate.a - anim_fade_speed);
+		img.modulate.a = maxf(0, img.modulate.a - anim_fade_speed);
 		if img.modulate.a == 0:
 			img.queue_free();
 			exit();
@@ -75,17 +75,17 @@ func _physics_process(_delta):
 		if anim_scale_type == GV.ScaleAnim.DUANG:
 			#fade out parent.img
 			if parent.img.modulate.a != 0:
-				parent.img.modulate.a = max(0, parent.img.modulate.a - anim_fade_speed);
+				parent.img.modulate.a = maxf(0, parent.img.modulate.a - anim_fade_speed);
 				finished = false;
 			
 			#fade in img
 			if img.modulate.a != 1:
-				img.modulate.a = min(1, img.modulate.a + anim_fade_speed);
+				img.modulate.a = minf(1, img.modulate.a + anim_fade_speed);
 				finished = false;
 			
 			#duang
 			if img.modulate.a >= GV.DUANG_START_MODULATE and anim_curr_angle < anim_end_angle: #do duang
-				anim_curr_angle = min(anim_end_angle, anim_curr_angle + anim_scale_speed);
+				anim_curr_angle = minf(anim_end_angle, anim_curr_angle + anim_scale_speed);
 				parent.img.scale = Vector2.ONE * GV.DUANG_FACTOR * sin(anim_curr_angle);
 				img.scale = parent.img.scale;
 				finished = false;
@@ -93,17 +93,17 @@ func _physics_process(_delta):
 			if anim_curr_angle >= GV.FADE_START_ANGLE:
 				#fade out parent.img
 				if parent.img.modulate.a != 0:
-					parent.img.modulate.a = max(0, parent.img.modulate.a - anim_fade_speed);
+					parent.img.modulate.a = maxf(0, parent.img.modulate.a - anim_fade_speed);
 					finished = false;
 				
 				#fade in img
 				if img.modulate.a != 1:
-					img.modulate.a = min(1, img.modulate.a + anim_fade_speed);
+					img.modulate.a = minf(1, img.modulate.a + anim_fade_speed);
 					finished = false;
 				
 			#dwing
 			if anim_curr_angle < anim_end_angle:
-				anim_curr_angle = min(anim_end_angle, anim_curr_angle + anim_scale_speed);
+				anim_curr_angle = minf(anim_end_angle, anim_curr_angle + anim_scale_speed);
 				parent.img.scale = Vector2.ONE * GV.DWING_FACTOR / sin(anim_curr_angle);
 				img.scale = parent.img.scale;
 				finished = false;

@@ -20,8 +20,9 @@ var combinations:Array[Array] = [[1]];
 #size-related stuff
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
-const RESOLUTION_T:Vector2 = RESOLUTION/TILE_WIDTH;
-const CHUNK_WIDTH:int = 16; #tiles
+const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
+const CHUNK_WIDTH_T:int = 16;
+const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
@@ -36,7 +37,8 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 const TILE_POW_MAX:int = 12;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
-const UNLOAD_OFFSCREEN_DT:int = CHUNK_WIDTH;
+const CHUNK_LOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
+const CHUNK_UNLOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];
@@ -234,9 +236,60 @@ func combinations_dp(n, k) -> int:
 	return ans;
 
 func world_to_pos_t(pos:Vector2) -> Vector2i:
-	return Vector2i(pos/TILE_WIDTH);
+	return (pos / TILE_WIDTH).floor();
+
+func pos_t_to_world(pos_t:Vector2i) -> Vector2:
+	return (Vector2(pos_t) + Vector2(0.5, 0.5)) * TILE_WIDTH;
+
+func world_to_pos_c(pos:Vector2) -> Vector2i:
+	return (pos / CHUNK_WIDTH).floor();
+
+func pos_c_to_world(pos_c:Vector2i) -> Vector2:
+	return pos_c * CHUNK_WIDTH;
+
+func pos_t_to_pos_c(pos_t:Vector2i) -> Vector2i:
+	return (pos_t / float(CHUNK_WIDTH_T)).floor();
+
+func pos_c_to_pos_t(pos_c:Vector2i) -> Vector2i:
+	return pos_c * CHUNK_WIDTH_T;
+
+func world_to_xt(x:float) -> int:
+	return floori(x / TILE_WIDTH);
+
+func xt_to_world(x:int) -> float:
+	return (x + 0.5) * TILE_WIDTH;
+
+func world_to_xc(x:float) -> int:
+	return floori(x / CHUNK_WIDTH);
+
+func xc_to_world(x:int) -> float:
+	return x * CHUNK_WIDTH;
+
+func xt_to_xc(x:int) -> int:
+	return floori(x / float(CHUNK_WIDTH_T));
+
+func xc_to_xt(x:int) -> int:
+	return x * CHUNK_WIDTH_T;
+
+#doesn't do ZERO->EMPTY optimization
+func tile_val_to_id(power:int, ssign:int) -> int:
+	if power == -1: #zero
+		return StuffId.ZERO;
+	if power == 0: #plus/minus one
+		return StuffId.POS_ONE if ssign == 1 else StuffId.NEG_ONE;
+	return power * ssign + StuffId.ZERO;
+
+func id_to_tile_val(id:int):
+	if id == StuffId.ZERO:
+		return [-1, 1];
+	if id == StuffId.NEG_ONE:
+		return [0, -1];
+	if id == StuffId.POS_ONE:
+		return [0, 1];
+	var signed_pow:int = id - StuffId.ZERO;
+	return [absi(signed_pow), signi(signed_pow)];
 
 func is_approx_equal(a:float, b:float, tolerance:float) -> bool:
-	if abs(a - b) <= tolerance:
+	if absf(a - b) <= tolerance:
 		return true;
 	return false;

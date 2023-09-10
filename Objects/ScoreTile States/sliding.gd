@@ -32,7 +32,7 @@ func enter():
 	#slide_target = actor.position + actor.slide_dir * GV.TILE_WIDTH;
 	actor.velocity = actor.slide_dir * slide_speed;
 	
-	#find target in tile coords
+	#find target in tile coords, which may have fractional component (player might not be aligned bc of slide mode)
 	var pos_t:Vector2 = actor.position/GV.TILE_WIDTH - Vector2(0.5, 0.5);
 	var target_t:Vector2 = pos_t + Vector2(actor.slide_dir);
 	if actor.slide_dir.x:

@@ -21,6 +21,8 @@ signal processed_action_input;
 @onready var baddies:Node2D = $Baddies;
 
 var resolution:Vector2;
+var half_resolution:Vector2;
+var chunked:bool = false;
 
 var players = []; #if player, add here in _ready()
 var player_snapshots:Array[PlayerSnapshot] = [];
@@ -35,8 +37,9 @@ var last_action_finished:bool = false;
 
 
 func _enter_tree():
-	#set resolution
+	#set resolution (before tracking cam _ready())
 	resolution = Vector2(resolution_t * GV.TILE_WIDTH);
+	half_resolution = resolution / 2;
 	
 func _ready():
 	set_level_name();
@@ -278,14 +281,9 @@ func on_copy():
 		#store tile stuff ids (add value id as offset)
 		for tile in scoretiles.get_children():
 			var pos_t = GV.world_to_pos_t(tile.position);
-			var id;
-			if tile.power == -1: #zero
-				#id = GV.StuffId.ZERO;
+			var id = GV.tile_val_to_id(tile.power, tile.ssign);
+			if id == GV.StuffId.ZERO:
 				id = GV.StuffId.EMPTY; #reduces astar branching
-			elif tile.power == 0: #plus/minus one
-				id = GV.StuffId.POS_ONE if tile.ssign == 1 else GV.StuffId.NEG_ONE;
-			else:
-				id = tile.power * tile.ssign + GV.StuffId.ZERO;
 			level_array[pos_t.y][pos_t.x] += id;
 		
 		#add to clipboard

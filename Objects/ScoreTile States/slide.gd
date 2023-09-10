@@ -35,7 +35,7 @@ func inPhysicsProcess(_delta):
 		elif collider is ScoreTile:
 			#find slide direction
 			var slide_dir:Vector2 = collision.get_normal() * (-1);
-			if abs(slide_dir.x) >= abs(slide_dir.y):
+			if absf(slide_dir.x) >= absf(slide_dir.y):
 				slide_dir.y = 0;
 			else:
 				slide_dir.x = 0;

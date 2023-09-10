@@ -38,6 +38,6 @@ func is_stopped() -> bool:
 
 func repeat():
 	repeat_count += 1;
-	frames_total = max(min_frames_total, frames_total + d_frames_total);
+	frames_total = maxi(min_frames_total, frames_total + d_frames_total);
 	frames_left = frames_total;
 	d_frames_total += dd_frames_total;

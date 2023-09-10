@@ -587,3 +587,19 @@ func get_next_action():
 		actor.partner.pusher = player;
 		actor.partner = null;
 '''
+
+'''
+		var track_dir:Vector2i = ($TrackingCam.position - last_cam_pos).sign();
+		var track_corner_dpos:Vector2 = Vector2(half_resolution.x * track_dir.x, half_resolution.y * track_dir.y);
+		var load_dpos:Vector2 = track_corner_dpos + GV.CHUNK_LOAD_BUFFER * track_dir;
+		var unload_dpos:Vector2 = -track_corner_dpos - GV.CHUNK_UNLOAD_BUFFER * track_dir;
+		var load_pos_c:Vector2i = GV.world_to_pos_c($TrackingCam.position + load_dpos);
+		var unload_pos_c:Vector2i = GV.world_to_pos_c($TrackingCam.position + unload_dpos);
+		
+		if track_dir.x > 0:
+			loaded_pos_c_max.x = min(loaded_pos_c_max.x, load_pos_c.x);
+'''
+
+'''
+
+'''
