@@ -10,14 +10,14 @@ var difficulty:float = 0; #probability of hostile, noise roughness
 
 var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
-#var load_mutex:Mutex;
-#var unload_mutex:Mutex;
-var queue_mutex:Mutex;
-var initial_mutex:Mutex;
+var load_mutex:Mutex;
+var unload_mutex:Mutex;
+#var queue_mutex:Mutex;
+#var initial_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
-var initial_chunks_loaded:bool;
+#var initial_chunks_loaded:bool;
 var load_queue:Dictionary; #use dictionary for faster lookup than array (in enqueue functions)
 var unload_queue:Dictionary;
 var modified_chunks:Dictionary; #chunk_pos:Vector2i, Chunk
@@ -26,11 +26,10 @@ var loaded_chunks:Dictionary;
 var loaded_pos_c_min:Vector2i;
 var loaded_pos_c_max:Vector2i; #inclusive
 
-var load_start_time:int;
-var load_end_time:int;
+#var load_start_time:int;
+#var load_end_time:int;
 
 @onready var last_cam_pos:Vector2 = $TrackingCam.position;
-@onready var walls:TileMap = $Walls; #for use in thread
 
 
 func _ready():
@@ -57,31 +56,30 @@ func _ready():
 	#wall_noise.set_domain_warp_enabled(true);
 	
 	#thread stuff
-	#load_mutex = Mutex.new();
-	#unload_mutex = Mutex.new();
-	queue_mutex = Mutex.new();
-	initial_mutex = Mutex.new();
+	load_mutex = Mutex.new();
+	unload_mutex = Mutex.new();
+	#queue_mutex = Mutex.new();
+	#initial_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
 	thread = Thread.new();
-	#thread.set_thread_safety_checks_enabled(false);
 	
 	#load initial chunks
-	initial_chunks_loaded = false;
+	#initial_chunks_loaded = false;
 	loaded_pos_c_min = GV.world_to_pos_c(last_cam_pos - half_resolution - Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	loaded_pos_c_max = GV.world_to_pos_c(last_cam_pos + half_resolution + Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
-	load_start_time = Time.get_ticks_usec();
-	thread.start(_manage_chunks);
+	#load_start_time = Time.get_ticks_usec();
+	thread.start(manage_chunks);
 
 func _process(_delta):
-	initial_mutex.lock();
-	var should_process:bool = initial_chunks_loaded;
-	initial_mutex.unlock();
-	if should_process and $TrackingCam.position != last_cam_pos:
+#	initial_mutex.lock();
+#	var should_process:bool = initial_chunks_loaded;
+#	initial_mutex.unlock();
+	if $TrackingCam.position != last_cam_pos:
 		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
 		var temp_pos_c_min:Vector2i = loaded_pos_c_min;
 		var temp_pos_c_max:Vector2i = loaded_pos_c_max;
@@ -130,52 +128,52 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
-			queue_mutex.lock();
-			if unload_queue.has(pos_c):
-				unload_queue.erase(pos_c);
-			else:
-				load_queue[pos_c] = true;
-			queue_mutex.unlock();
-	semaphore.post();
-			
-#			unload_mutex.lock();
+#			queue_mutex.lock();
 #			if unload_queue.has(pos_c):
 #				unload_queue.erase(pos_c);
-#				unload_mutex.unlock();
-#				continue;
-#			unload_mutex.unlock();
-#
-#			load_mutex.lock();
-#			load_queue[pos_c] = true;
-#			load_mutex.unlock();
-#			semaphore.post();
+#			else:
+#				load_queue[pos_c] = true;
+#				semaphore.post();
+#			queue_mutex.unlock();
+			
+			unload_mutex.lock();
+			if unload_queue.has(pos_c):
+				unload_queue.erase(pos_c);
+				unload_mutex.unlock();
+				continue;
+			unload_mutex.unlock();
+
+			load_mutex.lock();
+			load_queue[pos_c] = true;
+			load_mutex.unlock();
+			semaphore.post();
 
 func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
-			queue_mutex.lock();
-			if load_queue.has(pos_c):
-				load_queue.erase(pos_c);
-			else:
-				unload_queue[pos_c] = true;
-			queue_mutex.unlock();
-	semaphore.post();
-			
-#			load_mutex.lock();
+#			queue_mutex.lock();
 #			if load_queue.has(pos_c):
 #				load_queue.erase(pos_c);
-#				load_mutex.unlock();
-#				continue;
-#			load_mutex.unlock();
-#
-#			unload_mutex.lock();
-#			unload_queue[pos_c] = true;
-#			unload_mutex.unlock();
-#			semaphore.post();
+#			else:
+#				unload_queue[pos_c] = true;
+#				semaphore.post();
+#			queue_mutex.unlock();
+			
+			load_mutex.lock();
+			if load_queue.has(pos_c):
+				load_queue.erase(pos_c);
+				load_mutex.unlock();
+				continue;
+			load_mutex.unlock();
+
+			unload_mutex.lock();
+			unload_queue[pos_c] = true;
+			unload_mutex.unlock();
+			semaphore.post();
 
 #based on camera position
-func _manage_chunks():
+func manage_chunks():
 	Thread.set_thread_safety_checks_enabled(false);
 	while true:
 		semaphore.wait(); #wait
@@ -189,9 +187,9 @@ func _manage_chunks():
 		
 		#unload chunks
 		var unload_positions:Array = unload_queue.keys();
-		queue_mutex.lock();
+		unload_mutex.lock();
 		unload_queue.clear();
-		queue_mutex.unlock();
+		unload_mutex.unlock();
 		#print("unload_positions: ", unload_positions);
 		for pos_c in unload_positions:
 			loaded_chunks[pos_c].queue_free();
@@ -199,22 +197,18 @@ func _manage_chunks():
 		
 		#load chunks
 		var load_positions:Array = load_queue.keys();
-		queue_mutex.lock();
+		load_mutex.lock();
 		load_queue.clear();
-		queue_mutex.unlock();
+		load_mutex.unlock();
 		#print("load_positions: ", load_positions);
 		for pos_c in load_positions:
 			var chunk:Chunk = generate_chunk(pos_c);
 			call_deferred("add_child", chunk);
 			loaded_chunks[pos_c] = chunk;
 		
-		initial_mutex.lock();
-		initial_chunks_loaded = true;
-		initial_mutex.unlock();
-		
-		#debug
-		load_end_time = Time.get_ticks_usec();
-		print("LOAD TIME: ", load_end_time - load_start_time);
+#		initial_mutex.lock();
+#		initial_chunks_loaded = true;
+#		initial_mutex.unlock();
 	
 func generate_chunk(chunk_pos:Vector2i) -> Chunk:
 	#var dt = Time.get_ticks_usec();
@@ -253,12 +247,14 @@ func generate_tile(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2
 	
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
-		walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
+		$Walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
+		#$Walls.call_deferred("set_cell", 0, global_tile_pos, 0, Vector2i.ZERO)
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.BLACK_WALL;
 		#print("black instantiated");
 		return;
 	if absf(n_wall) < 0.02:
-		walls.set_cell(0, global_tile_pos, 1, Vector2i.ZERO);
+		$Walls.set_cell(0, global_tile_pos, 1, Vector2i.ZERO);
+		#$Walls.call_deferred("set_cell", 0, global_tile_pos, 1, Vector2i.ZERO);
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.MEMBRANE;
 		#print("membrane instantiated");
 		return;
