@@ -43,7 +43,6 @@ var invincible:bool = false; #spawn protection for player; see GV.PLAYER_SPAWN_I
 
 
 func _ready():
-	print("READY");
 	#visibility
 	visibility_notifier.screen_entered.connect(sprites.show);
 	visibility_notifier.screen_exited.connect(sprites.hide);

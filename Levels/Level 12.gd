@@ -62,7 +62,7 @@ func _ready():
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
-	thread.start(_manage_chunks);
+	#thread.start(_manage_chunks);
 	#semaphore.post();
 
 func _process(_delta):
