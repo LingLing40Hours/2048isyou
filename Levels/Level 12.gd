@@ -10,8 +10,10 @@ var difficulty:float = 0; #probability of hostile, noise roughness
 
 var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
-var load_mutex:Mutex;
-var unload_mutex:Mutex;
+#var load_mutex:Mutex;
+#var unload_mutex:Mutex;
+var queue_mutex:Mutex;
+var initial_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
@@ -24,8 +26,8 @@ var loaded_chunks:Dictionary;
 var loaded_pos_c_min:Vector2i;
 var loaded_pos_c_max:Vector2i; #inclusive
 
-#var load_start_time:int;
-#var load_end_time:int;
+var load_start_time:int;
+var load_end_time:int;
 
 @onready var last_cam_pos:Vector2 = $TrackingCam.position;
 @onready var walls:TileMap = $Walls; #for use in thread
@@ -55,8 +57,10 @@ func _ready():
 	#wall_noise.set_domain_warp_enabled(true);
 	
 	#thread stuff
-	load_mutex = Mutex.new();
-	unload_mutex = Mutex.new();
+	#load_mutex = Mutex.new();
+	#unload_mutex = Mutex.new();
+	queue_mutex = Mutex.new();
+	initial_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
@@ -70,11 +74,14 @@ func _ready():
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
-	#load_start_time = Time.get_ticks_usec();
+	load_start_time = Time.get_ticks_usec();
 	thread.start(_manage_chunks);
 
 func _process(_delta):
-	if initial_chunks_loaded and $TrackingCam.position != last_cam_pos:
+	initial_mutex.lock();
+	var should_process:bool = initial_chunks_loaded;
+	initial_mutex.unlock();
+	if should_process and $TrackingCam.position != last_cam_pos:
 		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
 		var temp_pos_c_min:Vector2i = loaded_pos_c_min;
 		var temp_pos_c_max:Vector2i = loaded_pos_c_max;
@@ -123,35 +130,49 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
-			
-			unload_mutex.lock();
+			queue_mutex.lock();
 			if unload_queue.has(pos_c):
 				unload_queue.erase(pos_c);
-				unload_mutex.unlock();
-				continue;
-			unload_mutex.unlock();
+			else:
+				load_queue[pos_c] = true;
+			queue_mutex.unlock();
+	semaphore.post();
 			
-			load_mutex.lock();
-			load_queue[pos_c] = true;
-			load_mutex.unlock();
-			semaphore.post();
+#			unload_mutex.lock();
+#			if unload_queue.has(pos_c):
+#				unload_queue.erase(pos_c);
+#				unload_mutex.unlock();
+#				continue;
+#			unload_mutex.unlock();
+#
+#			load_mutex.lock();
+#			load_queue[pos_c] = true;
+#			load_mutex.unlock();
+#			semaphore.post();
 
 func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
-			
-			load_mutex.lock();
+			queue_mutex.lock();
 			if load_queue.has(pos_c):
 				load_queue.erase(pos_c);
-				load_mutex.unlock();
-				continue;
-			load_mutex.unlock();
+			else:
+				unload_queue[pos_c] = true;
+			queue_mutex.unlock();
+	semaphore.post();
 			
-			unload_mutex.lock();
-			unload_queue[pos_c] = true;
-			unload_mutex.unlock();
-			semaphore.post();
+#			load_mutex.lock();
+#			if load_queue.has(pos_c):
+#				load_queue.erase(pos_c);
+#				load_mutex.unlock();
+#				continue;
+#			load_mutex.unlock();
+#
+#			unload_mutex.lock();
+#			unload_queue[pos_c] = true;
+#			unload_mutex.unlock();
+#			semaphore.post();
 
 #based on camera position
 func _manage_chunks():
@@ -168,9 +189,9 @@ func _manage_chunks():
 		
 		#unload chunks
 		var unload_positions:Array = unload_queue.keys();
-		unload_mutex.lock();
+		queue_mutex.lock();
 		unload_queue.clear();
-		unload_mutex.unlock();
+		queue_mutex.unlock();
 		#print("unload_positions: ", unload_positions);
 		for pos_c in unload_positions:
 			loaded_chunks[pos_c].queue_free();
@@ -178,14 +199,22 @@ func _manage_chunks():
 		
 		#load chunks
 		var load_positions:Array = load_queue.keys();
-		load_mutex.lock();
+		queue_mutex.lock();
 		load_queue.clear();
-		load_mutex.unlock();
+		queue_mutex.unlock();
 		#print("load_positions: ", load_positions);
 		for pos_c in load_positions:
 			var chunk:Chunk = generate_chunk(pos_c);
 			call_deferred("add_child", chunk);
 			loaded_chunks[pos_c] = chunk;
+		
+		initial_mutex.lock();
+		initial_chunks_loaded = true;
+		initial_mutex.unlock();
+		
+		#debug
+		load_end_time = Time.get_ticks_usec();
+		print("LOAD TIME: ", load_end_time - load_start_time);
 	
 func generate_chunk(chunk_pos:Vector2i) -> Chunk:
 	#var dt = Time.get_ticks_usec();
