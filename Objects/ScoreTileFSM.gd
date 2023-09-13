@@ -103,7 +103,7 @@ func _ready():
 	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 	
 	#add sprite
-	update_texture(img, power, ssign, is_player);
+	update_texture(img, power, ssign, is_player, is_hostile);
 	sprites.add_child(img);
 	
 	#set initial state
@@ -145,7 +145,7 @@ func debug_frame():
 		#print("physics on: ", physics_on);
 		pass;
 
-func update_texture(s:Sprite2D, score_pow, score_sign, dark):
+func update_texture(s:Sprite2D, score_pow, score_sign, is_player, is_hostile):
 	var texture_path:String = "res://Sprites/2_";
 	
 	#power
@@ -159,8 +159,10 @@ func update_texture(s:Sprite2D, score_pow, score_sign, dark):
 		texture_path += "m";
 	
 	#dark
-	if dark:
-		texture_path += "d";
+	if is_player:
+		texture_path += "k";
+	elif is_hostile:
+		texture_path += "i";
 	
 	s.texture = load(texture_path + ".png");
 

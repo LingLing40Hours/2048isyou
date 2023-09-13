@@ -44,10 +44,4 @@ metadata/_edit_lock_ = true
 tile_set = ExtResource("3_io8wo")
 format = 2
 
-[node name="ScoreTiles" type="Node2D" parent="."]
-
-[node name="SavePoints" type="Node2D" parent="."]
-
-[node name="Baddies" type="Node2D" parent="."]
-
 [node name="TrackingCam" parent="." instance=ExtResource("5_cl1ic")]

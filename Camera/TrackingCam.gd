@@ -44,7 +44,7 @@ func _ready():
 func avg_player_pos() -> Vector2:
 	var ans = Vector2.ZERO;
 	for player in level.players:
-		ans += player.position;
+		ans += player.global_position;
 	return ans / level.players.size();
 
 func _process(_delta):

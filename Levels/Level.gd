@@ -16,9 +16,9 @@ signal processed_action_input;
 @export var max_y:float = GV.RESOLUTION.y;
 
 @onready var game:Node2D = $"/root/Game";
-@onready var scoretiles:Node2D = $ScoreTiles;
-@onready var savepoints:Node2D = $SavePoints;
-@onready var baddies:Node2D = $Baddies;
+var scoretiles:Node2D;
+var savepoints:Node2D;
+var baddies:Node2D;
 
 var resolution:Vector2;
 var half_resolution:Vector2;
@@ -42,6 +42,11 @@ func _enter_tree():
 	half_resolution = resolution / 2;
 	
 func _ready():
+	if !chunked:
+		scoretiles = $ScoreTiles;
+		savepoints = $SavePoints;
+		baddies = $Baddies;
+	
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv

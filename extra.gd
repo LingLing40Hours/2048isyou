@@ -601,5 +601,19 @@ func get_next_action():
 '''
 
 '''
-
+	if global_tile_pos == Vector2i.ZERO: #player
+		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.POS_ONE;
+		
+		var player = score_tile.instantiate();
+		#player.call_deferred("set_position", GV.pos_t_to_world(local_tile_pos)); #relative
+		player.position = GV.pos_t_to_world(local_tile_pos);
+		player.is_player = true;
+		player.power = 0;
+		player.ssign = 1;
+		chunk.add_child(player);
+		#chunk.call_deferred("add_child", player);
+		#print("player instantiated");
+		return;
 '''
+
+#const CM_TILE_GEN_POW_MAX:int = GV.TILE_GEN_POW_MAX; #for thread safety?

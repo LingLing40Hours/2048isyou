@@ -1,6 +1,7 @@
 extends Level
 
-const CM_TILE_GEN_POW_MAX = GV.TILE_GEN_POW_MAX;
+signal initial_chunks_loaded;
+var initial_chunks_loaded_b:bool; #shared
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var packed_chunk:PackedScene = preload("res://Levels/Chunk.tscn");
@@ -13,30 +14,31 @@ var thread:Thread; #handles chunk loading/unloading
 var load_mutex:Mutex;
 var unload_mutex:Mutex;
 #var queue_mutex:Mutex;
-#var initial_mutex:Mutex;
+var initial_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
-#var initial_chunks_loaded:bool;
-var load_queue:Dictionary; #use dictionary for faster lookup than array (in enqueue functions)
-var unload_queue:Dictionary;
+var load_queue:Dictionary; #shared; dict for fast lookup
+var unload_queue:Dictionary; #shared
 var modified_chunks:Dictionary; #chunk_pos:Vector2i, Chunk
 #var constructed_chunks:Array[Chunk]; #chunks waiting to enter scene tree
-var loaded_chunks:Dictionary;
+var loaded_chunks:Dictionary; #CM thread
 var loaded_pos_c_min:Vector2i;
 var loaded_pos_c_max:Vector2i; #inclusive
 
 #var load_start_time:int;
 #var load_end_time:int;
+var player_spawn_pos_t:Vector2i = Vector2i.ZERO;
 
 @onready var last_cam_pos:Vector2 = $TrackingCam.position;
 
 
 func _ready():
+	chunked = true;
 	super._ready();
 	
-	#set chunked mode
-	chunked = true;
+	#load player
+	initial_chunks_loaded.connect(load_player);
 	
 	#randomize();
 	tile_noise.set_seed(2);
@@ -59,14 +61,14 @@ func _ready():
 	load_mutex = Mutex.new();
 	unload_mutex = Mutex.new();
 	#queue_mutex = Mutex.new();
-	#initial_mutex = Mutex.new();
+	initial_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
 	thread = Thread.new();
 	
 	#load initial chunks
-	#initial_chunks_loaded = false;
+	initial_chunks_loaded_b = false;
 	loaded_pos_c_min = GV.world_to_pos_c(last_cam_pos - half_resolution - Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	loaded_pos_c_max = GV.world_to_pos_c(last_cam_pos + half_resolution + Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
@@ -76,10 +78,10 @@ func _ready():
 	thread.start(manage_chunks);
 
 func _process(_delta):
-#	initial_mutex.lock();
-#	var should_process:bool = initial_chunks_loaded;
-#	initial_mutex.unlock();
-	if $TrackingCam.position != last_cam_pos:
+	initial_mutex.lock();
+	var ic_loaded:bool = initial_chunks_loaded_b;
+	initial_mutex.unlock();
+	if ic_loaded and $TrackingCam.position != last_cam_pos:
 		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
 		var temp_pos_c_min:Vector2i = loaded_pos_c_min;
 		var temp_pos_c_max:Vector2i = loaded_pos_c_max;
@@ -149,6 +151,7 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 			semaphore.post();
 
 func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
+	print("unload ", pos_c_min, pos_c_max);
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
@@ -202,17 +205,19 @@ func manage_chunks():
 		load_mutex.unlock();
 		#print("load_positions: ", load_positions);
 		for pos_c in load_positions:
-			var chunk:Chunk = generate_chunk(pos_c);
+			var chunk:Chunk = load_chunk(pos_c);
 			call_deferred("add_child", chunk);
 			loaded_chunks[pos_c] = chunk;
 		
-#		initial_mutex.lock();
-#		initial_chunks_loaded = true;
-#		initial_mutex.unlock();
+		initial_mutex.lock();
+		if not initial_chunks_loaded_b:
+			initial_chunks_loaded_b = true;
+			call_deferred("emit_signal", "initial_chunks_loaded");
+		initial_mutex.unlock();
 	
-func generate_chunk(chunk_pos:Vector2i) -> Chunk:
+func load_chunk(chunk_pos:Vector2i) -> Chunk:
 	#var dt = Time.get_ticks_usec();
-	#print(dt, "generate chunk ", chunk_pos);
+	#print("generate chunk ", chunk_pos); #print in thread is slow
 	var ans:Chunk = packed_chunk.instantiate();
 	ans.pos_c = chunk_pos;
 	#ans.call_deferred("set_position", GV.pos_c_to_world(chunk_pos));
@@ -222,29 +227,15 @@ func generate_chunk(chunk_pos:Vector2i) -> Chunk:
 	for tx in GV.CHUNK_WIDTH_T:
 		var global_tx:int = start_tile_pos.x + tx;
 		for ty in GV.CHUNK_WIDTH_T:
-			generate_tile(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
+			load_cell(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
 #	if chunk_pos == Vector2i.ONE:
 #		load_end_time = Time.get_ticks_usec();
 #		print("LOAD TIME: ", load_end_time - load_start_time);
 	return ans;
 
 #updates chunk cells and if tile, adds to chunk as child
-func generate_tile(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
+func load_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
-	if global_tile_pos == Vector2i.ZERO: #player
-		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.POS_ONE;
-		
-		var player = score_tile.instantiate();
-		#player.call_deferred("set_position", GV.pos_t_to_world(local_tile_pos)); #relative
-		player.position = GV.pos_t_to_world(local_tile_pos);
-		player.is_player = true;
-		player.power = 0;
-		player.ssign = 1;
-		chunk.add_child(player);
-		#chunk.call_deferred("add_child", player);
-		#print("player instantiated");
-		return;
-	
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
 		$Walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
@@ -269,7 +260,7 @@ func generate_tile(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2
 	var n_tile:float = tile_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	tile.ssign = int(signf(n_tile));
 	n_tile = pow(absf(n_tile), 1); #use this step to bias toward/away from 0
-	tile.power = CM_TILE_GEN_POW_MAX if (n_tile == 1.0) else int((CM_TILE_GEN_POW_MAX + 2) * n_tile) - 1;
+	tile.power = GV.TILE_GEN_POW_MAX if (n_tile == 1.0) else int((GV.TILE_GEN_POW_MAX + 2) * n_tile) - 1;
 	
 	#set chunk cells
 	chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.tile_val_to_id(tile.power, tile.ssign);
@@ -281,6 +272,9 @@ func generate_tile(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2
 	#debug
 	#if Vector2i(tx, ty) == Vector2i(0, 1):
 	#	tile.debug = true;
+
+func load_player():
+	pass;
 
 func _exit_tree():
 	#set exit condition
