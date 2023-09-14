@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://br4ktgm4grf6"]
+[gd_scene load_steps=4 format=3 uid="uid://br4ktgm4grf6"]
 
 [ext_resource type="Script" path="res://Levels/Level 12.gd" id="1_qjfa5"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_mvoie"]
-[ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="3_io8wo"]
 [ext_resource type="PackedScene" uid="uid://ck3d8d70jxrvw" path="res://Camera/TrackingCam.tscn" id="5_cl1ic"]
 
 [node name="Level 12" type="Node2D"]
@@ -39,9 +38,5 @@ theme = ExtResource("2_mvoie")
 theme_override_font_sizes/font_size = 50
 text = "The Deep Dereferenced"
 metadata/_edit_lock_ = true
-
-[node name="Walls" type="TileMap" parent="." groups=["wall"]]
-tile_set = ExtResource("3_io8wo")
-format = 2
 
 [node name="TrackingCam" parent="." instance=ExtResource("5_cl1ic")]

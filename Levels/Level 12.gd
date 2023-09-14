@@ -28,7 +28,8 @@ var loaded_pos_c_max:Vector2i; #inclusive
 
 #var load_start_time:int;
 #var load_end_time:int;
-var player_spawn_pos_t:Vector2i = Vector2i.ZERO;
+var player_global_spawn_pos_t:Vector2i = Vector2i.ZERO;
+var player_local_spawn_pos_t:Vector2i = player_global_spawn_pos_t % GV.CHUNK_WIDTH_T;
 
 @onready var last_cam_pos:Vector2 = $TrackingCam.position;
 
@@ -238,14 +239,14 @@ func load_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
-		$Walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
-		#$Walls.call_deferred("set_cell", 0, global_tile_pos, 0, Vector2i.ZERO)
+		#$Walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
+		chunk.get_node("Walls").set_cell(0, local_tile_pos, 0, Vector2i.ZERO);
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.BLACK_WALL;
 		#print("black instantiated");
 		return;
 	if absf(n_wall) < 0.02:
-		$Walls.set_cell(0, global_tile_pos, 1, Vector2i.ZERO);
-		#$Walls.call_deferred("set_cell", 0, global_tile_pos, 1, Vector2i.ZERO);
+		#$Walls.set_cell(0, global_tile_pos, 1, Vector2i.ZERO);
+		chunk.get_node("Walls").set_cell(0, local_tile_pos, 1, Vector2i.ZERO);
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.MEMBRANE;
 		#print("membrane instantiated");
 		return;
@@ -274,7 +275,23 @@ func load_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#	tile.debug = true;
 
 func load_player():
-	pass;
+	var chunk_pos_t:Vector2i = GV.pos_t_to_pos_c(player_global_spawn_pos_t);
+	var chunk:Chunk = loaded_chunks.get(chunk_pos_t);
+	if chunk != null:
+		#remove wall/tile at cell
+		chunk.get_node("Walls").set_cell(0, player_local_spawn_pos_t, -1, Vector2i.ZERO);
+		for child in chunk.get_children():
+			if child is ScoreTile and child.position == GV.pos_t_to_world(player_local_spawn_pos_t):
+				child.queue_free();
+		chunk.cells[player_local_spawn_pos_t.y][player_local_spawn_pos_t.x] = GV.StuffId.EMPTY;
+		
+		#add player
+		var player:ScoreTile = score_tile.instantiate();
+		player.position = GV.pos_t_to_world(player_local_spawn_pos_t);
+		player.is_player = true;
+		player.power = -1;
+		player.ssign = 1;
+		chunk.add_child(player);
 
 func _exit_tree():
 	#set exit condition

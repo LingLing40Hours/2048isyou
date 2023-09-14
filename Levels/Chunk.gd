@@ -3,7 +3,7 @@ extends Node2D
 
 #tiles in chunk are children
 var pos_c:Vector2i;
-var cells:Array; #holds cell data
+var cells:Array; #holds cell data, excluding player
 
 
 func _init():
