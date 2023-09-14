@@ -3,4 +3,5 @@
 
 Devlog/*
 **/*.gdextension
+**/.vscode/*
 **/build/*
