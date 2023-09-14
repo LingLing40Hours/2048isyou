@@ -152,7 +152,7 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 			semaphore.post();
 
 func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
-	print("unload ", pos_c_min, pos_c_max);
+	#print("unload ", pos_c_min, pos_c_max);
 	for cy in range(pos_c_min.y, pos_c_max.y + 1):
 		for cx in range(pos_c_min.x, pos_c_max.x + 1):
 			var pos_c:Vector2i = Vector2i(cx, cy);
@@ -291,7 +291,7 @@ func load_player():
 		player.is_player = true;
 		player.power = -1;
 		player.ssign = 1;
-		chunk.add_child(player);
+		add_child(player);
 
 func _exit_tree():
 	#set exit condition

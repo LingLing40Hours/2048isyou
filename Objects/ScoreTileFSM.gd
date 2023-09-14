@@ -32,7 +32,7 @@ var physics_on:bool = true;
 var physics_enabler_count:int = 0; #turn physics off when this reaches 0
 var slide_dir:Vector2i = Vector2i.ZERO;
 var next_dirs:Array[Vector2i] = []; #for premoving
-var next_moves:Array[String] = []; #allow early input when sliding/shifting
+var next_moves:Array[String] = []; #slide, split, shift
 #var func_slide:Callable = Callable(self, "slide");
 #var func_split:Callable = Callable(self, "split");
 #var func_shift:Callable = Callable(self, "shift");
@@ -208,11 +208,12 @@ func get_next_action():
 
 #assume level.last_input is valid
 func _on_repeat_input(input_type:int):
-	#don't repeat input if there are unconsumed premoves
+	#don't repeat input if undo or there are unconsumed premoves
 	if input_type != GV.InputType.MOVE or get_state() != "snap" or next_moves:
 		return;
 	
-	var action:Callable = get("func_" + game.current_level.last_input_modifier);
+	#var action:Callable = get("func_" + game.current_level.last_input_modifier);
+	var action:Callable = Callable(self, game.current_level.last_input_modifier);
 	action.call(GV.directions[game.current_level.last_input_move]);
 		
 

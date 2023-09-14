@@ -75,6 +75,7 @@ func update_target_parameters():
 	#print("SHIFT DISTANCE: ", distance);
 
 func handleInput(_event):
+	#allow early input
 	await game.current_level.processed_action_input;
 	actor.get_next_action();
 

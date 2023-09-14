@@ -86,7 +86,7 @@ const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
 const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies before premove
 const TILE_SLIDE_SPEED:float = 320;
-const COMBINING_MERGE_RATIO:float = 1/2.7;
+const COMBINING_MERGE_RATIO:float = 0; #1/2.7;
 
 const INPUT_REPEAT_DELAY_F0:int = 16; #when movement held down, delay (frames) between action calls
 const INPUT_REPEAT_DELAY_DF:int = -1; #every time input repeats, delay time decreases
@@ -106,7 +106,7 @@ enum ScaleAnim {
 	DWING
 };
 
-const DUANG_START_MODULATE:float = 0.2;
+const DUANG_START_MODULATE:float = 0; #0.2;
 const DUANG_START_ANGLE:float = 1;
 const DUANG_FACTOR:float = 1/sin(DUANG_START_ANGLE);
 const DUANG_END_ANGLE:float = PI - DUANG_START_ANGLE;

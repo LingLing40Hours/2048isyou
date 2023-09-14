@@ -75,7 +75,7 @@ func inPhysicsProcess(delta):
 		slide_done = true;
 
 func handleInput(_event):
-	if actor.is_player:
+	if actor.is_player: #allow early input
 		await game.current_level.processed_action_input;
 		actor.get_next_action();
 
