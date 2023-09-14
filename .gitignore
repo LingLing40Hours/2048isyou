@@ -3,3 +3,4 @@
 
 Devlog/*
 **/*.gdextension
+**/build/*
