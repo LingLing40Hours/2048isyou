@@ -1,6 +1,7 @@
 extends Level
 
 signal initial_chunks_loaded;
+var initial_chunk_count:int; #main then chunker
 var initial_chunks_loaded_b:bool; #shared
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
@@ -72,6 +73,7 @@ func _ready():
 	initial_chunks_loaded_b = false;
 	loaded_pos_c_min = GV.world_to_pos_c(last_cam_pos - half_resolution - Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	loaded_pos_c_max = GV.world_to_pos_c(last_cam_pos + half_resolution + Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
+	initial_chunk_count = (loaded_pos_c_max.x - loaded_pos_c_min.x + 1) * (loaded_pos_c_max.y - loaded_pos_c_min.y + 1);
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
@@ -180,6 +182,8 @@ func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 #based on camera position
 func manage_chunks():
 	Thread.set_thread_safety_checks_enabled(false);
+	var initial_load_count:int = 0;
+	
 	while true:
 		semaphore.wait(); #wait
 		
@@ -191,28 +195,31 @@ func manage_chunks():
 			break;
 		
 		#unload chunks
-		var unload_positions:Array = unload_queue.keys();
-		unload_mutex.lock();
-		unload_queue.clear();
-		unload_mutex.unlock();
-		#print("unload_positions: ", unload_positions);
-		for pos_c in unload_positions:
-			loaded_chunks[pos_c].queue_free();
-			loaded_chunks.erase(pos_c);
+		if not unload_queue.is_empty():
+			var unload_pos:Vector2i = unload_queue.keys().front();
+			unload_mutex.lock();
+			unload_queue.erase(unload_pos);
+			unload_mutex.unlock();
+			#print("unload_positions: ", unload_positions);
+			loaded_chunks[unload_pos].queue_free();
+			loaded_chunks.erase(unload_pos);
 		
 		#load chunks
-		var load_positions:Array = load_queue.keys();
-		load_mutex.lock();
-		load_queue.clear();
-		load_mutex.unlock();
-		#print("load_positions: ", load_positions);
-		for pos_c in load_positions:
-			var chunk:Chunk = load_chunk(pos_c);
+		if not load_queue.is_empty():
+			var load_pos:Vector2i = load_queue.keys().front();
+			load_mutex.lock();
+			load_queue.erase(load_pos);
+			load_mutex.unlock();
+			#print("load_positions: ", load_positions);
+			var chunk:Chunk = load_chunk(load_pos);
 			call_deferred("add_child", chunk);
-			loaded_chunks[pos_c] = chunk;
+			loaded_chunks[load_pos] = chunk;
+			if initial_load_count < initial_chunk_count:
+				initial_load_count += 1;
 		
+		#flag, signal
 		initial_mutex.lock();
-		if not initial_chunks_loaded_b:
+		if not initial_chunks_loaded_b and initial_load_count == initial_chunk_count:
 			initial_chunks_loaded_b = true;
 			call_deferred("emit_signal", "initial_chunks_loaded");
 		initial_mutex.unlock();
