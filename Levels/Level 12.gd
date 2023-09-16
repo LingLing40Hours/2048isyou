@@ -79,6 +79,7 @@ func _ready():
 	thread.start(manage_chunks);
 
 func _process(_delta):
+	print(loaded_pos_c_min, loaded_pos_c_max);
 	initial_mutex.lock();
 	var ic_loaded:bool = initial_chunks_loaded_b;
 	initial_mutex.unlock();
@@ -88,13 +89,13 @@ func _process(_delta):
 		var temp_pos_c_max:Vector2i = loaded_pos_c_max;
 		var track_dir:Vector2i = ($TrackingCam.position - last_cam_pos).sign();
 		if track_dir.x:
-			var load_min_x:float = $TrackingCam.position.x - half_resolution.x - GV.CHUNK_LOAD_BUFFER if track_dir.x < 0 else GV.CHUNK_UNLOAD_BUFFER;
-			var load_max_x:float = $TrackingCam.position.x + half_resolution.x + GV.CHUNK_LOAD_BUFFER if track_dir.x > 0 else GV.CHUNK_UNLOAD_BUFFER;
+			var load_min_x:float = $TrackingCam.position.x - half_resolution.x - (GV.CHUNK_LOAD_BUFFER if track_dir.x < 0 else GV.CHUNK_UNLOAD_BUFFER);
+			var load_max_x:float = $TrackingCam.position.x + half_resolution.x + (GV.CHUNK_LOAD_BUFFER if track_dir.x > 0 else GV.CHUNK_UNLOAD_BUFFER);
 			temp_pos_c_min.x = GV.world_to_xc(load_min_x);
 			temp_pos_c_max.x = GV.world_to_xc(load_max_x);
 		if track_dir.y:
-			var load_min_y:float = $TrackingCam.position.y - half_resolution.y - GV.CHUNK_LOAD_BUFFER if track_dir.y < 0 else GV.CHUNK_UNLOAD_BUFFER;
-			var load_max_y:float = $TrackingCam.position.y + half_resolution.y + GV.CHUNK_LOAD_BUFFER if track_dir.y > 0 else GV.CHUNK_UNLOAD_BUFFER;
+			var load_min_y:float = $TrackingCam.position.y - half_resolution.y - (GV.CHUNK_LOAD_BUFFER if track_dir.y < 0 else GV.CHUNK_UNLOAD_BUFFER);
+			var load_max_y:float = $TrackingCam.position.y + half_resolution.y + (GV.CHUNK_LOAD_BUFFER if track_dir.y > 0 else GV.CHUNK_UNLOAD_BUFFER);
 			temp_pos_c_min.y = GV.world_to_xc(load_min_y);
 			temp_pos_c_max.y = GV.world_to_xc(load_max_y);
 		update_chunk_queues(loaded_pos_c_min, loaded_pos_c_max, temp_pos_c_min, temp_pos_c_max);

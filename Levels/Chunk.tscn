@@ -6,6 +6,6 @@
 [node name="Chunk" type="Node2D"]
 script = ExtResource("1_7evs8")
 
-[node name="Walls" type="TileMap" parent="."]
+[node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("2_tlbhk")
 format = 2
