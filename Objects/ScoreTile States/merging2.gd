@@ -23,10 +23,7 @@ func inPhysicsProcess(delta):
 	slide_distance += slide_speed * delta;
 	if slide_distance >= GV.TILE_WIDTH:
 		if actor.is_player:
-			print("REMOVE");
-			print(game.current_level.players.size());
 			actor.remove_from_players();
-			print(game.current_level.players.size());
 		actor.queue_free(); #done sliding
 	else:
 		actor.move_and_collide(actor.velocity * delta);

@@ -1,8 +1,11 @@
 extends Level
 
-signal initial_chunks_loaded;
+signal initial_chunks_instanced;
+signal initial_chunks_readied;
+var initial_chunks_instantiated:bool; #shared
+var initial_chunks_ready:bool;
 var initial_chunk_count:int; #main then chunker
-var initial_chunks_loaded_b:bool; #shared
+var initial_ready_count:int;
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
 var packed_chunk:PackedScene = preload("res://Levels/Chunk.tscn");
@@ -27,8 +30,8 @@ var loaded_chunks:Dictionary; #CM thread
 var loaded_pos_c_min:Vector2i;
 var loaded_pos_c_max:Vector2i; #inclusive
 
-#var load_start_time:int;
-#var load_end_time:int;
+var load_start_time:int;
+var load_end_time:int;
 var player_global_spawn_pos_t:Vector2i = Vector2i.ZERO;
 var player_local_spawn_pos_t:Vector2i = player_global_spawn_pos_t % GV.CHUNK_WIDTH_T;
 
@@ -40,7 +43,7 @@ func _ready():
 	super._ready();
 	
 	#load player
-	initial_chunks_loaded.connect(load_player);
+	initial_chunks_instanced.connect(load_player);
 	
 	#randomize();
 	tile_noise.set_seed(2);
@@ -70,20 +73,29 @@ func _ready():
 	thread = Thread.new();
 	
 	#load initial chunks
-	initial_chunks_loaded_b = false;
+	initial_chunks_instantiated = false;
+	initial_chunks_ready = false;
+	initial_ready_count = 0;
 	loaded_pos_c_min = GV.world_to_pos_c(last_cam_pos - half_resolution - Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	loaded_pos_c_max = GV.world_to_pos_c(last_cam_pos + half_resolution + Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	initial_chunk_count = (loaded_pos_c_max.x - loaded_pos_c_min.x + 1) * (loaded_pos_c_max.y - loaded_pos_c_min.y + 1);
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
-	#load_start_time = Time.get_ticks_usec();
+	load_start_time = Time.get_ticks_usec();
 	thread.start(manage_chunks);
 
+func _on_chunk_ready():
+	if initial_ready_count < initial_chunk_count:
+		initial_ready_count += 1;
+		if initial_ready_count == initial_chunk_count:
+			initial_chunks_readied.emit();
+			load_end_time = Time.get_ticks_usec();
+			print("initial load time: ", load_end_time - load_start_time);
+
 func _process(_delta):
-	print(loaded_pos_c_min, loaded_pos_c_max);
 	initial_mutex.lock();
-	var ic_loaded:bool = initial_chunks_loaded_b;
+	var ic_loaded:bool = initial_chunks_instantiated;
 	initial_mutex.unlock();
 	if ic_loaded and $TrackingCam.position != last_cam_pos:
 		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
@@ -187,6 +199,13 @@ func manage_chunks():
 	while true:
 		semaphore.wait(); #wait
 		
+		#debug
+#		initial_mutex.lock();
+#		var temp = initial_chunks_instanced;
+#		initial_mutex.unlock();
+#		if temp:
+#			continue;
+		
 		#check for exit
 		exit_mutex.lock();
 		var should_exit = exit_thread;
@@ -219,13 +238,13 @@ func manage_chunks():
 		
 		#flag, signal
 		initial_mutex.lock();
-		if not initial_chunks_loaded_b and initial_load_count == initial_chunk_count:
-			initial_chunks_loaded_b = true;
-			call_deferred("emit_signal", "initial_chunks_loaded");
+		if not initial_chunks_instantiated and initial_load_count == initial_chunk_count:
+			initial_chunks_instantiated = true;
+			call_deferred("emit_signal", "initial_chunks_instanced");
 		initial_mutex.unlock();
 	
 func load_chunk(chunk_pos:Vector2i) -> Chunk:
-	#var dt = Time.get_ticks_usec();
+	var start_time:int = Time.get_ticks_usec();
 	#print("generate chunk ", chunk_pos); #print in thread is slow
 	var ans:Chunk = packed_chunk.instantiate();
 	ans.pos_c = chunk_pos;
@@ -233,13 +252,15 @@ func load_chunk(chunk_pos:Vector2i) -> Chunk:
 	ans.position = GV.pos_c_to_world(chunk_pos);
 	var start_tile_pos:Vector2i = GV.pos_c_to_pos_t(chunk_pos);
 	
+	#connect ready to increment_ready_count
+	ans.ready.connect(_on_chunk_ready);
+	
 	for tx in GV.CHUNK_WIDTH_T:
 		var global_tx:int = start_tile_pos.x + tx;
 		for ty in GV.CHUNK_WIDTH_T:
 			load_cell(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
-#	if chunk_pos == Vector2i.ONE:
-#		load_end_time = Time.get_ticks_usec();
-#		print("LOAD TIME: ", load_end_time - load_start_time);
+	var end_time:int = Time.get_ticks_usec();
+	print("chunk instance time: ", end_time - start_time);
 	return ans;
 
 #updates chunk cells and if tile, adds to chunk as child
