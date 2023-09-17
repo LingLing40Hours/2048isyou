@@ -10,10 +10,8 @@ signal processed_action_input;
 #on save, other players will become regular tiles
 @export var player_saved:ScoreTile;
 @export var resolution_t:Vector2i = GV.RESOLUTION_T;
-@export var min_x:float = 0;
-@export var min_y:float = 0;
-@export var max_x:float = GV.RESOLUTION.x;
-@export var max_y:float = GV.RESOLUTION.y;
+@export var min_pos:Vector2 = Vector2.ZERO;
+@export var max_pos:Vector2 = GV.RESOLUTION;
 
 @onready var game:Node2D = $"/root/Game";
 var scoretiles:Node2D;
@@ -263,13 +261,9 @@ func on_copy():
 			for col_itr in resolution_t.x:
 				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
 				if id == 0:
-					level_array[row_itr][col_itr] = GV.StuffId.BLACK_WALL;
-				elif id == 1:
-					level_array[row_itr][col_itr] = GV.StuffId.MEMBRANE;
-				elif id == 2:
-					level_array[row_itr][col_itr] = GV.StuffId.BLUE_WALL;
-				elif id == 3:
-					level_array[row_itr][col_itr] = GV.StuffId.RED_WALL;
+					level_array[row_itr][col_itr] = GV.StuffId.BORDER;
+				else:
+					level_array[row_itr][col_itr] = id * GV.StuffId.MEMBRANE;
 		
 		#store savepoint stuff ids (there's no overlap with tilemap)
 		for savepoint in savepoints.get_children():

@@ -32,8 +32,8 @@ func _ready():
 	max_dy = max_ry * level.resolution.y;
 	
 	#find position limits
-	min_pos = Vector2(level.min_x + level.resolution.x/2, level.min_y + level.resolution.y/2);
-	max_pos = Vector2(level.max_x - level.resolution.x/2, level.max_y - level.resolution.y/2);
+	min_pos = Vector2(level.min_pos.x + level.resolution.x/2, level.min_pos.y + level.resolution.y/2);
+	max_pos = Vector2(level.max_pos.x - level.resolution.x/2, level.max_pos.y - level.resolution.y/2);
 	
 	#set initial position
 	if level.players:

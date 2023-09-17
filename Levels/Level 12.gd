@@ -44,6 +44,12 @@ var player_local_spawn_pos_t:Vector2i = player_global_spawn_pos_t % GV.CHUNK_WID
 @onready var last_cam_pos:Vector2 = $TrackingCam.position;
 
 
+func _enter_tree():
+	super._enter_tree();
+	#set position bounds (before tracking cam _ready())
+	min_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MIN, GV.INT64_MIN);
+	max_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MAX, GV.INT64_MAX);
+
 func _ready():
 	chunked = true;
 	super._ready();
@@ -284,8 +290,13 @@ func manage_chunks():
 		initial_mutex.unlock();
 	
 func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
-	var start_time:int = Time.get_ticks_usec();
 	#print("generate chunk ", chunk_pos); #print in thread is slow
+	var start_time:int = Time.get_ticks_usec();
+	
+	#get cell function
+	var func_cell_str:String = "instantiate_cell_or_border" if contains_world_border(chunk_pos) else "instantiate_cell";
+	var func_cell:Callable = Callable(self, func_cell_str);
+	
 	var ans:Chunk = packed_chunk.instantiate();
 	ans.pos_c = chunk_pos;
 	#ans.call_deferred("set_position", GV.pos_c_to_world(chunk_pos));
@@ -298,12 +309,35 @@ func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
 	for tx in GV.CHUNK_WIDTH_T:
 		var global_tx:int = start_tile_pos.x + tx;
 		for ty in GV.CHUNK_WIDTH_T:
-			instantiate_cell(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
+			func_cell.call(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
+	
 	var end_time:int = Time.get_ticks_usec();
 	print("chunk instance time: ", end_time - start_time);
 	return ans;
 
-#updates chunk cells and if tile, adds to chunk as child
+func contains_world_border(pos_c:Vector2i) -> bool:
+	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
+		if pos_c.y >= GV.BORDER_MIN_POS_C.y and pos_c.y <= GV.BORDER_MAX_POS_C.y:
+			return true;
+	if pos_c.y == GV.BORDER_MIN_POS_C.y or pos_c.y == GV.BORDER_MAX_POS_C.y:
+		if pos_c.x >= GV.BORDER_MIN_POS_C.x and pos_c.x <= GV.BORDER_MAX_POS_C.x:
+			return true;
+	return false;
+
+func is_world_border(pos_t:Vector2i) -> bool:
+	if pos_t.x == GV.BORDER_MIN_POS_T.x or pos_t.x == GV.BORDER_MAX_POS_T.x:
+		if pos_t.y >= GV.BORDER_MIN_POS_T.y and pos_t.y <= GV.BORDER_MAX_POS_T.y:
+			return true;
+	if pos_t.y == GV.BORDER_MIN_POS_T.y or pos_t.y == GV.BORDER_MAX_POS_T.y:
+		if pos_t.x >= GV.BORDER_MIN_POST_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
+			return true;
+	return false;
+
+func instantiate_cell_or_border(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
+	if is_world_border(global_tile_pos):
+		
+
+#updates chunk cells; add tile as child or updates tilemap accordingly
 func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]

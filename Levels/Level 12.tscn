@@ -11,6 +11,7 @@ resolution_t = Vector2i(32, 24)
 min_x = -3200.0
 min_y = -2400.0
 max_x = 3200.0
+max_y = null
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = -10

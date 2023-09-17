@@ -23,6 +23,13 @@ const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
 const CHUNK_WIDTH_T:int = 5;
 const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
+const BORDER_DISTANCE_T:int = 2000000000;
+const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
+const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
+const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
+const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
+var BORDER_MIN_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MIN_POS_T);
+var BORDER_MAX_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MAX_POS_T);
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
@@ -150,16 +157,17 @@ var abilities = {
 
 #stuff ids
 enum StuffId {
-	RED_WALL = -3,
-	BLUE_WALL = -2,
-	BLACK_WALL = -1,
+	BORDER = -1,
 	ZERO = 16, #pow offset
 	NEG_ONE = 1,
 	POS_ONE = 31,
 	EMPTY = 0,
 	MEMBRANE = 32,
-	SAVEPOINT = 64,
-	GOAL = 96,
+	BLACK_WALL = 64,
+	BLUE_WALL = 96,
+	RED_WALL = 128,
+	SAVEPOINT = 160,
+	GOAL = 192,
 };
 
 
