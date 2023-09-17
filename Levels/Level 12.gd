@@ -17,16 +17,22 @@ var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
 var load_mutex:Mutex;
 var unload_mutex:Mutex;
-#var queue_mutex:Mutex;
 var initial_mutex:Mutex;
+var instanced_mutex:Mutex;
+var loaded_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
+#chunk_pos_c:Vector2i, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
 var unload_queue:Dictionary; #shared
-var modified_chunks:Dictionary; #chunk_pos:Vector2i, Chunk
-#var constructed_chunks:Array[Chunk]; #chunks waiting to enter scene tree
-var loaded_chunks:Dictionary; #CM thread
+
+#chunk_pos_c:Vector2i, chunk:Chunk
+var modified_chunks:Dictionary; #chunks modified by gameplay
+var instanced_chunks:Dictionary; #chunks waiting to enter scene tree
+var loaded_chunks:Dictionary; #CM thread; chunks both instanced and added to active tree
+
+#bounding rect
 var loaded_pos_c_min:Vector2i;
 var loaded_pos_c_max:Vector2i; #inclusive
 
@@ -43,7 +49,7 @@ func _ready():
 	super._ready();
 	
 	#load player
-	initial_chunks_instanced.connect(load_player);
+	initial_chunks_readied.connect(load_player);
 	
 	#randomize();
 	tile_noise.set_seed(2);
@@ -65,8 +71,9 @@ func _ready():
 	#thread stuff
 	load_mutex = Mutex.new();
 	unload_mutex = Mutex.new();
-	#queue_mutex = Mutex.new();
 	initial_mutex = Mutex.new();
+	instanced_mutex = Mutex.new();
+	loaded_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
@@ -79,6 +86,7 @@ func _ready():
 	loaded_pos_c_min = GV.world_to_pos_c(last_cam_pos - half_resolution - Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	loaded_pos_c_max = GV.world_to_pos_c(last_cam_pos + half_resolution + Vector2(GV.CHUNK_LOAD_BUFFER, GV.CHUNK_LOAD_BUFFER));
 	initial_chunk_count = (loaded_pos_c_max.x - loaded_pos_c_min.x + 1) * (loaded_pos_c_max.y - loaded_pos_c_min.y + 1);
+	print("INITIAL CHUNK COUNT: ", initial_chunk_count);
 	enqueue_for_load(loaded_pos_c_min, loaded_pos_c_max);
 	
 	#start thread
@@ -94,6 +102,7 @@ func _on_chunk_ready():
 			print("initial load time: ", load_end_time - load_start_time);
 
 func _process(_delta):
+	#mark chunks for load/unload based on camera pos
 	initial_mutex.lock();
 	var ic_loaded:bool = initial_chunks_instantiated;
 	initial_mutex.unlock();
@@ -118,6 +127,22 @@ func _process(_delta):
 		
 		#update last_cam_pos
 		last_cam_pos = $TrackingCam.position;
+	
+	#add an instanced chunk to active tree (all at once is too much to handle in one frame)
+	if not instanced_chunks.is_empty():
+		var load_pos:Vector2i = instanced_chunks.keys().back();
+		call_deferred("add_chunk", load_pos, instanced_chunks[load_pos]); #defer bc this is slow
+
+func add_chunk(pos_c:Vector2i, chunk:Chunk):
+	add_child(chunk);
+	
+	#move chunk from instanced to loaded
+	instanced_mutex.lock();
+	instanced_chunks.erase(pos_c);
+	instanced_mutex.unlock();
+	loaded_mutex.lock();
+	loaded_chunks[pos_c] = chunk;
+	loaded_mutex.unlock();
 
 #assume rects are inclusive and valid
 func update_chunk_queues(old_pos_c_min:Vector2i, old_pos_c_max:Vector2i, new_pos_c_min:Vector2i, new_pos_c_max:Vector2i):
@@ -160,7 +185,10 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 				unload_mutex.unlock();
 				continue;
 			unload_mutex.unlock();
-
+			
+			if instanced_chunks.has(pos_c):
+				continue;
+			
 			load_mutex.lock();
 			load_queue[pos_c] = true;
 			load_mutex.unlock();
@@ -185,7 +213,19 @@ func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 				load_mutex.unlock();
 				continue;
 			load_mutex.unlock();
-
+			
+			instanced_mutex.lock();
+			if instanced_chunks.has(pos_c): #move to loaded_chunks
+				var chunk:Chunk = instanced_chunks[pos_c];
+				instanced_chunks.erase(pos_c);
+				instanced_mutex.unlock();
+				loaded_mutex.lock();
+				loaded_chunks[pos_c] = chunk;
+				loaded_mutex.unlock();
+			else:
+				instanced_mutex.unlock();
+			
+			#mark for unload
 			unload_mutex.lock();
 			unload_queue[pos_c] = true;
 			unload_mutex.unlock();
@@ -199,13 +239,6 @@ func manage_chunks():
 	while true:
 		semaphore.wait(); #wait
 		
-		#debug
-#		initial_mutex.lock();
-#		var temp = initial_chunks_instanced;
-#		initial_mutex.unlock();
-#		if temp:
-#			continue;
-		
 		#check for exit
 		exit_mutex.lock();
 		var should_exit = exit_thread;
@@ -214,27 +247,34 @@ func manage_chunks():
 			break;
 		
 		#unload chunks
+		unload_mutex.lock();
 		if not unload_queue.is_empty():
-			var unload_pos:Vector2i = unload_queue.keys().front();
-			unload_mutex.lock();
+			var unload_pos:Vector2i = unload_queue.keys().back();
 			unload_queue.erase(unload_pos);
 			unload_mutex.unlock();
 			#print("unload_positions: ", unload_positions);
+			loaded_mutex.lock();
 			loaded_chunks[unload_pos].queue_free();
 			loaded_chunks.erase(unload_pos);
+			loaded_mutex.unlock();
+		else:
+			unload_mutex.unlock();
 		
 		#load chunks
+		load_mutex.lock();
 		if not load_queue.is_empty():
-			var load_pos:Vector2i = load_queue.keys().front();
-			load_mutex.lock();
+			var load_pos:Vector2i = load_queue.keys().back();
 			load_queue.erase(load_pos);
 			load_mutex.unlock();
 			#print("load_positions: ", load_positions);
-			var chunk:Chunk = load_chunk(load_pos);
-			call_deferred("add_child", chunk);
-			loaded_chunks[load_pos] = chunk;
+			var chunk:Chunk = instantiate_chunk(load_pos);
+			instanced_mutex.lock();
+			instanced_chunks[load_pos] = chunk;
+			instanced_mutex.unlock();
 			if initial_load_count < initial_chunk_count:
 				initial_load_count += 1;
+		else:
+			load_mutex.unlock();
 		
 		#flag, signal
 		initial_mutex.lock();
@@ -243,7 +283,7 @@ func manage_chunks():
 			call_deferred("emit_signal", "initial_chunks_instanced");
 		initial_mutex.unlock();
 	
-func load_chunk(chunk_pos:Vector2i) -> Chunk:
+func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
 	var start_time:int = Time.get_ticks_usec();
 	#print("generate chunk ", chunk_pos); #print in thread is slow
 	var ans:Chunk = packed_chunk.instantiate();
@@ -258,13 +298,13 @@ func load_chunk(chunk_pos:Vector2i) -> Chunk:
 	for tx in GV.CHUNK_WIDTH_T:
 		var global_tx:int = start_tile_pos.x + tx;
 		for ty in GV.CHUNK_WIDTH_T:
-			load_cell(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
+			instantiate_cell(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
 	var end_time:int = Time.get_ticks_usec();
 	print("chunk instance time: ", end_time - start_time);
 	return ans;
 
 #updates chunk cells and if tile, adds to chunk as child
-func load_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
+func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:

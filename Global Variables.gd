@@ -21,7 +21,7 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const CHUNK_WIDTH_T:int = 6;
+const CHUNK_WIDTH_T:int = 5;
 const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
 
 #level-related stuff
