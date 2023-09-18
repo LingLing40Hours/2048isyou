@@ -1,0 +1,879 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2638
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Bold;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Italic;
+\f3\fnil\fcharset0 HelveticaNeue-BoldItalic;}
+{\colortbl;\red255\green255\blue255;\red220\green161\blue13;}
+{\*\expandedcolortbl;;\cssrgb\c89412\c68627\c3922;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
+\margl1440\margr1440\vieww23480\viewh13000\viewkind0
+\deftab560
+\pard\pardeftab560\partightenfactor0
+
+\f0\b\fs40 \cf0 2048 Is You\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f1\b0\fs26 \cf0 \
+Titles\
+	Generic World\'92s Hardest Game and Baba Is You and 2048 and Minecraft Ripoff\
+	A Puzzle Game For You (And Your Computer)\
+	A Whole Sort Of General Mish Mash\
+	Number\
+		2148\
+		1024\
+		0x800\
+	One\
+		The One To Rule Them All\
+		The Chosen One\
+		Not One To Admit Defeat\
+	Baba is 2048\
+	2048 Is You\
+	2048 But You\'92re A Tile\
+	2048 But You Play As Tile\
+	#minecraftvania\
+\
+Dedication\
+Wrong idea is better than no idea\
+Dedicated to my stereo-imbalanced, double-typing every ten key presses or so laptop computer\
+	for all the bugs and finger grease and cover-slamming and mental breakdowns it\'92s put up with.\
+In loving memory of my NPT in a car backseat.\
+In loving memory of my childhood braincells.\
+\
+Poem\
+64 is red\
+Hostile is blue\
+Gray is player\
+2048 is you\
+Yellow is save\
+Green is too\
+Polychrome is collide\
+Monochrome is through\
+\
+Schedule (nice try)\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 	7/22 shifting
+\f1\b0 \
+	7/23 track\
+	7/24 lv1, lv2\
+	7/25 lv4, lv5, track\
+	7/27 track\
+	7/29 track\
+	7/30 lv6\
+	8/1 procedural generation, track\
+\
+\
+Music\
+	dynamic sound effect pitch to match key of current song\
+	convert game audio to mp3\
+	provide mp3, wav, and flp for download\
+	Sources\
+		The Music of 3b1b			Vincent Rubinetti\
+		Northern Pastures\
+		Tis the Season			\
+		The Magnificent Seven		Elmer Bernstein\
+		LIFE						Raubana\
+		Glorious Morning			Waterflame\
+		Brainiac Maniac			Laura Shigihara\
+		Simple Symphony\
+		Hollow Knight OST\
+		Pirates of the Caribbean OST\
+		Lagtrain\
+		Game of Thrones Opening Theme\
+		Merry Christmas Mr. Lawrence\
+		Scarborough Fair\
+		Suzume\
+		Interstellar OST\
+\
+Levels\
+	Hello World\
+	Hello Game\
+	Messing In Memory\
+	Making Ends Meet\
+	Lost In Memory\
+	Feature Not Bug\
+		baddies bouncing diagonally\
+	Beware of Bug\
+	Wall Is Danger/Die\
+	Cheridan\
+	Wall I Am\
+		maze you move around in by split merging\
+	World\'92s Hardest Maze\
+		walls are pushable\
+	World\'92s Second Hardest Maze\
+		like Hello World maze but larger\
+	There Is No Wall\
+	Up Is Down\
+	64 Is Red\
+		red baddie passes through 64\
+	Down Is Up\
+	One-Way Valve\
+	2048 Are You\
+		more than one player\
+	ProcGen\
+		open world exploration\
+	\
+\
+No collisions between same color objects\
+	Except black, which collides with every color\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 Collect 2048 blocks by pushing them into chest\
+	animate tile scaling after fusion\
+	combine before pushing to save effort\
+	combine and take advantage of baddie to transport 2048 block\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 ScoreTile stuff:\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 	when merging:\
+		set z_index to -1
+\f1\b0 \
+	when switching to player:\
+		add_group(\'93player\'94)?\
+		enable all masks except 2\
+		enable physicsEnabler\
+		disable rays\'92 mask 2\
+		reduce collider size\
+		switch to dark sprite\
+	banter after player dies\
+	splitting:\
+		tile shrinks - squeezes new tile out of itself\
+		set focus_dir to 0 after split?\
+	states:\
+		slide\
+		snap\
+		tile\
+		sliding\
+		merging1\
+		merging2\
+		combining\
+		splitting\
+\
+2048 path puzzle\
+	bfs to verify solution exists\
+	bfs to generate highest scoring solutions\
+	Cmd+Z to undo last merge(s), put player back to position when merge happened\
+	checkpoints\
+	Cmd+P to play solution\
+		spacebar to pause/unpause\
+	
+\f0\b fix scoretile lag
+\f1\b0 \
+		turn off collision detection\
+		use physicsserver2d\
+		
+\f0\b turn off raycast monitoring
+\f1\b0 \
+
+\f0\b 	don\'92t play sound if player can\'92t slide
+\f1\b0 \
+	annihilate with counterpart, merge with dark tiles only?\
+		only one dark at a time\
+		merge with counterpart\
+
+\f0\b 	Input - if multiple pressed, go in last pressed dir, don\'92t use get axis?\
+	Input - use mix o
+\f1\b0 f 
+\f0\b fget axis and last pressed
+\f1\b0 \
+\
+Dueling Mode\
+	fight with an inverted 2 (which annihilates with regular 2s and merges with inverted 2s)\
+\
+Level design\
+	shorten single-choice routes that lead to dead ends\
+	enter lv6 arrow from right not left\
+	loading bar for dense levels\
+	12s after death, a random 8 starts banter, followed by other 8s\
+	player dies after reaching 4096?\
+\
+Mobile Controls\
+	snap mode\
+		tap to slide\
+		swipe to shift\
+	slide mode\
+		round direction wheel (with non-fixed location)\
+\
+Instructions\
+	
+\f2\i 2048 Is You
+\f1\i0  says hello.\
+	
+\f2\i 2048 Is You
+\f1\i0  says he is a difficult game.\
+	To prove his point, 
+\f2\i 2048 Is You
+\f1\i0  has not provided instructions here.\
+\
+	press Cmd+E to return home\
+	press Cmd+R to discard save points and restart current level\
+	press Cmd+T to revert to last save point\
+	press Cmd+R to revert to the current level\'92s last save point, or, if none set, restart current level\
+		both green and yellow are save points\
+		warning: this will overwrite your progress in the current level\
+	press Cmd+Z to revert to state before the last merge\
+	press Cmd+P to view current level\'92s official solution\
+		spend points (from chest)\
+		harder levels cost more points\
+	press any key to stop playing solution\
+	press Cmd+movement to move via split\
+	press Shift+movement to shift (move until obstructed)\
+	press Cmd+X to toggle movement mode (slide/snap)\
+		in slide mode, you cannot merge or split\
+	If you are stuck (or suspect you are), press Cmd+T to go back to last save point, or Cmd+R to restart the level\
+	Same colors don\'92t collide.\
+		(Except black. Black collides with everything. And savepoints)\
+	Push tiles into chest to earn points.\
+	When not sliding, tiles can block enemies.\
+\
+Z Indices\
+	-10 Background\
+	-9 Hidden Label\
+	-2 Goals, Savepoints\
+	-1 Merging\
+	0 Default\
+	1 Splitting new_img\
+	2 Splitting img\
+	3 Combining new_img\
+	4 Combining img\
+	10 Level Name\
+\
+Layers\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 1. walls (excluding membrane), player, idle tiles, moving tiles if in snap mode, tile raycast, player raycast, unlocker\
+2. Membrane, tile raycast, baddie masks, savepoints? (NAH)\
+3. PhysicsEnabler, tiles\
+4. Baddie 5 mask and raycast mask, player (always), tiles (always), walls (except black)\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+Layers 5-32 all have player mask, player, tiles, walls*, baddies*\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 29. Baddie 4\
+30. Baddie 3\
+31. Baddie 2 Mask (layers 4-32 except 31)\
+32. Baddie 1 Mask (layers 4-32 except 32)\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+New Layers?\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 1. Inter-tile, baddie aggro\
+2. Tile physics enabling\
+3. Player, ability unlocking\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+Stuff IDs\
+	border		-1\
+\
+	-1			1\
+	-2^14		2\
+	\'85			\'85\
+	-4			14\
+	-2			15\
+	0			16\
+	2			17\
+	4			18\
+	\'85			\'85\
+	2^14		30\
+	1			31\
+\
+	empty		0\
+	membrane	32\
+	black wall	64\
+	blue wall		96\
+	red wall		128\
+	savepoint	160\
+	goal			192\
+\
+Todo\
+	learn procedural animation (animation too restrictive)\
+	learn Godot 3D\
+	learn particle effects\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 	Down bug solutions\
+		Squeeze\
+		Increase safe margin\
+		Temporarily turn off collision with player\
+		Temporarily move_and_slide\
+		Change move_and_slide mode to FLOATING (YAY)
+\f1\b0 \
+
+\f0\b 	presnapping
+\f1\b0 \
+	
+\f0\b don't snap_slide unless there's a new key press
+\f1\b0 \
+	
+\f0\b speed up snap_sliding
+\f1\b0 \
+	
+\f0\b get rid of focus_dir\
+	fix snapping into walls/tiles bug\
+		see ScoreTileFSM.gd line 66\
+		snap if offset within player collider
+\f1\b0 \
+	
+\f0\b premoving - slide/split/shift? (NAH, limit to slide/merge)\
+		premoving - sliding, shifting, splitted, combining
+\f1\b0 \
+	
+\f0\b fix shifting against tile/wall bug
+\f1\b0 \
+	
+\f0\b fix not merging bug
+\f1\b0 \
+	
+\f0\b fix continual snap_sliding bug
+\f1\b0 \
+	
+\f0\b allow shift if not aligned
+\f1\b0 \
+	
+\f0\b find better split sound
+\f1\b0 \
+
+\f0\b 	fix shifting through save point bug\
+		make distance to first tile in save point
+\f1\b0 \
+	
+\f0\b fix slide instead of split bug (when going right then down)\
+	speed up combining animation or allow state change before animation finishes\
+		write animation player for combining/splitting\
+			instantiate new for each animation, queue_free when finished\
+			more than 2 sprites at a time\
+	annihilate with -2^pow to become 0
+\f1\b0 \
+
+\f0\b 	0 merges with anything, good for covering unlocker labels\
+		merge with player half the time, toward slide_dir half the time? (NAH, introduces randomness)
+\f1\b0 \
+	
+\f0\b when created from merge, 4096 is player
+\f1\b0 \
+	
+\f0\b don\'92t save baddie multiple times\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f1\b0 \cf0 	
+\f0\b snapshots
+\f1\b0 	\
+		
+\f0\b fix extra 2 bug
+\f1\b0 \
+		
+\f0\b fix physics off bug
+\f1\b0 \
+		
+\f0\b fix undo split bug
+\f1\b0 \
+		
+\f0\b fix split then merge bug
+\f1\b0 \
+		
+\f0\b maintain current_level.players
+\f1\b0 \
+		
+\f0\b work in slide mode
+\f1\b0 \
+		
+\f0\b fix left right bug
+\f1\b0 \
+		
+\f0\b fix teleportation/random death bug
+\f1\b0 \
+	add hidden instruction in lv3, after 128, in opposite direction of goal\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 	fix pass two savepoints, revert to the second, then undo to the first savepoint\
+		make savepoint.saved an export var\
+	fix 304 tiles packed, 300 tiles instantiated bug\
+	fix pass 2 savepoints, revert to 2nd, snapshot refs missing bug\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f1\b0 \cf0 	make leaving savepoint (instead of entering savepoint) meaningful (NAH?)\
+	
+\f0\b fix export array bug by copying refs manually
+\f1\b0 \
+	
+\f0\b fix pop2, revert, repeat then bug
+\f1\b0 \
+	
+\f0\b fix pop, undo, repeat then bug\
+	fix save too late when exiting savepoint
+\f1\b0 \
+	
+\f0\b fix extremely slow shift if through savepoint (return to full speed after the one frame)
+\f1\b0 \
+	
+\f0\b fix premoves sometimes not working (shorten combining/splitting frame count)
+\f1\b0 \
+	
+\f0\b fix splitting
+\f1\b0 \
+	player is completely black (including number) when invincible, then fade to normal\
+		use modulate\
+	Baddie 5\
+		when dormant, baddie 5 is fake black wall tile?\
+		upon eaten, player becomes dormant baddie 5\
+	Track Score\
+		start level with maximum score, lose combined value for every merge\
+		start level with 0 score, gain combined value for every merge\
+	one-way valve\
+		without splitting, empty space is increasing contiguously (non-strictly)\
+		so a one-way valve must require player to split\
+	
+\f0\b don\'92t clear snapshots when reverting
+\f1\b0 \
+		
+\f0\b add temp snapshots in GV or add_level
+\f1\b0 \
+	
+\f0\b input repeat delay - hold down movement to snap slide continuously?
+\f1\b0 \
+		adjustable input repeat delay in settings\
+		
+\f0\b remove timer; add premove when last move finishes so player only spends 1 frame in snap
+\f1\b0 \
+		
+\f0\b allow infinite premoves\
+			transfer premoves to new player upon merge
+\f1\b0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 	fix offset player\'92s raycast not detecting obstructing tile\
+		use player-widthed shapecasts instead of raycasts
+\f1\b0 \
+		
+\f0\b prevent x-slide if not y-aligned, and vice versa? (NAH, might be mistaken for bug if no tiles nearby)
+\f1\b0 \
+	
+\f0\b savepoints\
+		allow multiple reverts (save multiple packed scenes)\
+		only save the first time player enters (before player messes up in the next stage)
+\f1\b0 \
+		
+\f0\b don\'92t show level name upon revert
+\f1\b0 \
+		
+\f0\b fix player spawn position by freeing then respawning player
+\f1\b0 \
+		
+\f0\b all goals should have membranes to reserve space for spawning player
+\f1\b0 \
+
+\f0\b 		spawn into baddies?\
+			player after baddies in scene tree to detect and reset position of nearby baddies (NAH)\
+			player gets 3s of spawn protection
+\f1\b0 \
+		
+\f0\b implement PlayerSnapshot\
+		initial goal to spawn player after Cmd+R?
+\f1\b0 \
+		
+\f0\b save player value between levels
+\f1\b0 \
+		
+\f0\b for green savepoint, fade to black, then queue_free/free player and convert the others to tiles and clear snapshots, then save_game, then queue_free level
+\f1\b0 \
+		
+\f0\b yellow savepoints should not interfere with snapshots\
+	make savepoints compatible with snapshots
+\f1\b0 \
+		
+\f0\b let entering savepoint be a meaningful snapshot
+\f1\b0 \
+		
+\f0\b and undos update level_last_savepoint_id
+\f1\b0 \
+		
+\f0\b verify no setting last/initial_savepoint_id to -1
+\f1\b0 \
+	row of 0s with \'93made you look\'94 instead of ability\
+	don\'92t lose any premoved input (see Baba Is You)\
+	ProcGen\
+		maze version\
+			generate classic maze, replace corridors with arithmetic power series\
+		tile is free if can be pushed\
+			both x neighbors or both y neighbors missing\
+			connected to player territory\
+	fix 2-player\
+		
+\f0\b sound bug\
+		
+\f1\b0 2p, 1p, split right\
+		shifting bug?\
+		gap when sliding bug?\
+		
+\f0\b physics enabling bug
+\f1\b0 \
+	? Icon to see instructions\
+		red circle at top right to indicate new abilities unlocked\
+		when opened, new abilities are highlighted\
+	baddie 5\
+		ambush\
+			wrap arm around and kill a tile/baddie/player\
+			subtle bulge in wall as hint\
+		idle\
+			extend tentacles like a filter feeder\
+		chase\
+		wall\
+		walling\
+			turning into wall\
+		\
+	to win game, enter 
+\f2\i 2048 Is You
+\f1\i0  logo\
+		at which point player will be 2048\
+	section in lv0 for variants\
+		make it fast to switch variants using shift plus 1-2 snaps\
+		
+\f0\b tracking/teleporting cam for shifts
+\f1\b0 \
+	sound effects for undo, revert, restart, home\
+	player shoot projectile at button to toggle gate, delays projectile rebound\
+
+\f0\b 	ability - increase tile push limit\
+		merges are prioritized over sliding, except for 0s at the end of the line, which prioritize sliding over merge
+\f1\b0 \
+	learn C# for Godot (priority queue, pathfinding speed)\
+	learn GDExtension for queue\
+	if pushed is player, turn off pusher collider when sliding\
+	push more tiles at a time\
+	
+\f0\b debug why level key not found\
+	
+\f1\b0 increase player speed to keep up with fast pressing\
+	ensure procgen same-value patch staircases don\'92t dead end\
+
+\f0\b 	add GV.tile_pow_max, stop max value tiles from merging
+\f1\b0 \
+	increase hello world difficulty (both smuggle and maze)\
+
+\f0\b 	change dict key to std::pair<pos, level>
+\f1\b0 \
+
+\f0\b 	fix lv12 splitting not respecting push limit bug
+\f1\b0 \
+	use vector.resize() or reserve()\
+	
+\f0\b speed up animation?
+\f1\b0 \
+	
+\f0\b fix double snap sound (NAH, 0.5 playback speed issue)
+\f1\b0 \
+	chunk (un)loading\
+make offscreen nodes invisible\
+set_cell in loop will kill you on function call overhead, use set(\'93tile_data\'94) instead\
+		use multi-threading\
+		is 'unloading' a chunk (by queue_freeing all the tiles inside when it goes out of range) worth all the calls to add_child and queue_free\
+	test gde global vars (bc static doesn\'92t work)\
+	fix memory leak from savepoints, obj pool\
+	add tile grid (togglable in game settings)\
+	give savepoints a \'93used\'94 indicator\
+	
+\f0\b fix all 0.5 and pos_t bugs\
+	
+\f1\b0 City of Tiles - fade in intro as player approaches boss, loop until player enters aggro range, then play drop\
+	
+\f0\b use separate mutex for load_queue and unload_queue
+\f1\b0 \
+	use object pool for tiles\
+	
+\f0\b set initial_chunks_loaded (NAH)
+\f1\b0 \
+	
+\f0\b commit, write version with shared mutex, aggregate lock, profile, commit
+\f1\b0 \
+	make 4096 behave like pushable black wall\
+		except hostiles/player can be 4096\
+		4096 doesn\'92t collide with black wall\
+	colorblind-friendly icons for 
+\f0\b player/hostile
+\f1\b0 , wall/membrane/red/blue/savepoint/goal\
+		use v+8 (HSV) rounded square to indicate hostility\
+		use 2-digit hex numbers for savepoints/goals\
+	switch to pooled arrays\
+	
+\f0\b use separate tileMap for each chunk?
+\f1\b0 \
+	
+\f0\b use visibilityNotifier instead of _process logic and trackingCam position (NAH)
+\f1\b0 \
+	fix shift not detecting far tiles\
+	fix shifting into unloaded chunks bug\
+\
+\
+the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
+\
+Variants\
+	Discount 2048 Is You\
+		player can change some tile locations in level as they see fit before playing\
+	Hi, Bot - design lv to defeat bot (but player must beat it)\
+		Input\
+			left click on tile to power++\
+			right click on tile to power\'97\
+			shift click to paste tile (with same value as tile last edited)\
+			\
+		level has predetermined dimensions\
+		start from scratch, or predetermined tiles/walls in place\
+		defeat is failing to find path\
+		defeat is failing to find path consisting of n- moves\
+	I, Bot - write bot(s) to compete in weekly bot tournaments (like micro-mouse)\
+		use server to store user bots\
+		game on local\
+		game on website {\field{\*\fldinst{HYPERLINK "http://2048isyou.com"}}{\fldrslt \cf2 2048isyou.com}}\
+	Tile Run\
+		Large snake\
+		Wall of glitchy tiles\
+		Hostiles - hostile tiles\
+			cannot slide (else overpowered)\
+			if in empty space for too long, turns to wall\
+			if negative-valued, chase player to merge with it\
+			upon merge, player becomes non-player 0\
+			(if player absolute value is larger than hostile or hostile positive-valued, it cannot kill player)\
+			but it can still obstruct/interfere player path\
+			multiple small abs valued hostiles will merge in order to kill player\
+			If stuck, create a 4096 tile and continue onward\
+			if a change in lv affects computed path or endpoint (player) moves, redo pathfind\
+			increase tile push limit\
+				as power increases\
+				in late-game regions\
+			allow 2 adjacent hostiles to swap pos by phasing through each other\
+			to get nearby level array, hostile\
+				wait until adjacent tiles are all idle\
+				use area2d, shift by offset (NAH)\
+				use dynamically updated level array\
+			if hostile obstructing player, ensure target pos isn\'92t same as that of another obstructor\
+			if 2+ hostiles\'92 next action conflict\
+				merge if path doesn\'92t require splitting and resulting value matches player\
+				one of the hostiles waits\
+			any-valued hostile can kill player if player is 0\
+			regular hostiles die when becoming 0; player can use this to \'91kill\'92 them\
+			immortal hostiles retain hostility when becoming 0\
+		Weak Hostile (is_weak = true)\
+			hostile but can\'92t break 0s (pushing 0s allowed)\
+		Strong Hostile (tile_push_limit = 2+)\
+			nerf by increasing wait time between moves\
+		Fission Hostile\
+			produces two hostiles upon splitting\
+	Open World\
+		names\
+			The Grated/Grid Unknown\
+			Uncharted Matrix/Chart\
+			Unexplored Horizontals (and Verticals)\
+			Segmentation Fault\
+			Dereferenced Memory\
+			The Deep Dereferenced\
+			Dereferenced Zone (DFZ)\
+		mimic what real computer memory looks like\
+			rectangular blocks of identical values?\
+		exploration, rpg stuff\
+		procgen (like Minecraft)\
+			2 noise layers, 1 variance layer\
+		occasional bosses\
+			dark wall/tentacle monster (see baddie 5)\
+			ram - can break tiles with abs < 128\
+			glitch-like wave/region in which tiles will rearrange themselves\
+				chases player, then tiles rearrange into descending gradient to trap player\
+				requires tiles to propagate, cannot affect empty space\
+				gray-modulate tiles within self (with particle effects and puffy/shifting/dynamic/cloud-like borders) to indicate position\
+				die if containing 5+ non-tile cells\
+			tribe of hostiles that has a 1-generator and tries to fill entire world with 2048s\
+			tribe of hostiles that tries to merge all tiles?\
+		occasional chest\
+		also has Hostiles\
+		slow, diagonally-moving passive tiles\
+			push two adjacent tiles (at right angle to one another) with every slide\
+		naturally spawned structures (chest, chest puzzle, tile puzzle, hostile fort)\
+		if player in slide mode\
+			sudden death when hostile touches?\
+			merge as if player were on grid position\
+			limit slide mode time\
+	Puzzle\
+		hourly server-wide, points awarded by finishing rank\
+			prevent solution sharing and multiple accounts\
+		lv0-11\
+		unlock abilities\
+		in lv6, use both 3-channels - one path pushes away 32 from the other\'92s <64, 32, 32, 32> path\
+	Complex 2048\
+		naturally occurring 
+\f3\i\b i
+\f1\i0\b0 s\
+		square root operator tile\
+		multiplication upon merging\
+\
+Built-In Bots\
+	straight - goes straight\
+	greedy - combines as much as possible\
+	perfect - always finds path with fewest moves\
+\
+Pathfinder\
+	sparser graph nah\
+	greedier astar nah\
+	multidest maybe\
+	coroutines/multi-threading yes\
+	optimal heuristics nah\
+	dp with min_box (plus 1-2 layers) yes\
+	hashed array tree maybe\
+	rerun search when min_box updates\
+	ignore maze corridor nodes\
+	ignore middle-of-empty-space nodes\
+
+\f0\b 	stop search if target enclosed by wall
+\f1\b0 \
+
+\f0\b 		trace wall upon encountering it, mark as traced (NAH)\
+		floodfill using A* to ensure target isn\'92t enclosed\
+	
+\f1\b0 deadlock detection\
+	D* (multi-A* with raise/lower propagation)\
+	Modify A* so it searches for multiple starting points\
+	ignore all empty space nodes except if meaningful action is possible\
+		after macro A* finishes, use micro A* with dp to fill in path between nodes\
+		micro A* can operate on empty space min_box instead of entire level\
+		pushing tile might be non-meaningful\
+			stop search if target enclosed by impenetrable tile cocoon and only useless tile(s) can be pushed\
+		every time meaningful action is done (not including pushing free-floating tiles), try an A* to target (using a global visited array)\
+			this isn\'92t guaranteed to be optimal\
+	
+\f0\b convert to iterative deepening A*?
+\f1\b0 \
+	don\'92t search split then push partner bc faster alternative exists?\
+	
+\f0\b debug IDA* not optimal
+\f1\b0 \
+	use z_hash()?\
+	
+\f0\b synchronize pathfinders\
+	
+\f1\b0 ui to indicate searching or search progress\
+	don\'92t go for shortest path, try to anticipate player moves and keep options open\
+	only copy row/col, not entire level when calling try_action()\
+	jump points\
+		include points where split/slide to adjacent tile is possible\
+\
+Achievements\
+	recluse/oops/cocoon/hibernation/snug and sealed - trap yourself (by splitting, then merging the split tile)\
+	pixel perfect - beat lv1 without using tiles (without pushing them into designated areas)\
+	without a trace - manually reset all levels (without using new game button)\
+	smuggler - beat Hello World\'92s maze the easy way\
+\
+Changing File Structure\
+	close all scenes in editor\
+	don't move scripts and scenes together\
+	only move one scene at a time\
+	try to open each moved scene\
+	fix dependencies in textEdit if necessary\
+\
+Fixing Scene Parse Error Bug\
+	close godot, remove lines 3 and 34 from ScoreTile.tscn, open godot and ScoreTile.tscn, run game, close godot (with ScoreTile.tscn open), re-add lines 3 and 34, open godot\
+	close all scenes and the script ScoreTileFSM.gd, then close godot before running scons\
+	if nc = 0/-1 bug, re-download godot (NAH)\
+	if problem scene not open:\
+		remove problem line in .tscn file\
+		restart godot\
+		open problem scene\
+	else:\
+		remove problem line in .tscn file\
+		click Reload in Godot\
+	re-add problem line in .tscn file\
+	click Reload in Godot\
+\
+Sources\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://github.com/mphe/GDNative-Ropesim"}}{\fldrslt \cf2 https://github.com/mphe/GDNative-Ropesim}}\
+\
+\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\b \cf0 Game Creation Resources
+\f1\b0  \
+Art tools:\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://colorhunt.co/"}}{\fldrslt \cf2 https://colorhunt.co/}} Palette suggestions \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://lospec.com/palette-list"}}{\fldrslt \cf2 https://lospec.com/palette-list}} Lo-bit palettes \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://kenney.nl/assets"}}{\fldrslt \cf2 https://kenney.nl/assets}} Free ccby0 Assets 2D and 3D plus isometric\
+2D Art Assets: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Free, licensed art assets \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://pixabay.com/"}}{\fldrslt \cf2 https://pixabay.com/}} 2D images \
+2D Art Creation: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://krita.org/"}}{\fldrslt \cf2 https://krita.org/}} Drawing program, also works for image manipulation \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://libresprite.github.io/"}}{\fldrslt \cf2 https://libresprite.github.io/}} (Old version of Aseprite, free) \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.gimp.org/"}}{\fldrslt \cf2 https://www.gimp.org/}} Free, open source image editor \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.aseprite.org/"}}{\fldrslt \cf2 https://www.aseprite.org/}} Pixel art program (not free) \
+3D Art Assets: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.poliigon.com/search?credit=0"}}{\fldrslt \cf2 https://www.poliigon.com/search?credit=0}} Free textures (priced textures available) \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://polyhaven.com/"}}{\fldrslt \cf2 https://polyhaven.com/}} Free, license cc0 textures \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.openfootage.net/textures/"}}{\fldrslt \cf2 https://www.openfootage.net/textures/}} Free, licensed images and textures \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.mixamo.com/#/"}}{\fldrslt \cf2 https://www.mixamo.com/#/}} 3D animations \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.turbosquid.com/"}}{\fldrslt \cf2 https://www.turbosquid.com/}} 3D models (not free)\
+3D Art Creation: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.blender.org/"}}{\fldrslt \cf2 https://www.blender.org/}} Free, open source, 3D modelling software \
+Sound Assets: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://incompetech.com/music/royalty-free/music.html"}}{\fldrslt \cf2 https://incompetech.com/music/royalty-free/music.html}} Royalty free music \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://freesound.org/"}}{\fldrslt \cf2 https://freesound.org/}} Free, licensed sound effects\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://freemusicarchive.org/"}}{\fldrslt \cf2 https://freemusicarchive.org/}} Music\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Sound effects\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.kenney.nl/assets?q=audio"}}{\fldrslt \cf2 https://www.kenney.nl/assets?q=audio}} Music, sound effects\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://sonniss.com/gameaudiogdc"}}{\fldrslt \cf2 https://sonniss.com/gameaudiogdc}} Sound effects\
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.shockwave-sound.com/"}}{\fldrslt \cf2 https://www.shockwave-sound.com/}}\
+Sound Creation: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.audacityteam.org/"}}{\fldrslt \cf2 https://www.audacityteam.org/}} Free, open source DAW \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://lmms.io/"}}{\fldrslt \cf2 https://lmms.io/}} DAW \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://sfxr.me/"}}{\fldrslt \cf2 https://sfxr.me/}} 8-bit sound and effects \
+Other: \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://github.com/"}}{\fldrslt \cf2 https://github.com/}} Source/version control \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://code.visualstudio.com/"}}{\fldrslt \cf2 https://code.visualstudio.com/}} IDE \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://trello.com/home"}}{\fldrslt \cf2 https://trello.com/home}} Project management tool \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://thebookofshaders.com/"}}{\fldrslt \cf2 https://thebookofshaders.com/}} Shader maths and info \
+\pard\pardeftab560\slleading20\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://jannikboysen.itch.io/easy-releasy"}}{\fldrslt \cf2 https://jannikboysen.itch.io/easy-releasy}} itch.io page decoration templates\
+\
+Remember ALWAYS check the license of any tools or assets you use as you may have to include that in the game information. Free does not mean you can use it without consequence.\uc0\u8232 \u8232 \
+\
+[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="1_4wq03"]\
+script = ExtResource("1_4wq03")\
+\
+\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+}
