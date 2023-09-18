@@ -11,12 +11,15 @@ texture_region_size = Vector2i(40, 40)
 0:0/0 = 0
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
 0:0/0/physics_layer_1/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_1/angular_velocity = 0.0
 0:0/0/physics_layer_2/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_2/angular_velocity = 0.0
 0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_3/angular_velocity = 0.0
+0:0/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_4/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8ypd0"]
 resource_name = "Membrane"
@@ -33,23 +36,11 @@ texture_region_size = Vector2i(40, 40)
 0:0/0/physics_layer_2/angular_velocity = 0.0
 0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_3/angular_velocity = 0.0
+0:0/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_4/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0d0sd"]
 texture = ExtResource("1_cbubu")
-texture_region_size = Vector2i(40, 40)
-0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
-0:0/0/physics_layer_1/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_1/angular_velocity = 0.0
-0:0/0/physics_layer_2/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_2/angular_velocity = 0.0
-0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_3/angular_velocity = 0.0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tmd3k"]
-texture = ExtResource("4_x7feg")
 texture_region_size = Vector2i(40, 40)
 0:0/0 = 0
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -61,6 +52,24 @@ texture_region_size = Vector2i(40, 40)
 0:0/0/physics_layer_2/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
 0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_3/angular_velocity = 0.0
+0:0/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_4/angular_velocity = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tmd3k"]
+texture = ExtResource("4_x7feg")
+texture_region_size = Vector2i(40, 40)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_1/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_1/angular_velocity = 0.0
+0:0/0/physics_layer_2/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_2/angular_velocity = 0.0
+0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_3/angular_velocity = 0.0
+0:0/0/physics_layer_3/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
+0:0/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_4/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ifu3"]
 texture = ExtResource("2_4i8su")
@@ -74,18 +83,22 @@ texture_region_size = Vector2i(40, 40)
 0:0/0/physics_layer_2/angular_velocity = 0.0
 0:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_3/angular_velocity = 0.0
-0:0/0/physics_layer_3/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
+0:0/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_4/angular_velocity = 0.0
+0:0/0/physics_layer_4/polygon_0/points = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
 
 [resource]
 tile_size = Vector2i(40, 40)
-physics_layer_0/collision_layer = 4294967281
+physics_layer_0/collision_layer = 4294967295
 physics_layer_0/collision_mask = 0
 physics_layer_1/collision_layer = 2
 physics_layer_1/collision_mask = 0
-physics_layer_2/collision_layer = 2147483641
+physics_layer_2/collision_layer = 4294967281
 physics_layer_2/collision_mask = 0
-physics_layer_3/collision_layer = 3221225465
+physics_layer_3/collision_layer = 2147483641
 physics_layer_3/collision_mask = 0
+physics_layer_4/collision_layer = 3221225465
+physics_layer_4/collision_mask = 0
 sources/1 = SubResource("TileSetAtlasSource_8ypd0")
 sources/2 = SubResource("TileSetAtlasSource_0d0sd")
 sources/0 = SubResource("TileSetAtlasSource_iiypt")
