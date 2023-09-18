@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cy3daaugnn180"]
+[gd_scene load_steps=12 format=3 uid="uid://cy3daaugnn180"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_s0cd0"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_jtwee"]
@@ -7,7 +7,6 @@
 [ext_resource type="AudioStream" uid="uid://b8hg5w8h4n0ll" path="res://Audio/merge_short.wav" id="4_iaiik"]
 [ext_resource type="AudioStream" uid="uid://cuqvb804wfuvi" path="res://Audio/shift_long_reverbless.wav" id="6_2ro13"]
 [ext_resource type="AudioStream" uid="uid://ba2n6bmuyqoqa" path="res://Audio/split_b_short.wav" id="6_tkdwj"]
-[ext_resource type="PackedScene" uid="uid://d3h7le4mgbadw" path="res://Pathfinder/Pathfinder.tscn" id="8_qm8qv"]
 
 [sub_resource type="Animation" id="Animation_o2tpm"]
 length = 0.001
@@ -121,11 +120,5 @@ volume_db = -0.7
 [node name="Shift" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("6_2ro13")
 volume_db = -5.5
-
-[node name="Pathfinder" parent="." instance=ExtResource("8_qm8qv")]
-tile_pow_max = -225378064
-max_depth = 290
-tile_push_limit = -1450246048
-is_player = true
 
 [connection signal="animation_finished" from="Overlay/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

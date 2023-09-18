@@ -420,7 +420,7 @@ func levelup():
 	is_hostile = partner.is_hostile;
 
 	#convert to player
-	if not is_player and (partner.is_player or power >= 12):
+	if not is_player and partner.is_player:
 		#print("CONVERT TO PLAYER");
 		is_player = true;
 		set_masks(true);
@@ -498,17 +498,17 @@ func die():
 		game.change_level_faded(GV.current_level_index);
 
 
-#layer 2 is for membrane and scoreTile raycasts
-#layer 3 is for scoreTiles and physicsEnabler
+#layer 2 is for tile physics enabling
+#layer 3 is for player ability unlocking
 func set_layers(state, layer_one):
 	if layer_one:
 		set_collision_layer_value(1, state);
-	for i in range(5, 33):
+	for i in range(4, 33):
 		set_collision_layer_value(i, state);
 
 func set_masks(state):
 	set_collision_mask_value(1, state);
-	for i in range(5, 33):
+	for i in range(4, 33):
 		set_collision_mask_value(i, state);
 
 func set_physics(state):
@@ -535,10 +535,10 @@ func player_settings():
 	#enable PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
 
-	#disable rays' mask 2
+	#disable membrane collision
 	for i in range(1, 5):
-		get_node("Ray"+str(i)).set_collision_mask_value(2, false);
-		get_node("Shape"+str(i)).set_collision_mask_value(2, false);
+		get_node("Ray"+str(i)).set_collision_mask_value(32, false);
+		get_node("Shape"+str(i)).set_collision_mask_value(32, false);
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
@@ -557,10 +557,10 @@ func tile_settings():
 	#disable PhysicsEnabler
 	$PhysicsEnabler.monitoring = false;
 	
-	#enable rays' mask 2
+	#enable membrane collision
 	for i in range(1, 5):
-		get_node("Ray"+str(i)).set_collision_mask_value(2, true);
-		get_node("Shape"+str(i)).set_collision_mask_value(2, true);
+		get_node("Ray"+str(i)).set_collision_mask_value(32, true);
+		get_node("Shape"+str(i)).set_collision_mask_value(32, true);
 	
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;
