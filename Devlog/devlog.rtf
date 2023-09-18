@@ -264,6 +264,10 @@ New Layers?\
 \ls3\ilvl0\cf0 1. Inter-tile, baddie aggro\
 2. Tile physics enabling\
 3. Player, ability unlocking\
+32. Membrane\
+31. Black wall\
+30. Blue wall\
+29. Red wall\
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 \
 Stuff IDs\
@@ -423,6 +427,7 @@ Todo\
 	Track Score\
 		start level with maximum score, lose combined value for every merge\
 		start level with 0 score, gain combined value for every merge\
+		in open world, number of empty cells as score\
 	one-way valve\
 		without splitting, empty space is increasing contiguously (non-strictly)\
 		so a one-way valve must require player to split\
@@ -659,6 +664,8 @@ Variants\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
 			nerf by increasing wait time between moves\
+		Smart Hostile\
+			build traps, cooperate with each other to trap player\
 		Fission Hostile\
 			produces two hostiles upon splitting\
 	Open World\

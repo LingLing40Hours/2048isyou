@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://bs5pnnv5k17ao"]
+[gd_scene load_steps=9 format=3 uid="uid://bs5pnnv5k17ao"]
 
 [ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="1_4wq03"]
 [ext_resource type="PackedScene" uid="uid://b5xshtev3l7ey" path="res://Objects/scoretile_fsm.tscn" id="2_6q1l5"]
-[ext_resource type="PackedScene" uid="uid://d3h7le4mgbadw" path="res://Pathfinder/Pathfinder.tscn" id="3_cg1ru"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v04qv"]
 resource_local_to_scene = true
@@ -28,7 +27,7 @@ resource_local_to_scene = true
 size = Vector2(224, 224)
 
 [node name="ScoreTile" type="CharacterBody2D"]
-collision_layer = 4294967293
+collision_layer = 3
 collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_4wq03")
@@ -86,8 +85,8 @@ collision_mask = 3
 
 [node name="PhysicsEnabler" type="Area2D" parent="."]
 visible = false
-collision_layer = 4
-collision_mask = 4
+collision_layer = 0
+collision_mask = 2
 monitoring = false
 monitorable = false
 metadata/_edit_lock_ = true
@@ -102,12 +101,9 @@ enabled = false
 shape = SubResource("RectangleShape2D_3f48n")
 target_position = Vector2(0, 0)
 max_results = 36
-collision_mask = 4
+collision_mask = 2
 
 [node name="FSM" parent="." instance=ExtResource("2_6q1l5")]
-
-[node name="Pathfinder" parent="." instance=ExtResource("3_cg1ru")]
-tile_push_limit = 0
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 scale = Vector2(2.1, 2.1)
