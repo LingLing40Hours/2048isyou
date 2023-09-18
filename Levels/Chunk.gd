@@ -24,4 +24,4 @@ func _enter_tree():
 
 func _ready():
 	add_end_time = Time.get_ticks_usec();
-	print("chunk add time: ", add_end_time - add_start_time);
+	#print("chunk add time: ", add_end_time - add_start_time);

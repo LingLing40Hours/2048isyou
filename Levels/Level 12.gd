@@ -103,16 +103,16 @@ func _on_chunk_ready():
 	if initial_ready_count < initial_chunk_count:
 		initial_ready_count += 1;
 		if initial_ready_count == initial_chunk_count:
+			initial_chunks_ready = true;
 			initial_chunks_readied.emit();
 			load_end_time = Time.get_ticks_usec();
 			print("initial load time: ", load_end_time - load_start_time);
 
 func _process(_delta):
+	#var process_start_time:int = Time.get_ticks_usec();
+	
 	#mark chunks for load/unload based on camera pos
-	initial_mutex.lock();
-	var ic_loaded:bool = initial_chunks_instantiated;
-	initial_mutex.unlock();
-	if ic_loaded and $TrackingCam.position != last_cam_pos:
+	if initial_chunks_ready and $TrackingCam.position != last_cam_pos:
 		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
 		var temp_pos_c_min:Vector2i = loaded_pos_c_min;
 		var temp_pos_c_max:Vector2i = loaded_pos_c_max;
@@ -136,8 +136,11 @@ func _process(_delta):
 	
 	#add an instanced chunk to active tree (all at once is too much to handle in one frame)
 	if not instanced_chunks.is_empty():
-		var load_pos:Vector2i = instanced_chunks.keys().back();
+		var load_pos:Vector2i = instanced_chunks.keys().front();
 		call_deferred("add_chunk", load_pos, instanced_chunks[load_pos]); #defer bc this is slow
+	
+	#var process_end_time:int = Time.get_ticks_usec();
+	#print("process time: ", process_end_time - process_start_time);
 
 func add_chunk(pos_c:Vector2i, chunk:Chunk):
 	add_child(chunk);
@@ -255,7 +258,7 @@ func manage_chunks():
 		#unload chunks
 		unload_mutex.lock();
 		if not unload_queue.is_empty():
-			var unload_pos:Vector2i = unload_queue.keys().back();
+			var unload_pos:Vector2i = unload_queue.keys().front();
 			unload_queue.erase(unload_pos);
 			unload_mutex.unlock();
 			#print("unload_positions: ", unload_positions);
@@ -269,7 +272,7 @@ func manage_chunks():
 		#load chunks
 		load_mutex.lock();
 		if not load_queue.is_empty():
-			var load_pos:Vector2i = load_queue.keys().back();
+			var load_pos:Vector2i = load_queue.keys().front();
 			load_queue.erase(load_pos);
 			load_mutex.unlock();
 			#print("load_positions: ", load_positions);
@@ -312,7 +315,7 @@ func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
 			func_cell.call(ans, Vector2i(global_tx, start_tile_pos.y + ty), Vector2i(tx, ty));
 	
 	var end_time:int = Time.get_ticks_usec();
-	print("chunk instance time: ", end_time - start_time);
+	#print("chunk instance time: ", end_time - start_time); #print in thread is slow
 	return ans;
 
 func contains_world_border(pos_c:Vector2i) -> bool:

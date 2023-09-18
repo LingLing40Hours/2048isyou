@@ -21,9 +21,9 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const CHUNK_WIDTH_T:int = 5;
+const CHUNK_WIDTH_T:int = 4;
 const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
-const BORDER_DISTANCE_T:int = 20; #2000000000;
+const BORDER_DISTANCE_T:int = 2000000000;
 const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
@@ -33,7 +33,7 @@ var BORDER_MAX_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MAX_POS_T);
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
-var current_level_index:int = 7;
+var current_level_index:int = 1;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
