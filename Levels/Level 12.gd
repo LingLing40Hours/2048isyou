@@ -329,21 +329,24 @@ func is_world_border(pos_t:Vector2i) -> bool:
 		if pos_t.y >= GV.BORDER_MIN_POS_T.y and pos_t.y <= GV.BORDER_MAX_POS_T.y:
 			return true;
 	if pos_t.y == GV.BORDER_MIN_POS_T.y or pos_t.y == GV.BORDER_MAX_POS_T.y:
-		if pos_t.x >= GV.BORDER_MIN_POST_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
+		if pos_t.x >= GV.BORDER_MIN_POS_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
 			return true;
 	return false;
 
 func instantiate_cell_or_border(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	if is_world_border(global_tile_pos):
-		
+		chunk.get_node("Walls").set_cell(0, local_tile_pos, 0, Vector2i.ZERO);
+		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.BORDER;
+	else:
+		instantiate_cell(chunk, global_tile_pos, local_tile_pos);
 
-#updates chunk cells; add tile as child or updates tilemap accordingly
+#add tile as child or updates tilemap accordingly; update chunk.cells
 func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
-		#$Walls.set_cell(0, global_tile_pos, 0, Vector2i.ZERO);
-		chunk.get_node("Walls").set_cell(0, local_tile_pos, 0, Vector2i.ZERO);
+		#$Walls.set_cell(0, global_tile_pos, 2, Vector2i.ZERO);
+		chunk.get_node("Walls").set_cell(0, local_tile_pos, 2, Vector2i.ZERO);
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.BLACK_WALL;
 		#print("black instantiated");
 		return;

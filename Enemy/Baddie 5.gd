@@ -35,7 +35,7 @@ func _physics_process(delta):
 				var wall = game.current_level.get_node("Walls")
 				print(collider.position)
 				print(wall.local_to_map(collider.position))
-				wall.set_cell(0, wall.local_to_map(collider.position), 0, Vector2i(0,0))
+				wall.set_cell(0, wall.local_to_map(collider.position), 2, Vector2i(0,0))
 				collider.queue_free();
 				
 	# do a 3 seconds delay
