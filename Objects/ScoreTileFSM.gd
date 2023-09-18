@@ -136,7 +136,7 @@ func _physics_process(_delta):
 
 func debug_frame():
 	if debug:
-		print("enter screen");
+		#print(get_collision_layer_value(1));
 		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
