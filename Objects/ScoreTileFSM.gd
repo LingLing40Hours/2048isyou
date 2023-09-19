@@ -503,13 +503,11 @@ func die():
 func set_layers(state, layer_one):
 	if layer_one:
 		set_collision_layer_value(1, state);
-	for i in range(4, 33):
+	for i in range(5, 33):
 		set_collision_layer_value(i, state);
 
 func set_masks(state):
 	set_collision_mask_value(1, state);
-	for i in range(4, 33):
-		set_collision_mask_value(i, state);
 
 func set_physics(state):
 	#set_process(state);
@@ -534,11 +532,18 @@ func player_settings():
 	
 	#enable PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
+	
+	#add to unlocker layer
+	set_collision_layer_value(3, true);
 
 	#disable membrane collision
 	for i in range(1, 5):
-		get_node("Ray"+str(i)).set_collision_mask_value(32, false);
-		get_node("Shape"+str(i)).set_collision_mask_value(32, false);
+		var ray:RayCast2D = get_node("Ray"+str(i));
+		var shape:ShapeCast2D = get_node("Shape"+str(i));
+		ray.set_collision_mask_value(4, false);
+		shape.set_collision_mask_value(4, false);
+		ray.set_collision_mask_value(32, true);
+		shape.set_collision_mask_value(32, true);
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
@@ -557,10 +562,17 @@ func tile_settings():
 	#disable PhysicsEnabler
 	$PhysicsEnabler.monitoring = false;
 	
+	#remove from unlocker layer
+	set_collision_layer_value(3, false);
+	
 	#enable membrane collision
 	for i in range(1, 5):
-		get_node("Ray"+str(i)).set_collision_mask_value(32, true);
-		get_node("Shape"+str(i)).set_collision_mask_value(32, true);
+		var ray:RayCast2D = get_node("Ray"+str(i));
+		var shape:ShapeCast2D = get_node("Shape"+str(i));
+		ray.set_collision_mask_value(4, true);
+		shape.set_collision_mask_value(4, true);
+		ray.set_collision_mask_value(32, false);
+		shape.set_collision_mask_value(32, false);
 	
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;
