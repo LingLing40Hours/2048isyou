@@ -8,8 +8,7 @@ size = Vector2(34, 29.3125)
 
 [node name="Baddie 4" type="CharacterBody2D" groups=["baddie"]]
 position = Vector2(1137, 921)
-collision_layer = 1073741825
-collision_mask = 1073741825
+collision_mask = 1073741824
 script = ExtResource("1_lj0ns")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

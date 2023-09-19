@@ -34,6 +34,8 @@ theme = ExtResource("5_2s88y")
 text = "press Cmd/Ctrl+X to change movement mode"
 
 [node name="Unlocker" type="Area2D" parent="Background/MoveMode"]
+collision_layer = 0
+collision_mask = 4
 monitoring = false
 monitorable = false
 

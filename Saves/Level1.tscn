@@ -1,27 +1,31 @@
 [gd_scene load_steps=17 format=3]
 
-[ext_resource type="Script" path="res://Levels/Level 1.gd" id="1_63160"]
-[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_k4tyr"]
-[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_cb3g7"]
-[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_x360i"]
-[ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_i6ekj"]
-[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_hle8l"]
-[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_y24jt"]
-[ext_resource type="PackedScene" path="res://Enemy/Baddie 2.tscn" id="8_o0cn3"]
-[ext_resource type="Script" path="res://Enemy/Baddie 2.gd" id="9_aagyf"]
-[ext_resource type="PackedScene" path="res://Enemy/Baddie 1.tscn" id="10_gr7m5"]
-[ext_resource type="Script" path="res://Enemy/Baddie 1.gd" id="11_na3qg"]
-[ext_resource type="PackedScene" path="res://Savepoints/Savepoint_1x1_Concave.tscn" id="12_swaj5"]
-[ext_resource type="Script" path="res://Savepoints/Savepoint.gd" id="13_vi8rt"]
-[ext_resource type="PackedScene" path="res://Savepoints/Goal_1x2_Concave.tscn" id="14_7einj"]
-[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="15_ii5qx"]
+[ext_resource type="Script" path="res://Levels/Level 1.gd" id="1_ix1fv"]
+[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_7g3su"]
+[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_cb4yl"]
+[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_gghtf"]
+[ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_m51od"]
+[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_kohmy"]
+[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_gbbvd"]
+[ext_resource type="PackedScene" path="res://Enemy/Baddie 2.tscn" id="8_w5s1x"]
+[ext_resource type="Script" path="res://Enemy/Baddie 2.gd" id="9_ax0fu"]
+[ext_resource type="PackedScene" path="res://Enemy/Baddie 1.tscn" id="10_jjvff"]
+[ext_resource type="Script" path="res://Enemy/Baddie 1.gd" id="11_x5xi8"]
+[ext_resource type="PackedScene" path="res://Savepoints/Savepoint_1x1_Concave.tscn" id="12_1xebs"]
+[ext_resource type="Script" path="res://Savepoints/Savepoint.gd" id="13_cm4v2"]
+[ext_resource type="PackedScene" path="res://Savepoints/Goal_1x2_Concave.tscn" id="14_anx0w"]
+[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="15_5jq0a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_adef3"]
 size = Vector2(480, 40)
 
-[node name="@Node2D@542" type="Node2D" node_paths=PackedStringArray("player_saved")]
-script = ExtResource("1_63160")
-player_saved = NodePath("ScoreTiles/@CharacterBody2D@590")
+[node name="Level 1" type="Node2D" node_paths=PackedStringArray("player_saved")]
+process_mode = 1
+script = ExtResource("1_ix1fv")
+player_saved = NodePath("ScoreTiles/ScoreTile15")
+resolution_t = Vector2i(40, 30)
+min_pos = Vector2(0, 0)
+max_pos = Vector2(1600, 1200)
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = -10
@@ -45,7 +49,7 @@ offset_right = 88.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_k4tyr")
+theme = ExtResource("2_7g3su")
 theme_override_font_sizes/font_size = 50
 text = "Hello World"
 metadata/_edit_lock_ = true
@@ -61,7 +65,7 @@ offset_top = -210.0
 offset_right = 880.0
 offset_bottom = -190.0
 grow_vertical = 0
-theme = ExtResource("2_k4tyr")
+theme = ExtResource("2_7g3su")
 text = "press WASD/arrow keys to move
 "
 metadata/_edit_lock_ = true
@@ -77,12 +81,11 @@ offset_top = -907.0
 offset_right = 1360.0
 offset_bottom = -887.0
 grow_vertical = 0
-theme = ExtResource("2_k4tyr")
+theme = ExtResource("2_7g3su")
 text = "press Shift+movement to shift"
 metadata/_edit_lock_ = true
 
 [node name="Unlocker" type="Area2D" parent="Background/Shift"]
-collision_layer = 0
 monitoring = false
 monitorable = false
 metadata/_edit_lock_ = true
@@ -93,812 +96,843 @@ shape = SubResource("RectangleShape2D_adef3")
 metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
-tile_set = ExtResource("3_cb3g7")
+tile_set = ExtResource("3_cb4yl")
 format = 2
-layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0, 7, 0, 0, 8, 0, 0, 9, 0, 0, 10, 0, 0, 11, 0, 0, 12, 0, 0, 13, 0, 0, 14, 0, 0, 15, 0, 0, 16, 0, 0, 17, 0, 0, 18, 0, 0, 19, 0, 0, 20, 0, 0, 21, 0, 0, 22, 0, 0, 23, 0, 0, 24, 0, 0, 25, 0, 0, 26, 0, 0, 27, 0, 0, 28, 0, 0, 29, 0, 0, 30, 0, 0, 31, 0, 0, 32, 0, 0, 33, 0, 0, 34, 0, 0, 35, 0, 0, 36, 0, 0, 37, 0, 0, 38, 0, 0, 39, 0, 0, 65575, 0, 0, 131111, 0, 0, 196647, 0, 0, 262183, 0, 0, 327719, 0, 0, 393255, 0, 0, 458791, 0, 0, 524327, 0, 0, 589863, 0, 0, 655399, 0, 0, 720935, 0, 0, 786471, 0, 0, 852007, 0, 0, 917543, 0, 0, 983079, 0, 0, 1048615, 0, 0, 1114151, 0, 0, 1179687, 0, 0, 1245223, 0, 0, 1310759, 0, 0, 1376295, 0, 0, 1441831, 0, 0, 1507367, 0, 0, 1572903, 0, 0, 1638439, 0, 0, 1703975, 0, 0, 1769511, 0, 0, 1835047, 0, 0, 1900583, 0, 0, 1900582, 0, 0, 1900581, 0, 0, 1900580, 0, 0, 1900579, 0, 0, 1900578, 0, 0, 1900577, 0, 0, 1900576, 0, 0, 1900575, 0, 0, 1900574, 0, 0, 1900573, 0, 0, 1900572, 0, 0, 1900571, 0, 0, 1900570, 0, 0, 1900569, 0, 0, 1900568, 0, 0, 1900567, 0, 0, 1900566, 0, 0, 1900565, 0, 0, 1900564, 0, 0, 1900563, 0, 0, 1900562, 0, 0, 1900561, 0, 0, 1900560, 0, 0, 1900559, 0, 0, 1900558, 0, 0, 1900557, 0, 0, 1900556, 0, 0, 1900555, 0, 0, 1900554, 0, 0, 1900553, 0, 0, 1900552, 0, 0, 1900551, 0, 0, 1900550, 0, 0, 1900549, 0, 0, 1900548, 0, 0, 1900547, 0, 0, 1900544, 0, 0, 65536, 0, 0, 131072, 0, 0, 196608, 0, 0, 262144, 0, 0, 327680, 0, 0, 393216, 0, 0, 458752, 0, 0, 524288, 0, 0, 589824, 0, 0, 655360, 0, 0, 720896, 0, 0, 786432, 0, 0, 851968, 0, 0, 917504, 0, 0, 983040, 0, 0, 1048576, 0, 0, 1114112, 0, 0, 1179648, 0, 0, 1245184, 0, 0, 1310720, 0, 0, 1376256, 0, 0, 1441792, 0, 0, 1507328, 0, 0, 1572864, 0, 0, 1638400, 0, 0, 1703936, 0, 0, 327682, 3, 0, 327683, 3, 0, 327684, 3, 0, 327685, 3, 0, 327686, 3, 0, 131080, 3, 0, 196616, 3, 0, 262152, 3, 0, 327688, 3, 0, 393224, 3, 0, 65540, 3, 0, 131076, 3, 0, 196612, 3, 0, 262148, 3, 0, 983043, 3, 0, 1048579, 3, 0, 1114115, 3, 0, 1114116, 3, 0, 1114117, 3, 0, 1310723, 0, 0, 1310724, 0, 0, 1310725, 0, 0, 1310726, 0, 0, 1310727, 0, 0, 1310728, 0, 0, 1310729, 0, 0, 1310730, 0, 0, 1310731, 0, 0, 1310732, 0, 0, 1310733, 0, 0, 1310734, 0, 0, 786434, 3, 0, 786435, 3, 0, 786438, 3, 0, 851974, 3, 0, 917510, 3, 0, 983046, 3, 0, 1048582, 3, 0, 1114118, 3, 0, 458761, 3, 0, 524298, 3, 0, 589835, 3, 0, 655372, 3, 0, 983055, 3, 0, 983056, 3, 0, 1310735, 0, 0, 1310736, 0, 0, 1048593, 0, 0, 1114129, 3, 0, 1179665, 3, 0, 1245201, 3, 0, 983054, 3, 0, 1114119, 3, 0, 1114120, 3, 0, 1048585, 3, 0, 1048586, 3, 0, 1507341, 3, 0, 1507342, 3, 0, 1507343, 3, 0, 1507344, 3, 0, 1507345, 3, 0, 1703957, 3, 0, 1703958, 3, 0, 1507353, 3, 0, 1703959, 3, 0, 1703960, 3, 0, 1703940, 3, 0, 1703941, 3, 0, 1703942, 3, 0, 1703943, 3, 0, 1703944, 3, 0, 1703945, 3, 0, 1769509, 3, 0, 1703973, 3, 0, 1638437, 3, 0, 1507366, 3, 0, 1507365, 3, 0, 1507364, 3, 0, 1638436, 3, 0, 1638435, 3, 0, 1638434, 3, 0, 1572898, 3, 0, 1507362, 3, 0, 1441826, 3, 0, 1376290, 3, 0, 1376291, 3, 0, 1376292, 3, 0, 1376293, 3, 0, 720909, 3, 0, 786445, 3, 0, 851981, 3, 0, 917517, 3, 0, 983053, 3, 0, 1048589, 3, 0, 1703949, 2, 0, 1703953, 2, 0, 1507333, 2, 0, 1507334, 2, 0, 1507335, 2, 0, 1507336, 2, 0, 1507337, 2, 0, 1507338, 2, 0, 1507332, 2, 0, 1507349, 3, 0, 1507350, 3, 0, 1507351, 3, 0, 1507352, 3, 0, 1703962, 3, 0, 1703961, 3, 0, 1507354, 3, 0, 1048594, 0, 0, 1048595, 0, 0, 1048596, 0, 0, 1048597, 0, 0, 1048598, 0, 0, 1048599, 0, 0, 1048600, 0, 0, 1048601, 0, 0, 1048602, 0, 0, 1048603, 0, 0, 1048604, 0, 0, 1048605, 0, 0, 1048606, 0, 0, 1048607, 0, 0, 1048608, 0, 0, 1048609, 0, 0, 1048610, 0, 0, 1114146, 3, 0, 1179682, 3, 0, 1245218, 3, 0, 1310754, 3, 0, 1507339, 2, 0, 786433, 3, 0, 1179651, 3, 0, 1245187, 3, 0, 1507331, 2, 0, 1703948, 2, 0, 1703952, 2, 0, 1572867, 3, 0, 1638403, 3, 0, 1703939, 3, 0, 1769481, 3, 0, 1835017, 3, 0, 1507340, 3, 0, 1245204, 3, 0, 1310740, 3, 0, 1376276, 3, 0, 1441812, 3, 0, 1507348, 3, 0, 1572890, 3, 0, 1638426, 3, 0, 1703956, 3, 0, 1769492, 3, 0, 1835028, 3, 0, 917541, 2, 0, 852005, 2, 0, 786469, 2, 0, 917539, 2, 0, 917538, 2, 0, 917537, 2, 0, 917536, 2, 0, 917535, 2, 0, 786461, 2, 0, 851997, 2, 0, 917533, 2, 0, 786463, 2, 0, 786465, 2, 0, 524323, 2, 0, 589859, 2, 0, 655395, 2, 0, 720931, 2, 0, 786467, 2, 0, 852003, 2, 0, 393247, 2, 0, 393248, 2, 0, 393249, 2, 0, 393251, 2, 0, 524321, 2, 0, 655393, 2, 0, 720929, 2, 0, 524318, 2, 0, 524319, 2, 0, 524320, 2, 0, 655391, 2, 0, 720927, 2, 0, 655390, 2, 0, 655389, 2, 0, 655388, 2, 0, 655387, 2, 0, 786459, 2, 0, 917531, 2, 0, 917530, 2, 0, 917529, 2, 0, 917528, 2, 0, 917527, 2, 0, 262175, 2, 0, 262174, 2, 0, 262173, 2, 0, 262172, 2, 0, 262171, 2, 0, 327707, 2, 0, 393243, 2, 0, 524315, 2, 0, 393245, 2, 0, 393246, 2, 0, 524317, 2, 0, 262177, 2, 0, 327713, 2, 0, 131105, 2, 0, 131104, 2, 0, 131103, 2, 0, 131102, 2, 0, 131101, 2, 0, 131100, 2, 0, 131099, 2, 0, 131098, 2, 0, 131097, 2, 0, 196633, 2, 0, 262169, 2, 0, 327705, 2, 0, 393241, 2, 0, 655385, 2, 0, 786457, 2, 0, 786458, 2, 0, 262179, 2, 0, 262180, 2, 0, 262181, 2, 0, 393253, 2, 0, 458789, 2, 0, 720933, 2, 0, 131109, 2, 0, 196645, 2, 0, 65571, 2, 0, 131107, 2, 0, 655397, 2, 0, 589861, 2, 0, 131095, 2, 0, 196631, 2, 0, 65555, 2, 0, 131091, 2, 0, 196627, 2, 0, 262163, 2, 0, 131093, 2, 0, 131094, 2, 0, 524313, 2, 0, 655383, 2, 0, 655381, 2, 0, 720919, 2, 0, 786455, 2, 0, 786454, 2, 0, 786453, 2, 0, 786452, 2, 0, 786451, 2, 0, 655380, 2, 0, 524310, 2, 0, 524311, 2, 0, 458773, 2, 0, 458772, 2, 0, 458771, 2, 0, 524309, 2, 0, 589843, 2, 0, 655379, 2, 0, 393239, 2, 0, 327703, 2, 0, 327702, 2, 0, 327701, 2, 0, 393235, 2, 0, 262165, 2, 0, 524325, 2, 0, 917523, 2, 0, 917524, 2, 0, 524312, 2, 0, 524316, 2, 0, 131089, 2, 0, 196625, 2, 0, 262161, 2, 0, 393233, 2, 0, 393232, 2, 0, 393231, 2, 0, 393230, 2, 0, 131084, 2, 0, 262156, 2, 0, 458764, 2, 0, 393228, 2, 0, 458766, 2, 0, 524302, 2, 0, 589838, 2, 0, 851983, 2, 0, 786447, 2, 0, 786449, 2, 0, 720911, 2, 0, 655377, 2, 0, 589841, 2, 0, 524305, 2, 0, 524304, 2, 0, 655375, 2, 0, 131085, 2, 0, 131086, 2, 0, 131087, 2, 0, 262158, 2, 0, 262159, 2, 0, 262160, 2, 0, 917522, 2, 0, 851985, 2, 0, 917526, 2, 0, 327690, 2, 0, 393227, 2, 0, 131082, 2, 0, 196618, 2, 0, 983074, 1, 0, 917540, 1, 0, 917542, 1, 0, 1900545, 0, 0, 1900546, 0, 0, 1769473, 1, 0, 1835009, 1, 0, 983044, 1, 0, 983045, 1, 0)
+layer_0/tile_data = PackedInt32Array(0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 6, 2, 0, 7, 2, 0, 8, 2, 0, 9, 2, 0, 10, 2, 0, 11, 2, 0, 12, 2, 0, 13, 2, 0, 14, 2, 0, 15, 2, 0, 16, 2, 0, 17, 2, 0, 18, 2, 0, 19, 2, 0, 20, 2, 0, 21, 2, 0, 22, 2, 0, 23, 2, 0, 24, 2, 0, 25, 2, 0, 26, 2, 0, 27, 2, 0, 28, 2, 0, 29, 2, 0, 30, 2, 0, 31, 2, 0, 32, 2, 0, 33, 2, 0, 34, 2, 0, 35, 2, 0, 36, 2, 0, 37, 2, 0, 38, 2, 0, 39, 2, 0, 65575, 2, 0, 131111, 2, 0, 196647, 2, 0, 262183, 2, 0, 327719, 2, 0, 393255, 2, 0, 458791, 2, 0, 524327, 2, 0, 589863, 2, 0, 655399, 2, 0, 720935, 2, 0, 786471, 2, 0, 852007, 2, 0, 917543, 2, 0, 983079, 2, 0, 1048615, 2, 0, 1114151, 2, 0, 1179687, 2, 0, 1245223, 2, 0, 1310759, 2, 0, 1376295, 2, 0, 1441831, 2, 0, 1507367, 2, 0, 1572903, 2, 0, 1638439, 2, 0, 1703975, 2, 0, 1769511, 2, 0, 1835047, 2, 0, 1900583, 2, 0, 1900582, 2, 0, 1900581, 2, 0, 1900580, 2, 0, 1900579, 2, 0, 1900578, 2, 0, 1900577, 2, 0, 1900576, 2, 0, 1900575, 2, 0, 1900574, 2, 0, 1900573, 2, 0, 1900572, 2, 0, 1900571, 2, 0, 1900570, 2, 0, 1900569, 2, 0, 1900568, 2, 0, 1900567, 2, 0, 1900566, 2, 0, 1900565, 2, 0, 1900564, 2, 0, 1900563, 2, 0, 1900562, 2, 0, 1900561, 2, 0, 1900560, 2, 0, 1900559, 2, 0, 1900558, 2, 0, 1900557, 2, 0, 1900556, 2, 0, 1900555, 2, 0, 1900554, 2, 0, 1900553, 2, 0, 1900552, 2, 0, 1900551, 2, 0, 1900550, 2, 0, 1900549, 2, 0, 1900548, 2, 0, 1900547, 2, 0, 1900544, 2, 0, 65536, 2, 0, 131072, 2, 0, 196608, 2, 0, 262144, 2, 0, 327680, 2, 0, 393216, 2, 0, 458752, 2, 0, 524288, 2, 0, 589824, 2, 0, 655360, 2, 0, 720896, 2, 0, 786432, 2, 0, 851968, 2, 0, 917504, 2, 0, 983040, 2, 0, 1048576, 2, 0, 1114112, 2, 0, 1179648, 2, 0, 1245184, 2, 0, 1310720, 2, 0, 1376256, 2, 0, 1441792, 2, 0, 1507328, 2, 0, 1572864, 2, 0, 1638400, 2, 0, 1703936, 2, 0, 327682, 4, 0, 327683, 4, 0, 327684, 4, 0, 327685, 4, 0, 327686, 4, 0, 131080, 4, 0, 196616, 4, 0, 262152, 4, 0, 327688, 4, 0, 393224, 4, 0, 65540, 4, 0, 131076, 4, 0, 196612, 4, 0, 262148, 4, 0, 983043, 4, 0, 1048579, 4, 0, 1114115, 4, 0, 1114116, 4, 0, 1114117, 4, 0, 1310723, 2, 0, 1310724, 2, 0, 1310725, 2, 0, 1310726, 2, 0, 1310727, 2, 0, 1310728, 2, 0, 1310729, 2, 0, 1310730, 2, 0, 1310731, 2, 0, 1310732, 2, 0, 1310733, 2, 0, 1310734, 2, 0, 786434, 4, 0, 786435, 4, 0, 786438, 4, 0, 851974, 4, 0, 917510, 4, 0, 983046, 4, 0, 1048582, 4, 0, 1114118, 4, 0, 458761, 4, 0, 524298, 4, 0, 589835, 4, 0, 655372, 4, 0, 983055, 4, 0, 983056, 4, 0, 1310735, 2, 0, 1310736, 2, 0, 1048593, 2, 0, 1114129, 4, 0, 1179665, 4, 0, 1245201, 4, 0, 983054, 4, 0, 1114119, 4, 0, 1114120, 4, 0, 1048585, 4, 0, 1048586, 4, 0, 1507341, 4, 0, 1507342, 4, 0, 1507343, 4, 0, 1507344, 4, 0, 1507345, 4, 0, 1703957, 4, 0, 1703958, 4, 0, 1507353, 4, 0, 1703959, 4, 0, 1703960, 4, 0, 1703940, 4, 0, 1703941, 4, 0, 1703942, 4, 0, 1703943, 4, 0, 1703944, 4, 0, 1703945, 4, 0, 1769509, 4, 0, 1703973, 4, 0, 1638437, 4, 0, 1507366, 4, 0, 1507365, 4, 0, 1507364, 4, 0, 1638436, 4, 0, 1638435, 4, 0, 1638434, 4, 0, 1572898, 4, 0, 1507362, 4, 0, 1441826, 4, 0, 1376290, 4, 0, 1376291, 4, 0, 1376292, 4, 0, 1376293, 4, 0, 720909, 4, 0, 786445, 4, 0, 851981, 4, 0, 917517, 4, 0, 983053, 4, 0, 1048589, 4, 0, 1703949, 3, 0, 1703953, 3, 0, 1507333, 3, 0, 1507334, 3, 0, 1507335, 3, 0, 1507336, 3, 0, 1507337, 3, 0, 1507338, 3, 0, 1507332, 3, 0, 1507349, 4, 0, 1507350, 4, 0, 1507351, 4, 0, 1507352, 4, 0, 1703962, 4, 0, 1703961, 4, 0, 1507354, 4, 0, 1048594, 2, 0, 1048595, 2, 0, 1048596, 2, 0, 1048597, 2, 0, 1048598, 2, 0, 1048599, 2, 0, 1048600, 2, 0, 1048601, 2, 0, 1048602, 2, 0, 1048603, 2, 0, 1048604, 2, 0, 1048605, 2, 0, 1048606, 2, 0, 1048607, 2, 0, 1048608, 2, 0, 1048609, 2, 0, 1048610, 2, 0, 1114146, 4, 0, 1179682, 4, 0, 1245218, 4, 0, 1310754, 4, 0, 1507339, 3, 0, 786433, 4, 0, 1179651, 4, 0, 1245187, 4, 0, 1507331, 3, 0, 1703948, 3, 0, 1703952, 3, 0, 1572867, 4, 0, 1638403, 4, 0, 1703939, 4, 0, 1769481, 4, 0, 1835017, 4, 0, 1507340, 4, 0, 1245204, 4, 0, 1310740, 4, 0, 1376276, 4, 0, 1441812, 4, 0, 1507348, 4, 0, 1572890, 4, 0, 1638426, 4, 0, 1703956, 4, 0, 1769492, 4, 0, 1835028, 4, 0, 917541, 3, 0, 852005, 3, 0, 786469, 3, 0, 917539, 3, 0, 917538, 3, 0, 917537, 3, 0, 917536, 3, 0, 917535, 3, 0, 786461, 3, 0, 851997, 3, 0, 917533, 3, 0, 786463, 3, 0, 786465, 3, 0, 524323, 3, 0, 589859, 3, 0, 655395, 3, 0, 720931, 3, 0, 786467, 3, 0, 852003, 3, 0, 393247, 3, 0, 393248, 3, 0, 393249, 3, 0, 393251, 3, 0, 524321, 3, 0, 655393, 3, 0, 720929, 3, 0, 524318, 3, 0, 524319, 3, 0, 524320, 3, 0, 655391, 3, 0, 720927, 3, 0, 655390, 3, 0, 655389, 3, 0, 655388, 3, 0, 655387, 3, 0, 786459, 3, 0, 917531, 3, 0, 917530, 3, 0, 917529, 3, 0, 917528, 3, 0, 917527, 3, 0, 262175, 3, 0, 262174, 3, 0, 262173, 3, 0, 262172, 3, 0, 262171, 3, 0, 327707, 3, 0, 393243, 3, 0, 524315, 3, 0, 393245, 3, 0, 393246, 3, 0, 524317, 3, 0, 262177, 3, 0, 327713, 3, 0, 131105, 3, 0, 131104, 3, 0, 131103, 3, 0, 131102, 3, 0, 131101, 3, 0, 131100, 3, 0, 131099, 3, 0, 131098, 3, 0, 131097, 3, 0, 196633, 3, 0, 262169, 3, 0, 327705, 3, 0, 393241, 3, 0, 655385, 3, 0, 786457, 3, 0, 786458, 3, 0, 262179, 3, 0, 262180, 3, 0, 262181, 3, 0, 393253, 3, 0, 458789, 3, 0, 720933, 3, 0, 131109, 3, 0, 196645, 3, 0, 65571, 3, 0, 131107, 3, 0, 655397, 3, 0, 589861, 3, 0, 131095, 3, 0, 196631, 3, 0, 65555, 3, 0, 131091, 3, 0, 196627, 3, 0, 262163, 3, 0, 131093, 3, 0, 131094, 3, 0, 524313, 3, 0, 655383, 3, 0, 655381, 3, 0, 720919, 3, 0, 786455, 3, 0, 786454, 3, 0, 786453, 3, 0, 786452, 3, 0, 786451, 3, 0, 655380, 3, 0, 524310, 3, 0, 524311, 3, 0, 458773, 3, 0, 458772, 3, 0, 458771, 3, 0, 524309, 3, 0, 589843, 3, 0, 655379, 3, 0, 393239, 3, 0, 327703, 3, 0, 327702, 3, 0, 327701, 3, 0, 393235, 3, 0, 262165, 3, 0, 524325, 3, 0, 917523, 3, 0, 917524, 3, 0, 524312, 3, 0, 524316, 3, 0, 131089, 3, 0, 196625, 3, 0, 262161, 3, 0, 393233, 3, 0, 393232, 3, 0, 393231, 3, 0, 393230, 3, 0, 131084, 3, 0, 262156, 3, 0, 458764, 3, 0, 393228, 3, 0, 458766, 3, 0, 524302, 3, 0, 589838, 3, 0, 851983, 3, 0, 786447, 3, 0, 786449, 3, 0, 720911, 3, 0, 655377, 3, 0, 589841, 3, 0, 524305, 3, 0, 524304, 3, 0, 655375, 3, 0, 131085, 3, 0, 131086, 3, 0, 131087, 3, 0, 262158, 3, 0, 262159, 3, 0, 262160, 3, 0, 917522, 3, 0, 851985, 3, 0, 917526, 3, 0, 327690, 3, 0, 393227, 3, 0, 131082, 3, 0, 196618, 3, 0, 983074, 1, 0, 917540, 1, 0, 917542, 1, 0, 1900545, 2, 0, 1900546, 2, 0, 1769473, 1, 0, 1835009, 1, 0, 983044, 1, 0, 983045, 1, 0)
 
-[node name="Freedom" type="Area2D" parent="." instance=ExtResource("4_x360i")]
-script = ExtResource("5_i6ekj")
+[node name="Freedom" type="Area2D" parent="." instance=ExtResource("4_gghtf")]
+script = ExtResource("5_m51od")
 
 [node name="ScoreTiles" type="Node2D" parent="."]
 
-[node name="ScoreTile" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
-position = Vector2(140, 900)
-collision_layer = 4294967293
+[node name="ScoreTile" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
+position = Vector2(300, 1100)
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-velocity = Vector2(320, 0)
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile2" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
-position = Vector2(1260, 860)
-collision_layer = 4294967293
+[node name="ScoreTile15" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
+position = Vector2(20, 1100)
+collision_layer = 4294967283
+motion_mode = 1
+script = ExtResource("7_gbbvd")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile2" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
+position = Vector2(580, 1060)
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-velocity = Vector2(0, 320)
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile5" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
-position = Vector2(1220, 820)
-collision_layer = 4294967293
+[node name="ScoreTile5" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
+position = Vector2(620, 1060)
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-velocity = Vector2(0, 320)
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile3" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
-position = Vector2(1180, 780)
-collision_layer = 4294967293
+[node name="ScoreTile3" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
+position = Vector2(980, 1020)
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-velocity = Vector2(0, 320)
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile16" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile16" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1540, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile19" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile19" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile20" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile20" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1460, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile21" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile21" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1420, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile22" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile22" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile35" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile35" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 740)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile23" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile23" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1460, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile33" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile33" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1460, 740)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile34" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile34" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1420, 740)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile24" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile24" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1420, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile17" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile17" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1540, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile25" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile25" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1420, 660)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile48" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile48" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(740, 260)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile50" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile50" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(940, 180)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(500, 340)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile58" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile58" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(980, 500)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile59" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile59" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1340, 380)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile60" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile60" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(700, 460)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile54" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile54" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(340, 60)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 5
 ssign = 1
 debug = false
 
-[node name="ScoreTile55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(380, 60)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 4
 ssign = 1
 debug = false
 
-[node name="ScoreTile52" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile52" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 220)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile49" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile49" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(740, 300)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile56" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile56" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1060, 340)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1060, 380)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile51" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile51" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(60, 220)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile26" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile26" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1460, 660)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile27" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile27" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 660)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile28" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile28" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1540, 660)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile29" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile29" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1540, 700)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile30" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile30" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1500, 700)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile31" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile31" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1460, 700)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile32" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile32" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1420, 700)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile18" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile18" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(1540, 740)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile6" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile6" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(900, 1100)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile4" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile4" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(220, 1020)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile7" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile7" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(60, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 5
 ssign = 1
 debug = false
 
-[node name="ScoreTile8" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile8" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(100, 780)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile11" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile11" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(220, 740)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile14" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile14" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(580, 700)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile12" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile12" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(100, 180)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile13" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile13" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(260, 180)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 4
 ssign = 1
 debug = false
 
-[node name="ScoreTile9" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile9" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(100, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile10" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_hle8l")]
+[node name="ScoreTile10" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_kohmy")]
 position = Vector2(60, 820)
-collision_layer = 4294967293
+collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_y24jt")
+script = ExtResource("7_gbbvd")
 is_player = false
+is_hostile = false
 power = 4
 ssign = 1
 debug = false
 
 [node name="Baddies" type="Node2D" parent="."]
 
-[node name="Baddie 4" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("8_o0cn3")]
-position = Vector2(260, 1066.93)
-collision_layer = 3221225464
-collision_mask = 1073741826
-velocity = Vector2(0, 180)
-script = ExtResource("9_aagyf")
-vx = 0.0
-vy = 180.0
-
-[node name="Baddie 1" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(520, 1122.07)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(0, 180)
-script = ExtResource("11_na3qg")
-vx = 0.0
-vy = 180.0
-
-[node name="Baddie 2" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(680, 997.925)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 4" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("8_w5s1x")]
+position = Vector2(260, 1102.93)
+collision_mask = 268435456
 velocity = Vector2(0, -180)
-script = ExtResource("11_na3qg")
+script = ExtResource("9_ax0fu")
+vx = 0.0
+vy = 180.0
+
+[node name="Baddie 1" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(520, 1068.07)
+collision_mask = 536870912
+velocity = Vector2(0, 180)
+script = ExtResource("11_x5xi8")
+vx = 0.0
+vy = 180.0
+
+[node name="Baddie 2" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(680, 1051.93)
+collision_mask = 536870912
+velocity = Vector2(0, -180)
+script = ExtResource("11_x5xi8")
 vx = 0.0
 vy = -180.0
 
-[node name="Baddie 6" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1420, 1095.07)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 6" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1420, 1104.93)
+collision_mask = 536870912
 velocity = Vector2(0, -300)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 0.0
 vy = -300.0
 
-[node name="Baddie 3" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(376.932, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-240, 0)
-script = ExtResource("11_na3qg")
+[node name="Baddie 3" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(691.069, 900)
+collision_mask = 536870912
+velocity = Vector2(240, 0)
+script = ExtResource("11_x5xi8")
 vx = -240.0
 vy = 0.0
 
-[node name="Baddie 21" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1478.93, 1140)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(180, 0)
-script = ExtResource("11_na3qg")
+[node name="Baddie 21" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1076.93, 1140)
+collision_mask = 536870912
+velocity = Vector2(-180, 0)
+script = ExtResource("11_x5xi8")
 vx = 180.0
 vy = 0.0
 
-[node name="Baddie 7" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(950.4, 780)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 7" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(965.071, 780)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 8" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1016.4, 780)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 8" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1220.27, 780)
+collision_mask = 536870912
 velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = -440.0
 vy = 0.0
 
-[node name="Baddie 9" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1034.93, 780)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+[node name="Baddie 9" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(978.26, 780)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 10" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(902.263, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 10" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1124.93, 860)
+collision_mask = 536870912
 velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = -440.0
 vy = 0.0
 
-[node name="Baddie 11" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1041.6, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 11" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1264.27, 860)
+collision_mask = 536870912
 velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = -440.0
 vy = 0.0
 
-[node name="Baddie 12" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1224.97, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 12" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1009.07, 860)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_x5xi8")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 23" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(869.733, 860)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_x5xi8")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 24" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(978.26, 860)
+collision_mask = 536870912
 velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 23" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1089.73, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 13" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1126.4, 820)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 24" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(950.399, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 22" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(943.071, 820)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 13" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(906.4, 820)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 14" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1302.4, 820)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
-vx = 440.0
-vy = 0.0
-
-[node name="Baddie 22" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1030.93, 820)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
-vx = 440.0
-vy = 0.0
-
-[node name="Baddie 14" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1038.4, 820)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = -440.0
 vy = 0.0
 
-[node name="Baddie 15" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1104.27, 820)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 15" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1205.6, 820)
+collision_mask = 536870912
 velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = -440.0
 vy = 0.0
 
-[node name="Baddie 16" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(912.26, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
-vx = -440.0
-vy = 0.0
-
-[node name="Baddie 17" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(869.738, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
-vx = -440.0
-vy = 0.0
-
-[node name="Baddie 18" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(994.399, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-440, 0)
-script = ExtResource("11_na3qg")
-vx = -440.0
-vy = 0.0
-
-[node name="Baddie 25" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1080.93, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 16" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1280.41, 900)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 17" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1293.59, 900)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_x5xi8")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 18" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1168.93, 900)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_x5xi8")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 25" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1155.73, 900)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 26" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1315.6, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 26" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(921.066, 900)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 27" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(1198.27, 900)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 27" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(1038.4, 900)
+collision_mask = 536870912
 velocity = Vector2(440, 0)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 440.0
 vy = 0.0
 
-[node name="Baddie 5" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(235.068, 860)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(-240, 0)
-script = ExtResource("11_na3qg")
+[node name="Baddie 5" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(691.069, 860)
+collision_mask = 536870912
+velocity = Vector2(240, 0)
+script = ExtResource("11_x5xi8")
 vx = -240.0
 vy = 0.0
 
-[node name="Baddie 19" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(302.877, 655.026)
-collision_layer = 2147483640
-collision_mask = 2147483650
+[node name="Baddie 19" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(397.133, 562.998)
+collision_mask = 536870912
 velocity = Vector2(120, -120)
-script = ExtResource("11_na3qg")
+script = ExtResource("11_x5xi8")
 vx = 120.0
 vy = -120.0
 
-[node name="Baddie 28" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_gr7m5")]
-position = Vector2(386.654, 373.346)
-collision_layer = 2147483640
-collision_mask = 2147483650
-velocity = Vector2(120, -120)
-script = ExtResource("11_na3qg")
+[node name="Baddie 28" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_jjvff")]
+position = Vector2(297.346, 462.654)
+collision_mask = 536870912
+velocity = Vector2(-120, 120)
+script = ExtResource("11_x5xi8")
 vx = 120.0
 vy = -120.0
 
 [node name="SavePoints" type="Node2D" parent="."]
 
-[node name="Savepoint" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_swaj5")]
+[node name="Savepoint" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_1xebs")]
 z_index = -2
 position = Vector2(860, 1100)
 rotation = 3.14159
-script = ExtResource("13_vi8rt")
+script = ExtResource("13_cm4v2")
+saved = false
 id = 0
 spawn_point = Vector2(860, 1100)
 
-[node name="Savepoint2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_swaj5")]
+[node name="Savepoint2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_1xebs")]
 z_index = -2
 position = Vector2(300, 220)
-script = ExtResource("13_vi8rt")
+script = ExtResource("13_cm4v2")
+saved = false
 id = 1
 spawn_point = Vector2(300, 220)
 
-[node name="Goal" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_7einj")]
+[node name="Goal" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_anx0w")]
 z_index = -2
 position = Vector2(0, 1120)
 rotation = 1.5708
-script = ExtResource("15_ii5qx")
+script = ExtResource("15_5jq0a")
 to_level = 0
+saved = false
 id = 2
 spawn_point = Vector2(60, 1120)
 
-[node name="Goal2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_7einj")]
+[node name="Goal2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_anx0w")]
 z_index = -2
 position = Vector2(200, 680)
-script = ExtResource("15_ii5qx")
+script = ExtResource("15_5jq0a")
 to_level = 0
+saved = false
 id = 3
 spawn_point = Vector2(200, 620)
 
