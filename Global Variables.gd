@@ -44,8 +44,8 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 const TILE_POW_MAX:int = 12;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
-const CHUNK_LOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
-const CHUNK_UNLOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
+const CHUNK_LOAD_BUFFER:float = CHUNK_WIDTH;
+const CHUNK_UNLOAD_BUFFER:float = CHUNK_WIDTH;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];

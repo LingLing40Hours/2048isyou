@@ -16,7 +16,6 @@ var difficulty:float = 0; #probability of hostile, noise roughness
 var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
 var load_mutex:Mutex;
-var unload_mutex:Mutex;
 var initial_mutex:Mutex;
 var instanced_mutex:Mutex;
 var loaded_mutex:Mutex;
@@ -25,7 +24,7 @@ var exit_thread:bool = false;
 
 #chunk_pos_c:Vector2i, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
-var unload_queue:Dictionary; #shared
+var unloaded_chunks:Dictionary; #main thread; chunks waiting for queue_free()
 
 #chunk_pos_c:Vector2i, chunk:Chunk
 var modified_chunks:Dictionary; #chunks modified by gameplay
@@ -76,7 +75,6 @@ func _ready():
 	
 	#thread stuff
 	load_mutex = Mutex.new();
-	unload_mutex = Mutex.new();
 	initial_mutex = Mutex.new();
 	instanced_mutex = Mutex.new();
 	loaded_mutex = Mutex.new();
@@ -139,6 +137,15 @@ func _process(_delta):
 		var load_pos:Vector2i = instanced_chunks.keys().front();
 		call_deferred("add_chunk", load_pos, instanced_chunks[load_pos]); #defer bc this is slow
 	
+	#queue_free an unloaded chunk from active tree
+	elif not unloaded_chunks.is_empty():
+		var unload_pos:Vector2i = unloaded_chunks.keys().back();
+		unloaded_chunks.erase(unload_pos);
+		loaded_mutex.lock();
+		loaded_chunks[unload_pos].queue_free();
+		loaded_chunks.erase(unload_pos);
+		loaded_mutex.unlock();
+	
 	#var process_end_time:int = Time.get_ticks_usec();
 	#print("process time: ", process_end_time - process_start_time);
 
@@ -188,12 +195,9 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 #				semaphore.post();
 #			queue_mutex.unlock();
 			
-			unload_mutex.lock();
-			if unload_queue.has(pos_c):
-				unload_queue.erase(pos_c);
-				unload_mutex.unlock();
+			if unloaded_chunks.has(pos_c):
+				unloaded_chunks.erase(pos_c);
 				continue;
-			unload_mutex.unlock();
 			
 			if instanced_chunks.has(pos_c):
 				continue;
@@ -224,7 +228,7 @@ func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 			load_mutex.unlock();
 			
 			instanced_mutex.lock();
-			if instanced_chunks.has(pos_c): #move to loaded_chunks
+			if instanced_chunks.has(pos_c): #move to loaded chunks
 				var chunk:Chunk = instanced_chunks[pos_c];
 				instanced_chunks.erase(pos_c);
 				instanced_mutex.unlock();
@@ -232,13 +236,11 @@ func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 				loaded_chunks[pos_c] = chunk;
 				loaded_mutex.unlock();
 			else:
+				#already in loaded chunks
 				instanced_mutex.unlock();
 			
-			#mark for unload
-			unload_mutex.lock();
-			unload_queue[pos_c] = true;
-			unload_mutex.unlock();
-			semaphore.post();
+			#add to unload queue
+			unloaded_chunks[pos_c] = true;
 
 #based on camera position
 func manage_chunks():
@@ -254,20 +256,6 @@ func manage_chunks():
 		exit_mutex.unlock();
 		if should_exit:
 			break;
-		
-		#unload chunks
-		unload_mutex.lock();
-		if not unload_queue.is_empty():
-			var unload_pos:Vector2i = unload_queue.keys().front();
-			unload_queue.erase(unload_pos);
-			unload_mutex.unlock();
-			#print("unload_positions: ", unload_positions);
-			loaded_mutex.lock();
-			loaded_chunks[unload_pos].queue_free();
-			loaded_chunks.erase(unload_pos);
-			loaded_mutex.unlock();
-		else:
-			unload_mutex.unlock();
 		
 		#load chunks
 		load_mutex.lock();
