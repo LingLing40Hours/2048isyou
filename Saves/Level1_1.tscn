@@ -1,0 +1,946 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://Levels/Level 1.gd" id="1_0bou8"]
+[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_c5dg0"]
+[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_sto26"]
+[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_opa2s"]
+[ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_ib3s4"]
+[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_ctktq"]
+[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_tmtn8"]
+[ext_resource type="PackedScene" path="res://Enemy/Baddie 2.tscn" id="8_py63a"]
+[ext_resource type="Script" path="res://Enemy/Baddie 2.gd" id="9_x37rn"]
+[ext_resource type="PackedScene" path="res://Enemy/Baddie 1.tscn" id="10_vrceg"]
+[ext_resource type="Script" path="res://Enemy/Baddie 1.gd" id="11_4owvn"]
+[ext_resource type="PackedScene" path="res://Savepoints/Savepoint_1x1_Concave.tscn" id="12_2engd"]
+[ext_resource type="Script" path="res://Savepoints/Savepoint.gd" id="13_013c2"]
+[ext_resource type="PackedScene" path="res://Savepoints/Goal_1x2_Concave.tscn" id="14_l86c5"]
+[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="15_vjqqq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_adef3"]
+size = Vector2(480, 40)
+
+[node name="Level 1" type="Node2D" node_paths=PackedStringArray("player_saved")]
+process_mode = 1
+script = ExtResource("1_0bou8")
+player_saved = NodePath("ScoreTiles/@CharacterBody2D@57")
+resolution_t = Vector2i(40, 30)
+min_pos = Vector2(0, 0)
+max_pos = Vector2(1600, 1200)
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
+
+[node name="LevelName" type="Label" parent="Background"]
+modulate = Color(1, 1, 1, 0)
+z_index = 20
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -11.5
+offset_right = 88.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_c5dg0")
+theme_override_font_sizes/font_size = 50
+text = "Hello World"
+metadata/_edit_lock_ = true
+
+[node name="Move" type="Label" parent="Background"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 410.0
+offset_top = -210.0
+offset_right = 880.0
+offset_bottom = -190.0
+grow_vertical = 0
+theme = ExtResource("2_c5dg0")
+text = "press WASD/arrow keys to move
+"
+metadata/_edit_lock_ = true
+
+[node name="Shift" type="Label" parent="Background"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 890.0
+offset_top = -907.0
+offset_right = 1360.0
+offset_bottom = -887.0
+grow_vertical = 0
+theme = ExtResource("2_c5dg0")
+text = "press Shift+movement to shift"
+metadata/_edit_lock_ = true
+
+[node name="Unlocker" type="Area2D" parent="Background/Shift"]
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+monitorable = false
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/Unlocker"]
+position = Vector2(230, 7)
+shape = SubResource("RectangleShape2D_adef3")
+metadata/_edit_lock_ = true
+
+[node name="Walls" type="TileMap" parent="." groups=["wall"]]
+tile_set = ExtResource("3_sto26")
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 6, 2, 0, 7, 2, 0, 8, 2, 0, 9, 2, 0, 10, 2, 0, 11, 2, 0, 12, 2, 0, 13, 2, 0, 14, 2, 0, 15, 2, 0, 16, 2, 0, 17, 2, 0, 18, 2, 0, 19, 2, 0, 20, 2, 0, 21, 2, 0, 22, 2, 0, 23, 2, 0, 24, 2, 0, 25, 2, 0, 26, 2, 0, 27, 2, 0, 28, 2, 0, 29, 2, 0, 30, 2, 0, 31, 2, 0, 32, 2, 0, 33, 2, 0, 34, 2, 0, 35, 2, 0, 36, 2, 0, 37, 2, 0, 38, 2, 0, 39, 2, 0, 65575, 2, 0, 131111, 2, 0, 196647, 2, 0, 262183, 2, 0, 327719, 2, 0, 393255, 2, 0, 458791, 2, 0, 524327, 2, 0, 589863, 2, 0, 655399, 2, 0, 720935, 2, 0, 786471, 2, 0, 852007, 2, 0, 917543, 2, 0, 983079, 2, 0, 1048615, 2, 0, 1114151, 2, 0, 1179687, 2, 0, 1245223, 2, 0, 1310759, 2, 0, 1376295, 2, 0, 1441831, 2, 0, 1507367, 2, 0, 1572903, 2, 0, 1638439, 2, 0, 1703975, 2, 0, 1769511, 2, 0, 1835047, 2, 0, 1900583, 2, 0, 1900582, 2, 0, 1900581, 2, 0, 1900580, 2, 0, 1900579, 2, 0, 1900578, 2, 0, 1900577, 2, 0, 1900576, 2, 0, 1900575, 2, 0, 1900574, 2, 0, 1900573, 2, 0, 1900572, 2, 0, 1900571, 2, 0, 1900570, 2, 0, 1900569, 2, 0, 1900568, 2, 0, 1900567, 2, 0, 1900566, 2, 0, 1900565, 2, 0, 1900564, 2, 0, 1900563, 2, 0, 1900562, 2, 0, 1900561, 2, 0, 1900560, 2, 0, 1900559, 2, 0, 1900558, 2, 0, 1900557, 2, 0, 1900556, 2, 0, 1900555, 2, 0, 1900554, 2, 0, 1900553, 2, 0, 1900552, 2, 0, 1900551, 2, 0, 1900550, 2, 0, 1900549, 2, 0, 1900548, 2, 0, 1900547, 2, 0, 1900544, 2, 0, 65536, 2, 0, 131072, 2, 0, 196608, 2, 0, 262144, 2, 0, 327680, 2, 0, 393216, 2, 0, 458752, 2, 0, 524288, 2, 0, 589824, 2, 0, 655360, 2, 0, 720896, 2, 0, 786432, 2, 0, 851968, 2, 0, 917504, 2, 0, 983040, 2, 0, 1048576, 2, 0, 1114112, 2, 0, 1179648, 2, 0, 1245184, 2, 0, 1310720, 2, 0, 1376256, 2, 0, 1441792, 2, 0, 1507328, 2, 0, 1572864, 2, 0, 1638400, 2, 0, 1703936, 2, 0, 327682, 4, 0, 327683, 4, 0, 327684, 4, 0, 327685, 4, 0, 327686, 4, 0, 131080, 4, 0, 196616, 4, 0, 262152, 4, 0, 327688, 4, 0, 393224, 4, 0, 65540, 4, 0, 131076, 4, 0, 196612, 4, 0, 262148, 4, 0, 983043, 4, 0, 1048579, 4, 0, 1114115, 4, 0, 1114116, 4, 0, 1114117, 4, 0, 1310723, 2, 0, 1310724, 2, 0, 1310725, 2, 0, 1310726, 2, 0, 1310727, 2, 0, 1310728, 2, 0, 1310729, 2, 0, 1310730, 2, 0, 1310731, 2, 0, 1310732, 2, 0, 1310733, 2, 0, 1310734, 2, 0, 786434, 4, 0, 786435, 4, 0, 786438, 4, 0, 851974, 4, 0, 917510, 4, 0, 983046, 4, 0, 1048582, 4, 0, 1114118, 4, 0, 458761, 4, 0, 524298, 4, 0, 589835, 4, 0, 655372, 4, 0, 983055, 4, 0, 983056, 4, 0, 1310735, 2, 0, 1310736, 2, 0, 1048593, 2, 0, 1114129, 4, 0, 1179665, 4, 0, 1245201, 4, 0, 983054, 4, 0, 1114119, 4, 0, 1114120, 4, 0, 1048585, 4, 0, 1048586, 4, 0, 1507341, 4, 0, 1507342, 4, 0, 1507343, 4, 0, 1507344, 4, 0, 1507345, 4, 0, 1703957, 4, 0, 1703958, 4, 0, 1507353, 4, 0, 1703959, 4, 0, 1703960, 4, 0, 1703940, 4, 0, 1703941, 4, 0, 1703942, 4, 0, 1703943, 4, 0, 1703944, 4, 0, 1703945, 4, 0, 1769509, 4, 0, 1703973, 4, 0, 1638437, 4, 0, 1507366, 4, 0, 1507365, 4, 0, 1507364, 4, 0, 1638436, 4, 0, 1638435, 4, 0, 1638434, 4, 0, 1572898, 4, 0, 1507362, 4, 0, 1441826, 4, 0, 1376290, 4, 0, 1376291, 4, 0, 1376292, 4, 0, 1376293, 4, 0, 720909, 4, 0, 786445, 4, 0, 851981, 4, 0, 917517, 4, 0, 983053, 4, 0, 1048589, 4, 0, 1703949, 3, 0, 1703953, 3, 0, 1507333, 3, 0, 1507334, 3, 0, 1507335, 3, 0, 1507336, 3, 0, 1507337, 3, 0, 1507338, 3, 0, 1507332, 3, 0, 1507349, 4, 0, 1507350, 4, 0, 1507351, 4, 0, 1507352, 4, 0, 1703962, 4, 0, 1703961, 4, 0, 1507354, 4, 0, 1048594, 2, 0, 1048595, 2, 0, 1048596, 2, 0, 1048597, 2, 0, 1048598, 2, 0, 1048599, 2, 0, 1048600, 2, 0, 1048601, 2, 0, 1048602, 2, 0, 1048603, 2, 0, 1048604, 2, 0, 1048605, 2, 0, 1048606, 2, 0, 1048607, 2, 0, 1048608, 2, 0, 1048609, 2, 0, 1048610, 2, 0, 1114146, 4, 0, 1179682, 4, 0, 1245218, 4, 0, 1310754, 4, 0, 1507339, 3, 0, 786433, 4, 0, 1179651, 4, 0, 1245187, 4, 0, 1507331, 3, 0, 1703948, 3, 0, 1703952, 3, 0, 1572867, 4, 0, 1638403, 4, 0, 1703939, 4, 0, 1769481, 4, 0, 1835017, 4, 0, 1507340, 4, 0, 1245204, 4, 0, 1310740, 4, 0, 1376276, 4, 0, 1441812, 4, 0, 1507348, 4, 0, 1572890, 4, 0, 1638426, 4, 0, 1703956, 4, 0, 1769492, 4, 0, 1835028, 4, 0, 917541, 3, 0, 852005, 3, 0, 786469, 3, 0, 917539, 3, 0, 917538, 3, 0, 917537, 3, 0, 917536, 3, 0, 917535, 3, 0, 786461, 3, 0, 851997, 3, 0, 917533, 3, 0, 786463, 3, 0, 786465, 3, 0, 524323, 3, 0, 589859, 3, 0, 655395, 3, 0, 720931, 3, 0, 786467, 3, 0, 852003, 3, 0, 393247, 3, 0, 393248, 3, 0, 393249, 3, 0, 393251, 3, 0, 524321, 3, 0, 655393, 3, 0, 720929, 3, 0, 524318, 3, 0, 524319, 3, 0, 524320, 3, 0, 655391, 3, 0, 720927, 3, 0, 655390, 3, 0, 655389, 3, 0, 655388, 3, 0, 655387, 3, 0, 786459, 3, 0, 917531, 3, 0, 917530, 3, 0, 917529, 3, 0, 917528, 3, 0, 917527, 3, 0, 262175, 3, 0, 262174, 3, 0, 262173, 3, 0, 262172, 3, 0, 262171, 3, 0, 327707, 3, 0, 393243, 3, 0, 524315, 3, 0, 393245, 3, 0, 393246, 3, 0, 524317, 3, 0, 262177, 3, 0, 327713, 3, 0, 131105, 3, 0, 131104, 3, 0, 131103, 3, 0, 131102, 3, 0, 131101, 3, 0, 131100, 3, 0, 131099, 3, 0, 131098, 3, 0, 131097, 3, 0, 196633, 3, 0, 262169, 3, 0, 327705, 3, 0, 393241, 3, 0, 655385, 3, 0, 786457, 3, 0, 786458, 3, 0, 262179, 3, 0, 262180, 3, 0, 262181, 3, 0, 393253, 3, 0, 458789, 3, 0, 720933, 3, 0, 131109, 3, 0, 196645, 3, 0, 65571, 3, 0, 131107, 3, 0, 655397, 3, 0, 589861, 3, 0, 131095, 3, 0, 196631, 3, 0, 65555, 3, 0, 131091, 3, 0, 196627, 3, 0, 262163, 3, 0, 131093, 3, 0, 131094, 3, 0, 524313, 3, 0, 655383, 3, 0, 655381, 3, 0, 720919, 3, 0, 786455, 3, 0, 786454, 3, 0, 786453, 3, 0, 786452, 3, 0, 786451, 3, 0, 655380, 3, 0, 524310, 3, 0, 524311, 3, 0, 458773, 3, 0, 458772, 3, 0, 458771, 3, 0, 524309, 3, 0, 589843, 3, 0, 655379, 3, 0, 393239, 3, 0, 327703, 3, 0, 327702, 3, 0, 327701, 3, 0, 393235, 3, 0, 262165, 3, 0, 524325, 3, 0, 917523, 3, 0, 917524, 3, 0, 524312, 3, 0, 524316, 3, 0, 131089, 3, 0, 196625, 3, 0, 262161, 3, 0, 393233, 3, 0, 393232, 3, 0, 393231, 3, 0, 393230, 3, 0, 131084, 3, 0, 262156, 3, 0, 458764, 3, 0, 393228, 3, 0, 458766, 3, 0, 524302, 3, 0, 589838, 3, 0, 851983, 3, 0, 786447, 3, 0, 786449, 3, 0, 720911, 3, 0, 655377, 3, 0, 589841, 3, 0, 524305, 3, 0, 524304, 3, 0, 655375, 3, 0, 131085, 3, 0, 131086, 3, 0, 131087, 3, 0, 262158, 3, 0, 262159, 3, 0, 262160, 3, 0, 917522, 3, 0, 851985, 3, 0, 917526, 3, 0, 327690, 3, 0, 393227, 3, 0, 131082, 3, 0, 196618, 3, 0, 983074, 1, 0, 917540, 1, 0, 917542, 1, 0, 1900545, 2, 0, 1900546, 2, 0, 1769473, 1, 0, 1835009, 1, 0, 983044, 1, 0, 983045, 1, 0)
+
+[node name="Freedom" type="Area2D" parent="." instance=ExtResource("4_opa2s")]
+script = ExtResource("5_ib3s4")
+
+[node name="ScoreTiles" type="Node2D" parent="."]
+
+[node name="ScoreTile" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(140, 900)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+velocity = Vector2(320, 0)
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile5" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1220, 860)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+velocity = Vector2(0, 320)
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile16" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1540, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile19" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile20" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1460, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile21" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1420, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 3
+ssign = 1
+debug = false
+
+[node name="ScoreTile22" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile35" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 740)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile23" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1460, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 3
+ssign = 1
+debug = false
+
+[node name="ScoreTile33" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1460, 740)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile34" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1420, 740)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile24" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1420, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile17" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1540, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile25" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1420, 660)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile48" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(740, 260)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile50" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(940, 180)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(500, 340)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile58" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(980, 500)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile59" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1340, 380)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile60" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(700, 460)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile54" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(340, 60)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 5
+ssign = 1
+debug = false
+
+[node name="ScoreTile55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(380, 60)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 4
+ssign = 1
+debug = false
+
+[node name="ScoreTile52" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 220)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile49" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(740, 300)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile56" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1060, 340)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1060, 380)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile51" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(60, 220)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = -1
+ssign = 1
+debug = false
+
+[node name="ScoreTile26" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1460, 660)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile27" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 660)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile28" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1540, 660)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="ScoreTile29" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1540, 700)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 3
+ssign = 1
+debug = false
+
+[node name="ScoreTile30" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1500, 700)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 3
+ssign = 1
+debug = false
+
+[node name="ScoreTile31" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1460, 700)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile32" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1420, 700)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile18" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1540, 740)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile6" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(900, 1100)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile4" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1180, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+velocity = Vector2(0, 320)
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile7" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(60, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 5
+ssign = 1
+debug = false
+
+[node name="ScoreTile8" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(100, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile11" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(220, 740)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile14" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(580, 700)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="ScoreTile12" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(100, 180)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 2
+ssign = 1
+debug = false
+
+[node name="ScoreTile13" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(260, 180)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 4
+ssign = 1
+debug = false
+
+[node name="ScoreTile9" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(100, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 3
+ssign = 1
+debug = false
+
+[node name="ScoreTile10" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(60, 820)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 4
+ssign = 1
+debug = false
+
+[node name="@CharacterBody2D@53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1140, 780)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+velocity = Vector2(0, 320)
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="@CharacterBody2D@55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(1260, 900)
+collision_layer = 4294967283
+collision_mask = 0
+motion_mode = 1
+velocity = Vector2(0, 320)
+script = ExtResource("7_tmtn8")
+is_player = false
+is_hostile = false
+power = 1
+ssign = 1
+debug = false
+
+[node name="@CharacterBody2D@57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_ctktq")]
+position = Vector2(860, 1100)
+collision_layer = 4294967287
+motion_mode = 1
+script = ExtResource("7_tmtn8")
+is_player = true
+is_hostile = false
+power = 0
+ssign = 1
+debug = false
+
+[node name="Baddies" type="Node2D" parent="."]
+
+[node name="Baddie 4" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("8_py63a")]
+position = Vector2(260, 1128.07)
+collision_mask = 268435456
+velocity = Vector2(0, 180)
+script = ExtResource("9_x37rn")
+vx = 0.0
+vy = 180.0
+
+[node name="Baddie 1" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(520, 1008.07)
+collision_mask = 536870912
+velocity = Vector2(0, 180)
+script = ExtResource("11_4owvn")
+vx = 0.0
+vy = 180.0
+
+[node name="Baddie 2" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(680, 1111.93)
+collision_mask = 536870912
+velocity = Vector2(0, -180)
+script = ExtResource("11_4owvn")
+vx = 0.0
+vy = -180.0
+
+[node name="Baddie 6" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1420, 1084.93)
+collision_mask = 536870912
+velocity = Vector2(0, -300)
+script = ExtResource("11_4owvn")
+vx = 0.0
+vy = -300.0
+
+[node name="Baddie 3" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(539.068, 900)
+collision_mask = 536870912
+velocity = Vector2(240, 0)
+script = ExtResource("11_4owvn")
+vx = -240.0
+vy = 0.0
+
+[node name="Baddie 21" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1125.07, 1140)
+collision_mask = 536870912
+velocity = Vector2(180, 0)
+script = ExtResource("11_4owvn")
+vx = 180.0
+vy = 0.0
+
+[node name="Baddie 7" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(958.265, 780)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 8" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1031.6, 780)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 9" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1023.73, 780)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 10" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1155.73, 860)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 11" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1016.4, 860)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 12" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(921.067, 860)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 23" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(928.266, 860)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 24" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1067.6, 860)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 13" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1093.6, 820)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 22" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1016.4, 820)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 14" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(917.599, 820)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 15" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(943.067, 820)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 16" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(987.069, 900)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 17" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1104.4, 900)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 18" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1225, 900)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = -440.0
+vy = 0.0
+
+[node name="Baddie 25" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(862.4, 900)
+collision_mask = 536870912
+velocity = Vector2(440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 26" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(1078.27, 900)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 27" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(960.933, 900)
+collision_mask = 536870912
+velocity = Vector2(-440, 0)
+script = ExtResource("11_4owvn")
+vx = 440.0
+vy = 0.0
+
+[node name="Baddie 5" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(480.932, 860)
+collision_mask = 536870912
+velocity = Vector2(-240, 0)
+script = ExtResource("11_4owvn")
+vx = -240.0
+vy = 0.0
+
+[node name="Baddie 19" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(338.864, 619.033)
+collision_mask = 536870912
+velocity = Vector2(-120, 120)
+script = ExtResource("11_4owvn")
+vx = 120.0
+vy = -120.0
+
+[node name="Baddie 28" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_vrceg")]
+position = Vector2(330.654, 429.346)
+collision_mask = 536870912
+velocity = Vector2(120, -120)
+script = ExtResource("11_4owvn")
+vx = 120.0
+vy = -120.0
+
+[node name="SavePoints" type="Node2D" parent="."]
+
+[node name="Savepoint" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_2engd")]
+z_index = -2
+position = Vector2(860, 1100)
+rotation = 3.14159
+script = ExtResource("13_013c2")
+saved = false
+id = 0
+spawn_point = Vector2(860, 1100)
+
+[node name="Savepoint2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("12_2engd")]
+z_index = -2
+position = Vector2(300, 220)
+script = ExtResource("13_013c2")
+saved = false
+id = 1
+spawn_point = Vector2(300, 220)
+
+[node name="Goal" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_l86c5")]
+z_index = -2
+position = Vector2(0, 1120)
+rotation = 1.5708
+script = ExtResource("15_vjqqq")
+to_level = 0
+saved = false
+id = 2
+spawn_point = Vector2(60, 1120)
+
+[node name="Goal2" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("14_l86c5")]
+z_index = -2
+position = Vector2(200, 680)
+script = ExtResource("15_vjqqq")
+to_level = 0
+saved = false
+id = 3
+spawn_point = Vector2(200, 620)
+
+[connection signal="body_entered" from="Background/Shift/Unlocker" to="." method="_on_unlocker_body_entered" flags=18]

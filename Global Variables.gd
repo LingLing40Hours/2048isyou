@@ -33,7 +33,7 @@ var BORDER_MAX_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MAX_POS_T);
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
-var current_level_index:int = 1;
+var current_level_index:int = 12;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
