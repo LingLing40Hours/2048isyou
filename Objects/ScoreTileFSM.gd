@@ -71,9 +71,6 @@ func _ready():
 			break;
 	
 	#settings
-	set_layers(true, true);
-	set_collision_layer_value(2, true);
-	
 	if is_player:
 		if splitted:
 			set_layers(false, true);
@@ -504,10 +501,6 @@ func set_layers(state, layer_one):
 	if layer_one:
 		set_collision_layer_value(1, state);
 	for i in range(5, 33):
-		set_collision_layer_value(i, state);
-
-func set_layers_all(state):
-	for i in range(1, 33):
 		set_collision_layer_value(i, state);
 
 func set_masks(state):

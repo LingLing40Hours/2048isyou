@@ -360,6 +360,9 @@ func generate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2
 	#set chunk cells
 	chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.tile_val_to_id(tile.power, tile.ssign);
 
+	#re-enable tile collisions
+	tile.get_node("CollisionPolygon2D").disabled = false;
+
 	#debug
 	#if Vector2i(tx, ty) == Vector2i(0, 1):
 	#	tile.debug = true;
@@ -405,7 +408,7 @@ func get_chunk() -> Chunk:
 #		var tile:ScoreTile = score_tile.instantiate();
 #		tile.hide();
 #		tile.set_process_mode(PROCESS_MODE_DISABLED);
-#		tile.set_layers_all(false);
+#		tile.get_node("CollisionPolygon2D").disabled = true;
 #		chunk.tile_pool.push_back(tile);
 #		chunk.add_child(tile);
 	
@@ -442,7 +445,7 @@ func pool_chunk(chunk:Chunk):
 func pool_tile(chunk:Chunk, tile:ScoreTile):
 	tile.hide();
 	tile.set_process_mode(PROCESS_MODE_DISABLED);
-	tile.set_layers_all(false);
+	tile.get_node("CollisionPolygon2D").disabled = true;
 	chunk.tile_pool.push_back(tile);
 
 func contains_world_border(pos_c:Vector2i) -> bool:
