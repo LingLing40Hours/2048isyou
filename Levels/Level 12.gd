@@ -28,7 +28,7 @@ var chunk_pool:Array;
 
 #chunk_pos_c:Vector2i, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
-var pool_queue:Dictionary; #main thread; chunks waiting for queue_free()
+var pool_queue:Dictionary; #main thread
 var tile_free_queue:Array; #main thread
 
 #chunk_pos_c:Vector2i, chunk:Chunk
