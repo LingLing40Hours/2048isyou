@@ -17,18 +17,23 @@ var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
 var load_mutex:Mutex;
 var initial_mutex:Mutex;
-var instanced_mutex:Mutex;
+var constructed_mutex:Mutex;
 var loaded_mutex:Mutex;
+var chunk_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
+#pools
+var chunk_pool:Array;
+
 #chunk_pos_c:Vector2i, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
-var unloaded_chunks:Dictionary; #main thread; chunks waiting for queue_free()
+var pool_queue:Dictionary; #main thread; chunks waiting for queue_free()
+var tile_free_queue:Array; #main thread
 
 #chunk_pos_c:Vector2i, chunk:Chunk
 var modified_chunks:Dictionary; #chunks modified by gameplay
-var instanced_chunks:Dictionary; #chunks waiting to enter scene tree
+var constructed_chunks:Dictionary; #chunks waiting to enter scene tree
 var loaded_chunks:Dictionary; #CM thread; chunks both instanced and added to active tree
 
 #bounding rect
@@ -76,8 +81,9 @@ func _ready():
 	#thread stuff
 	load_mutex = Mutex.new();
 	initial_mutex = Mutex.new();
-	instanced_mutex = Mutex.new();
+	constructed_mutex = Mutex.new();
 	loaded_mutex = Mutex.new();
+	chunk_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
@@ -107,6 +113,7 @@ func _on_chunk_ready():
 			print("initial load time: ", load_end_time - load_start_time);
 
 func _process(_delta):
+	#print("chunk pool size: ", chunk_pool.size());
 	#var process_start_time:int = Time.get_ticks_usec();
 	
 	#mark chunks for load/unload based on camera pos
@@ -132,30 +139,40 @@ func _process(_delta):
 		#update last_cam_pos
 		last_cam_pos = $TrackingCam.position;
 	
-	#add an instanced chunk to active tree (all at once is too much to handle in one frame)
-	if not instanced_chunks.is_empty():
-		var load_pos:Vector2i = instanced_chunks.keys().front();
-		call_deferred("add_chunk", load_pos, instanced_chunks[load_pos]); #defer bc this is slow
+	#add a constructed chunk to active tree (all at once is too much to handle in one frame)
+	if not constructed_chunks.is_empty():
+		var load_pos:Vector2i = constructed_chunks.keys().front();
+		call_deferred("add_chunk", load_pos, constructed_chunks[load_pos]); #defer bc this is slow
 	
-	#queue_free an unloaded chunk from active tree
-	elif not unloaded_chunks.is_empty():
-		var unload_pos:Vector2i = unloaded_chunks.keys().back();
-		unloaded_chunks.erase(unload_pos);
+	#pool an unloaded chunk
+	elif not pool_queue.is_empty():
+		var unload_pos:Vector2i = pool_queue.keys().back();
+		pool_queue.erase(unload_pos);
 		loaded_mutex.lock();
-		loaded_chunks[unload_pos].queue_free();
+		var unload_chunk:Chunk = loaded_chunks[unload_pos];
 		loaded_chunks.erase(unload_pos);
 		loaded_mutex.unlock();
+		pool_chunk(unload_chunk);
+	
+	#free a chunk marked for free
+	elif not tile_free_queue.is_empty():
+		var free_chunk:Chunk = tile_free_queue.pop_back();
+		var free_start_time:int = Time.get_ticks_usec();
+		free_chunk.free();
+		var free_end_time:int = Time.get_ticks_usec();
+		print("NOT IN ACTIVE TREE FREE TIME: ", free_end_time - free_start_time);
 	
 	#var process_end_time:int = Time.get_ticks_usec();
 	#print("process time: ", process_end_time - process_start_time);
 
 func add_chunk(pos_c:Vector2i, chunk:Chunk):
-	add_child(chunk);
+	if not chunk.is_inside_tree():
+		add_child(chunk);
 	
 	#move chunk from instanced to loaded
-	instanced_mutex.lock();
-	instanced_chunks.erase(pos_c);
-	instanced_mutex.unlock();
+	constructed_mutex.lock();
+	constructed_chunks.erase(pos_c);
+	constructed_mutex.unlock();
 	loaded_mutex.lock();
 	loaded_chunks[pos_c] = chunk;
 	loaded_mutex.unlock();
@@ -195,11 +212,11 @@ func enqueue_for_load(pos_c_min:Vector2i, pos_c_max:Vector2i):
 #				semaphore.post();
 #			queue_mutex.unlock();
 			
-			if unloaded_chunks.has(pos_c):
-				unloaded_chunks.erase(pos_c);
+			if pool_queue.has(pos_c):
+				pool_queue.erase(pos_c);
 				continue;
 			
-			if instanced_chunks.has(pos_c):
+			if constructed_chunks.has(pos_c):
 				continue;
 			
 			load_mutex.lock();
@@ -227,20 +244,17 @@ func enqueue_for_unload(pos_c_min:Vector2i, pos_c_max:Vector2i):
 				continue;
 			load_mutex.unlock();
 			
-			instanced_mutex.lock();
-			if instanced_chunks.has(pos_c): #move to loaded chunks
-				var chunk:Chunk = instanced_chunks[pos_c];
-				instanced_chunks.erase(pos_c);
-				instanced_mutex.unlock();
-				loaded_mutex.lock();
-				loaded_chunks[pos_c] = chunk;
-				loaded_mutex.unlock();
-			else:
-				#already in loaded chunks
-				instanced_mutex.unlock();
+			constructed_mutex.lock();
+			if constructed_chunks.has(pos_c): #move to free queue
+				var chunk:Chunk = constructed_chunks[pos_c];
+				constructed_chunks.erase(pos_c);
+				constructed_mutex.unlock();
+				tile_free_queue.push_back(chunk);
+				continue;
+			constructed_mutex.unlock();
 			
-			#add to unload queue
-			unloaded_chunks[pos_c] = true;
+			#queue for pool
+			pool_queue[pos_c] = true;
 
 #based on camera position
 func manage_chunks():
@@ -264,10 +278,10 @@ func manage_chunks():
 			load_queue.erase(load_pos);
 			load_mutex.unlock();
 			#print("load_positions: ", load_positions);
-			var chunk:Chunk = instantiate_chunk(load_pos);
-			instanced_mutex.lock();
-			instanced_chunks[load_pos] = chunk;
-			instanced_mutex.unlock();
+			var chunk:Chunk = generate_chunk(load_pos);
+			constructed_mutex.lock();
+			constructed_chunks[load_pos] = chunk;
+			constructed_mutex.unlock();
 			if initial_load_count < initial_chunk_count:
 				initial_load_count += 1;
 		else:
@@ -280,22 +294,19 @@ func manage_chunks():
 			call_deferred("emit_signal", "initial_chunks_instanced");
 		initial_mutex.unlock();
 	
-func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
+func generate_chunk(chunk_pos:Vector2i) -> Chunk:
 	#print("generate chunk ", chunk_pos); #print in thread is slow
 	var start_time:int = Time.get_ticks_usec();
 	
-	#get cell function
-	var func_cell_str:String = "instantiate_cell_or_border" if contains_world_border(chunk_pos) else "instantiate_cell";
-	var func_cell:Callable = Callable(self, func_cell_str);
-	
-	var ans:Chunk = packed_chunk.instantiate();
+	var ans:Chunk = get_chunk();
 	ans.pos_c = chunk_pos;
 	#ans.call_deferred("set_position", GV.pos_c_to_world(chunk_pos));
 	ans.position = GV.pos_c_to_world(chunk_pos);
 	var start_tile_pos:Vector2i = GV.pos_c_to_pos_t(chunk_pos);
 	
-	#connect ready to increment_ready_count
-	ans.ready.connect(_on_chunk_ready);
+	#get cell function
+	var func_cell_str:String = "generate_cell_or_border" if contains_world_border(chunk_pos) else "generate_cell";
+	var func_cell:Callable = Callable(self, func_cell_str);
 	
 	for tx in GV.CHUNK_WIDTH_T:
 		var global_tx:int = start_tile_pos.x + tx;
@@ -306,33 +317,15 @@ func instantiate_chunk(chunk_pos:Vector2i) -> Chunk:
 	#print("chunk instance time: ", end_time - start_time); #print in thread is slow
 	return ans;
 
-func contains_world_border(pos_c:Vector2i) -> bool:
-	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
-		if pos_c.y >= GV.BORDER_MIN_POS_C.y and pos_c.y <= GV.BORDER_MAX_POS_C.y:
-			return true;
-	if pos_c.y == GV.BORDER_MIN_POS_C.y or pos_c.y == GV.BORDER_MAX_POS_C.y:
-		if pos_c.x >= GV.BORDER_MIN_POS_C.x and pos_c.x <= GV.BORDER_MAX_POS_C.x:
-			return true;
-	return false;
-
-func is_world_border(pos_t:Vector2i) -> bool:
-	if pos_t.x == GV.BORDER_MIN_POS_T.x or pos_t.x == GV.BORDER_MAX_POS_T.x:
-		if pos_t.y >= GV.BORDER_MIN_POS_T.y and pos_t.y <= GV.BORDER_MAX_POS_T.y:
-			return true;
-	if pos_t.y == GV.BORDER_MIN_POS_T.y or pos_t.y == GV.BORDER_MAX_POS_T.y:
-		if pos_t.x >= GV.BORDER_MIN_POS_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
-			return true;
-	return false;
-
-func instantiate_cell_or_border(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
+func generate_cell_or_border(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	if is_world_border(global_tile_pos):
 		chunk.get_node("Walls").set_cell(0, local_tile_pos, 0, Vector2i.ZERO);
 		chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.StuffId.BORDER;
 	else:
-		instantiate_cell(chunk, global_tile_pos, local_tile_pos);
+		generate_cell(chunk, global_tile_pos, local_tile_pos);
 
-#add tile as child or updates tilemap accordingly; update chunk.cells
-func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
+#inits a tile or updates tilemap accordingly; update chunk.cells
+func generate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vector2i):
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(global_tile_pos.x, global_tile_pos.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
@@ -349,7 +342,7 @@ func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vect
 		return;
 	
 	#tile, position
-	var tile:ScoreTile = score_tile.instantiate();
+	var tile:ScoreTile = get_tile(chunk);
 	#mutex.lock(); exit_thread = true; mutex.unlock(); return; #debug
 	#tile.call_deferred("set_position", GV.pos_t_to_world(local_tile_pos));
 	tile.position = GV.pos_t_to_world(local_tile_pos);
@@ -362,10 +355,6 @@ func instantiate_cell(chunk:Chunk, global_tile_pos:Vector2i, local_tile_pos:Vect
 	
 	#set chunk cells
 	chunk.cells[local_tile_pos.y][local_tile_pos.x] = GV.tile_val_to_id(tile.power, tile.ssign);
-	
-	#add tile
-	chunk.add_child(tile);
-	#chunk.call_deferred("add_child", tile);
 
 	#debug
 	#if Vector2i(tx, ty) == Vector2i(0, 1):
@@ -389,6 +378,86 @@ func load_player():
 		player.power = -1;
 		player.ssign = 1;
 		add_child(player);
+
+#called from CM
+func get_chunk() -> Chunk:
+	chunk_mutex.lock();
+	if not chunk_pool.is_empty(): #retrieve from chunk_pool
+		var chunk = chunk_pool.pop_back();
+		chunk_mutex.unlock();
+		chunk.show();
+		chunk.set_process_mode(PROCESS_MODE_INHERIT);
+		return chunk;
+	chunk_mutex.unlock();
+	
+	#instantiate new chunk
+	var chunk = packed_chunk.instantiate();
+	
+	#connect ready to increment_ready_count
+	chunk.ready.connect(_on_chunk_ready);
+	
+	#fill obj pool
+#	for i in GV.CHUNK_AREA_T:
+#		var tile:ScoreTile = score_tile.instantiate();
+#		tile.hide();
+#		tile.set_process_mode(PROCESS_MODE_DISABLED);
+#		tile.set_layers_all(false);
+#		chunk.tile_pool.push_back(tile);
+#		chunk.add_child(tile);
+	
+	return chunk;
+
+#called from CM
+#returned tile is already child of chunk
+func get_tile(chunk:Chunk) -> ScoreTile:
+	if not chunk.tile_pool.is_empty(): #retrieve from chunk.tile_pool
+		var tile = chunk.tile_pool.pop_back();
+		tile.show();
+		tile.set_process_mode(PROCESS_MODE_INHERIT);
+		return tile;
+	
+	#instantiate new tile
+	var tile:ScoreTile = score_tile.instantiate();
+	chunk.add_child(tile);
+	return tile;
+
+#called from main
+func pool_chunk(chunk:Chunk):
+	chunk.hide();
+	chunk.set_process_mode(PROCESS_MODE_DISABLED);
+	chunk.get_node("Walls").clear_layer(0);
+	for child_itr in range(chunk.get_child_count()-1, 0, -1):
+		var tile:ScoreTile = chunk.get_child(child_itr);
+		if not tile.is_queued_for_deletion():
+			pool_tile(chunk, tile);
+	chunk_mutex.lock();
+	chunk_pool.push_back(chunk);
+	chunk_mutex.unlock();
+
+#called from main
+func pool_tile(chunk:Chunk, tile:ScoreTile):
+	tile.hide();
+	tile.set_process_mode(PROCESS_MODE_DISABLED);
+	tile.set_layers_all(false);
+	chunk.tile_pool.push_back(tile);
+
+func contains_world_border(pos_c:Vector2i) -> bool:
+	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
+		if pos_c.y >= GV.BORDER_MIN_POS_C.y and pos_c.y <= GV.BORDER_MAX_POS_C.y:
+			return true;
+	if pos_c.y == GV.BORDER_MIN_POS_C.y or pos_c.y == GV.BORDER_MAX_POS_C.y:
+		if pos_c.x >= GV.BORDER_MIN_POS_C.x and pos_c.x <= GV.BORDER_MAX_POS_C.x:
+			return true;
+	return false;
+
+func is_world_border(pos_t:Vector2i) -> bool:
+	if pos_t.x == GV.BORDER_MIN_POS_T.x or pos_t.x == GV.BORDER_MAX_POS_T.x:
+		if pos_t.y >= GV.BORDER_MIN_POS_T.y and pos_t.y <= GV.BORDER_MAX_POS_T.y:
+			return true;
+	if pos_t.y == GV.BORDER_MIN_POS_T.y or pos_t.y == GV.BORDER_MAX_POS_T.y:
+		if pos_t.x >= GV.BORDER_MIN_POS_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
+			return true;
+	return false;
 
 func _exit_tree():
 	#set exit condition
