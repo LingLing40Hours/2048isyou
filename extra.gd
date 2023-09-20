@@ -633,3 +633,14 @@ func get_next_action():
 		else:
 			unload_mutex.unlock();
 '''
+
+'''
+	#queue_free an unloaded chunk from active tree
+	elif not unloaded_chunks.is_empty():
+		var unload_pos:Vector2i = unloaded_chunks.keys().back();
+		unloaded_chunks.erase(unload_pos);
+		loaded_mutex.lock();
+		loaded_chunks[unload_pos].queue_free();
+		loaded_chunks.erase(unload_pos);
+		loaded_mutex.unlock();
+'''
