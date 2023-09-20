@@ -8,7 +8,6 @@ var initial_chunk_count:int; #main then chunker
 var initial_ready_count:int;
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
-var packed_chunk:PackedScene = preload("res://Levels/Chunk.tscn");
 var tile_noise = FastNoiseLite.new();
 var wall_noise = FastNoiseLite.new();
 var difficulty:float = 0; #probability of hostile, noise roughness
@@ -19,22 +18,16 @@ var load_mutex:Mutex;
 var initial_mutex:Mutex;
 var constructed_mutex:Mutex;
 var loaded_mutex:Mutex;
-var chunk_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
 #pools
-var chunk_pool:Array;
+var tile_pool:Array;
 
-#chunk_pos_c:Vector2i, bool
+#pos_t:Vector2i, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
-var pool_queue:Dictionary; #main thread; chunks waiting for queue_free()
+var pool_queue:Dictionary; #main thread;
 var tile_free_queue:Array; #main thread
-
-#chunk_pos_c:Vector2i, chunk:Chunk
-var modified_chunks:Dictionary; #chunks modified by gameplay
-var constructed_chunks:Dictionary; #chunks waiting to enter scene tree
-var loaded_chunks:Dictionary; #CM thread; chunks both instanced and added to active tree
 
 #bounding rect
 var loaded_pos_c_min:Vector2i;
