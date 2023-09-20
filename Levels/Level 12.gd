@@ -140,12 +140,16 @@ func _process(_delta):
 		last_cam_pos = $TrackingCam.position;
 	
 	#add a constructed chunk to active tree (all at once is too much to handle in one frame)
+	constructed_mutex.lock();
 	if not constructed_chunks.is_empty():
 		var load_pos:Vector2i = constructed_chunks.keys().front();
+		constructed_mutex.unlock();
 		call_deferred("add_chunk", load_pos, constructed_chunks[load_pos]); #defer bc this is slow
+		return;
+	constructed_mutex.unlock();
 	
 	#pool an unloaded chunk
-	elif not pool_queue.is_empty():
+	if not pool_queue.is_empty():
 		var unload_pos:Vector2i = pool_queue.keys().back();
 		pool_queue.erase(unload_pos);
 		loaded_mutex.lock();
