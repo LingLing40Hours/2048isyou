@@ -111,7 +111,5 @@ scale = Vector2(2.1, 2.1)
 [node name="Sprites" type="Node2D" parent="."]
 visible = false
 
-[node name="Sprite2D" type="Sprite2D" parent="Sprites"]
-
 [connection signal="body_entered" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_entered"]
 [connection signal="body_exited" from="PhysicsEnabler" to="." method="_on_physics_enabler_body_exited"]

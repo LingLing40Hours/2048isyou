@@ -6,7 +6,6 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
-@onready var img:Node2D = $Sprites/Sprite2D;
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
 @onready var sprites:Node2D = $Sprites;
 
@@ -21,6 +20,7 @@ var snapshot_locations:Array[Vector2i] = [];
 var snapshot_locations_new:Array[Vector2i] = [];
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
+var img:Sprite2D;
 var animators:Array[ScoreTileAnimator] = [];
 var pusheds:Array[ScoreTile] = []; #tiles pushed by self; to update collider's pusher after player is instantiated in split
 var pusher:ScoreTile; #player at start of line, not immediate neighbor
@@ -41,6 +41,9 @@ var splitted:bool = false; #created from split, not settled yet
 var snap_slid:bool = false; #slid by player in snap mode; if true, don't play snap sound bc it would overlap with that of player
 var invincible:bool = false; #spawn protection for player; see GV.PLAYER_SPAWN_INVINCIBILITY_TIME
 
+
+func _init():
+	img = Sprite2D.new();
 
 func _ready():
 	#visibility
@@ -75,6 +78,15 @@ func _ready():
 	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
+
+	#spawn protection
+	if is_player and not splitted:
+		invincible = true;
+		var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
+		timer.timeout.connect(_on_invincibility_timeout);
+	
+	#add img
+	sprites.add_child(img);
 	
 	initialize();
 
@@ -87,11 +99,6 @@ func initialize():
 		else:
 			set_layers(true, true);
 			set_masks(true);
-			
-			#spawn protection
-			invincible = true;
-			var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
-			timer.timeout.connect(_on_invincibility_timeout);
 		
 		player_settings();
 		

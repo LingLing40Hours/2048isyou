@@ -15,23 +15,27 @@ var difficulty:float = 0; #probability of hostile, noise roughness
 var semaphore:Semaphore;
 var thread:Thread; #handles chunk loading/unloading
 var load_mutex:Mutex;
+var pool_mutex:Mutex;
 var initial_mutex:Mutex;
-#var constructed_mutex:Mutex;
+var constructed_mutex:Mutex;
 var loaded_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
 #pools
-var tile_pool:Array;
+var tile_pool:Array; #shared
 var max_tiles_per_frame:int = 4;
 
 #pos_t, bool
 var load_queue:Dictionary; #shared; dict for fast lookup
-var pool_queue:Dictionary; #main thread;
+var pool_queue:Dictionary; #main thread
+
+#ScoreTile
+var free_queue:Array; #main thread
 
 #pos_t, ScoreTile
-#var constructed_tiles:Dictionary; #shared
 var loaded_tiles:Dictionary; #shared
+var constructed_tiles:Dictionary; #shared
 
 #bounding rect
 var loaded_pos_t_min:Vector2i;
@@ -76,8 +80,9 @@ func _ready():
 	
 	#thread stuff
 	load_mutex = Mutex.new();
+	pool_mutex = Mutex.new();
 	initial_mutex = Mutex.new();
-	#constructed_mutex = Mutex.new();
+	constructed_mutex = Mutex.new();
 	loaded_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
@@ -108,7 +113,8 @@ func _on_cell_ready():
 			print("initial load time: ", load_end_time - load_start_time);
 
 func _process(_delta):
-	var process_start_time:int = Time.get_ticks_usec();
+	print(loaded_tiles.size());
+#	var process_start_time:int = Time.get_ticks_usec();
 	
 	#mark chunks for load/unload based on camera pos
 	if initial_tiles_ready and $TrackingCam.position != last_cam_pos:
@@ -133,17 +139,20 @@ func _process(_delta):
 		#update last_cam_pos
 		last_cam_pos = $TrackingCam.position;
 	
-	#add tiles to active tree
-#	var tiles:Array[ScoreTile];
-#	constructed_mutex.lock();
-#	var tile_positions:Array = constructed_queue.keys().slice(0, max_tiles_per_frame);
-#	for pos_t in tile_positions:
-#		tiles.push_back(constructed_queue[pos_t]);
-#		constructed_queue.erase(pos_t);
-#	constructed_mutex.unlock();
-#
-#	for tile in tiles:
-#		add_child(tile);
+	#initialize constructed tiles (add to active tree if necessary)
+	constructed_mutex.lock();
+	var constructed_positions:Array = constructed_tiles.keys();
+	constructed_mutex.unlock();
+	if initial_tiles_ready:
+		constructed_positions = constructed_positions.slice(0, max_tiles_per_frame);
+	for pos_t in constructed_positions:
+		constructed_mutex.lock();
+		var tile:ScoreTile = constructed_tiles[pos_t];
+		constructed_tiles.erase(pos_t);
+		constructed_mutex.unlock();
+		if not tile.is_inside_tree():
+			scoretiles.add_child(tile);
+		tile.initialize();
 	
 	#pool unloaded tiles
 	var pool_positions:Array = pool_queue.keys().slice(0, max_tiles_per_frame);
@@ -155,8 +164,13 @@ func _process(_delta):
 		loaded_mutex.unlock();
 		pool_tile(tile);
 	
-	var process_end_time:int = Time.get_ticks_usec();
-	print("process time: ", process_end_time - process_start_time);
+	for tile in free_queue:
+		tile.queue_free();
+		print("FREE");
+	free_queue.clear();
+	
+#	var process_end_time:int = Time.get_ticks_usec();
+#	print("process time: ", process_end_time - process_start_time);
 
 #assume rects are inclusive and valid
 func update_queues(old_pos_t_min:Vector2i, old_pos_t_max:Vector2i, new_pos_t_min:Vector2i, new_pos_t_max:Vector2i):
@@ -198,8 +212,8 @@ func enqueue_for_load(pos_t_min:Vector2i, pos_t_max:Vector2i):
 				pool_queue.erase(pos_t);
 				continue;
 			
-#			if constructed_chunks.has(pos_t):
-#				continue;
+			if constructed_tiles.has(pos_t) or load_queue.has(pos_t):
+				continue;
 			
 			load_mutex.lock();
 			load_queue[pos_t] = true;
@@ -211,13 +225,6 @@ func enqueue_for_unload(pos_t_min:Vector2i, pos_t_max:Vector2i):
 	for ty in range(pos_t_min.y, pos_t_max.y + 1):
 		for tx in range(pos_t_min.x, pos_t_max.x + 1):
 			var pos_t:Vector2i = Vector2i(tx, ty);
-#			queue_mutex.lock();
-#			if load_queue.has(pos_t):
-#				load_queue.erase(pos_t);
-#			else:
-#				unload_queue[pos_t] = true;
-#				semaphore.post();
-#			queue_mutex.unlock();
 			
 			load_mutex.lock();
 			if load_queue.has(pos_t):
@@ -225,6 +232,22 @@ func enqueue_for_unload(pos_t_min:Vector2i, pos_t_max:Vector2i):
 				load_mutex.unlock();
 				continue;
 			load_mutex.unlock();
+			
+			#check if constructed
+			constructed_mutex.lock();
+			if constructed_tiles.has(pos_t):
+				var tile:ScoreTile = constructed_tiles[pos_t];
+				constructed_tiles.erase(pos_t);
+				constructed_mutex.unlock();
+				if tile.is_inside_tree(): #pool tile
+					loaded_mutex.lock();
+					loaded_tiles[pos_t] = tile;
+					loaded_mutex.unlock();
+					pool_queue[pos_t] = true;
+				else:
+					free_queue.push_back(tile);
+				continue;
+			constructed_mutex.unlock();
 			
 			#queue for pool
 			if loaded_tiles.has(pos_t):
@@ -290,8 +313,10 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 
 	#re-enable tile collision
 	tile.get_node("CollisionPolygon2D").disabled = false;
-	tile.initialize();
-
+	
+	constructed_mutex.lock();
+	constructed_tiles[pos_t] = tile;
+	constructed_mutex.unlock();
 	return tile;
 	#debug
 	#if Vector2i(tx, ty) == Vector2i(0, 1):
@@ -318,19 +343,20 @@ func load_player():
 	scoretiles.add_child(player);
 
 #called from CM
-#returned tile is already child of level
+#returned tile might not be in active tree (use is_inside_tree() to check)
 func get_tile() -> ScoreTile:
+	pool_mutex.lock();
 	if not tile_pool.is_empty(): #retrieve from tile_pool
 		var tile = tile_pool.pop_back();
+		pool_mutex.unlock();
 		tile.show();
 		tile.set_process_mode(PROCESS_MODE_INHERIT);
 		return tile;
+	pool_mutex.unlock();
 	
 	#instantiate new tile
 	var tile:ScoreTile = score_tile.instantiate();
 	tile.ready.connect(_on_cell_ready);
-	scoretiles.call_deferred("add_child", tile);
-	print("ADD TILE");
 	return tile;
 
 #called from main
@@ -345,7 +371,9 @@ func pool_tile(tile:ScoreTile):
 	tile.is_player = false;
 	tile.is_hostile = false;
 	tile.debug = false;
+	pool_mutex.lock();
 	tile_pool.push_back(tile);
+	pool_mutex.unlock();
 
 func contains_world_border(pos_c:Vector2i) -> bool:
 	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
