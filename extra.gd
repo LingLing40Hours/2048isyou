@@ -644,3 +644,5 @@ func get_next_action():
 		loaded_chunks.erase(unload_pos);
 		loaded_mutex.unlock();
 '''
+
+#mutex.lock(); exit_thread = true; mutex.unlock(); return; #debug

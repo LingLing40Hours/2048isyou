@@ -6,6 +6,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 
 @onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
+@onready var img:Node2D = $Sprites/Sprite2D;
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
 @onready var sprites:Node2D = $Sprites;
 
@@ -20,7 +21,6 @@ var snapshot_locations:Array[Vector2i] = [];
 var snapshot_locations_new:Array[Vector2i] = [];
 
 var score_tile:PackedScene = preload("res://Objects/ScoreTile.tscn");
-var img:Sprite2D = Sprite2D.new();
 var animators:Array[ScoreTileAnimator] = [];
 var pusheds:Array[ScoreTile] = []; #tiles pushed by self; to update collider's pusher after player is instantiated in split
 var pusher:ScoreTile; #player at start of line, not immediate neighbor
@@ -70,14 +70,22 @@ func _ready():
 			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
 			break;
 	
-	#settings
-	set_layers(true, true);
-	set_collision_layer_value(2, true);
+	#scale shapecasts (bc inspector can't handle precise floats)
+	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
+	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 	
+	initialize();
+
+func initialize():
+	#settings
 	if is_player:
 		if splitted:
 			set_layers(false, true);
+			set_masks(false);
 		else:
+			set_layers(true, true);
 			set_masks(true);
 			
 			#spawn protection
@@ -92,27 +100,20 @@ func _ready():
 			GV.level_initial_player_powers[GV.current_level_index] = power;
 			GV.level_initial_player_ssigns[GV.current_level_index] = ssign;
 	else:
+		set_layers(true, true);
+		set_masks(false);
+		
 		#turn off physics
 		set_physics(false);
 		physics_on = false;
 	
-	#scale shapecasts (bc of floating point error)
-	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
-	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
-	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
-	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
-	
-	#add sprite
+	#set img texture
 	update_texture(img, power, ssign, is_player, is_hostile);
-	sprites.add_child(img);
 	
 	#set initial state
 	var initial_state = "tile";
 	if is_player:
-		if GV.player_snap:
-			initial_state = "snap";
-		else:
-			initial_state = "slide";
+		initial_state = "snap" if GV.player_snap else "slide";
 	$FSM.setState($FSM.states[initial_state]);
 	
 func _input(event):
@@ -145,7 +146,7 @@ func debug_frame():
 		#print("physics on: ", physics_on);
 		pass;
 
-func update_texture(s:Sprite2D, score_pow, score_sign, is_player, is_hostile):
+func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile):
 	var texture_path:String = "res://Sprites/2_";
 	
 	#power
@@ -159,9 +160,9 @@ func update_texture(s:Sprite2D, score_pow, score_sign, is_player, is_hostile):
 		texture_path += "m";
 	
 	#dark
-	if is_player:
+	if _is_player:
 		texture_path += "k";
-	elif is_hostile:
+	elif _is_hostile:
 		texture_path += "i";
 	
 	s.texture = load(texture_path + ".png");
@@ -506,10 +507,6 @@ func set_layers(state, layer_one):
 	for i in range(5, 33):
 		set_collision_layer_value(i, state);
 
-func set_layers_all(state):
-	for i in range(1, 33):
-		set_collision_layer_value(i, state);
-
 func set_masks(state):
 	set_collision_mask_value(1, state);
 
@@ -583,6 +580,7 @@ func tile_settings():
 
 func remove_from_players():
 	var index = game.current_level.players.rfind(self);
+	assert(index != -1);
 	game.current_level.players.remove_at(index);
 	#print("remove index: ", index);
 

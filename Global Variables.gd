@@ -21,16 +21,11 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const CHUNK_WIDTH_T:int = 4;
-const CHUNK_AREA_T:int = CHUNK_WIDTH_T * CHUNK_WIDTH_T;
-const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
 const BORDER_DISTANCE_T:int = 2000000000;
 const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
 const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
-var BORDER_MIN_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MIN_POS_T);
-var BORDER_MAX_POS_C:Vector2i = pos_t_to_pos_c(BORDER_MAX_POS_T);
 
 #level-related stuff
 const LEVEL_COUNT:int = 13;
@@ -45,8 +40,8 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 const TILE_POW_MAX:int = 12;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
-const CHUNK_LOAD_BUFFER:float = CHUNK_WIDTH;
-const CHUNK_UNLOAD_BUFFER:float = CHUNK_WIDTH;
+const TILE_LOAD_BUFFER:float = 8 * TILE_WIDTH;
+const TILE_UNLOAD_BUFFER:float = 8 * TILE_WIDTH;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];
@@ -250,35 +245,11 @@ func world_to_pos_t(pos:Vector2) -> Vector2i:
 func pos_t_to_world(pos_t:Vector2i) -> Vector2:
 	return (Vector2(pos_t) + Vector2(0.5, 0.5)) * TILE_WIDTH;
 
-func world_to_pos_c(pos:Vector2) -> Vector2i:
-	return (pos / CHUNK_WIDTH).floor();
-
-func pos_c_to_world(pos_c:Vector2i) -> Vector2:
-	return pos_c * CHUNK_WIDTH;
-
-func pos_t_to_pos_c(pos_t:Vector2i) -> Vector2i:
-	return (pos_t / float(CHUNK_WIDTH_T)).floor();
-
-func pos_c_to_pos_t(pos_c:Vector2i) -> Vector2i:
-	return pos_c * CHUNK_WIDTH_T;
-
 func world_to_xt(x:float) -> int:
 	return floori(x / TILE_WIDTH);
 
 func xt_to_world(x:int) -> float:
 	return (x + 0.5) * TILE_WIDTH;
-
-func world_to_xc(x:float) -> int:
-	return floori(x / CHUNK_WIDTH);
-
-func xc_to_world(x:int) -> float:
-	return x * CHUNK_WIDTH;
-
-func xt_to_xc(x:int) -> int:
-	return floori(x / float(CHUNK_WIDTH_T));
-
-func xc_to_xt(x:int) -> int:
-	return x * CHUNK_WIDTH_T;
 
 #doesn't do ZERO->EMPTY optimization
 func tile_val_to_id(power:int, ssign:int) -> int:

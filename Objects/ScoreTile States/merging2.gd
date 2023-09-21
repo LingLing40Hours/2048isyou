@@ -21,10 +21,12 @@ func enter():
 func inPhysicsProcess(delta):
 	#sliding into partner
 	slide_distance += slide_speed * delta;
-	if slide_distance >= GV.TILE_WIDTH:
-		if actor.is_player:
-			actor.remove_from_players();
-		actor.queue_free(); #done sliding
+	if slide_distance >= GV.TILE_WIDTH: #done sliding
+		if game.current_level.pooled:
+			game.current_level.pool_tile(actor);
+		else:
+			if actor.is_player:
+				actor.remove_from_players();
+			actor.queue_free();
 	else:
 		actor.move_and_collide(actor.velocity * delta);
-	

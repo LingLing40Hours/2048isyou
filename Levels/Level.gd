@@ -21,6 +21,7 @@ var baddies:Node2D;
 var resolution:Vector2;
 var half_resolution:Vector2;
 var chunked:bool = false;
+var pooled:bool = false;
 
 var players = []; #if player, add here in _ready()
 var player_snapshots:Array[PlayerSnapshot] = [];
@@ -40,10 +41,9 @@ func _enter_tree():
 	half_resolution = resolution / 2;
 	
 func _ready():
-	if !chunked:
-		scoretiles = $ScoreTiles;
-		savepoints = $SavePoints;
-		baddies = $Baddies;
+	scoretiles = $ScoreTiles;
+	savepoints = $SavePoints;
+	baddies = $Baddies;
 	
 	set_level_name();
 	

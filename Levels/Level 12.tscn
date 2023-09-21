@@ -9,17 +9,17 @@
 process_mode = 1
 script = ExtResource("1_qjfa5")
 resolution_t = Vector2i(32, 24)
-min_pos = null
-max_pos = null
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Background" type="ColorRect" parent="ParallaxBackground"]
 z_index = -10
 offset_right = 1600.0
 offset_bottom = 1200.0
 color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
-[node name="LevelName" type="Label" parent="Background"]
+[node name="LevelName" type="Label" parent="ParallaxBackground/Background"]
 modulate = Color(1, 1, 1, 0)
 z_index = 20
 layout_mode = 1
@@ -44,3 +44,9 @@ metadata/_edit_lock_ = true
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("4_5jc0c")
 format = 2
+
+[node name="ScoreTiles" type="Node2D" parent="."]
+
+[node name="SavePoints" type="Node2D" parent="."]
+
+[node name="Baddies" type="Node2D" parent="."]
