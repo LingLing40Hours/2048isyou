@@ -7,7 +7,7 @@
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww23480\viewh13000\viewkind0
+\margl1440\margr1440\vieww20140\viewh14100\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -264,6 +264,11 @@ New Layers?\
 \ls3\ilvl0\cf0 1. Inter-tile, baddie aggro\
 2. Tile physics enabling\
 3. Player, ability unlocking\
+4. All walls (including membrane)\
+32. Membrane (Gray wall)\
+31. Black wall\
+30. Blue wall\
+29. Red wall\
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 \
 Stuff IDs\
@@ -423,6 +428,7 @@ Todo\
 	Track Score\
 		start level with maximum score, lose combined value for every merge\
 		start level with 0 score, gain combined value for every merge\
+		in open world, number of empty cells as score\
 	one-way valve\
 		without splitting, empty space is increasing contiguously (non-strictly)\
 		so a one-way valve must require player to split\
@@ -604,13 +610,31 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 	
 \f0\b use visibilityNotifier instead of _process logic and trackingCam position (NAH)
 \f1\b0 \
-	fix shift not detecting far tiles\
+	fix shift not detecting far tiles and walls\
 	fix shifting into unloaded chunks bug\
-\
+	fix undo in chunked levels\
+	fix restart in chunked levels\
+	add hostiles\
+	
+\f0\b fix wall collision
+\f1\b0 \
+	
+\f0\b fix baddie collision
+\f1\b0 \
+	
+\f0\b sort out collision layer 3
+\f1\b0 \
+	
+\f0\b fix membrane collision\
+	
+\f1\b0 lv12 parallax background\
+	spread out queue_frees\
+		switch to free() and time it\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
 Variants\
+	Equilateral Triangles (flipping)\
 	Discount 2048 Is You\
 		player can change some tile locations in level as they see fit before playing\
 	Hi, Bot - design lv to defeat bot (but player must beat it)\
@@ -659,6 +683,8 @@ Variants\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
 			nerf by increasing wait time between moves\
+		Smart Hostile\
+			build traps, cooperate with each other to trap player\
 		Fission Hostile\
 			produces two hostiles upon splitting\
 	Open World\
@@ -694,6 +720,7 @@ Variants\
 			sudden death when hostile touches?\
 			merge as if player were on grid position\
 			limit slide mode time\
+		triangle region (grid slowly becomes triangular)\
 	Puzzle\
 		hourly server-wide, points awarded by finishing rank\
 			prevent solution sharing and multiple accounts\

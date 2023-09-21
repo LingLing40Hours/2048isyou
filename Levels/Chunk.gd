@@ -5,6 +5,8 @@ extends Node2D
 var pos_c:Vector2i;
 var cells:Array; #holds cell data, excluding player
 
+var tile_pool:Array;
+
 var add_start_time:int;
 var add_end_time:int;
 
@@ -24,4 +26,4 @@ func _enter_tree():
 
 func _ready():
 	add_end_time = Time.get_ticks_usec();
-	print("chunk add time: ", add_end_time - add_start_time);
+	#print("chunk add time: ", add_end_time - add_start_time);

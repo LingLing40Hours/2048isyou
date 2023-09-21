@@ -30,7 +30,7 @@ func _ready():
 	change_move_mode(GV.player_snap);
 	
 	#generate hash numbers
-	$Pathfinder.generate_hash_numbers(GV.RESOLUTION_T);
+	#$Pathfinder.generate_hash_numbers(GV.RESOLUTION_T);
 	
 	#testing
 

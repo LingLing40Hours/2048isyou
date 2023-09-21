@@ -56,6 +56,8 @@ to resta-
 rt level"
 
 [node name="RestartUnlocker" type="Area2D" parent="Background/Restart"]
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Restart/RestartUnlocker"]
 position = Vector2(66.5, 37)
@@ -76,6 +78,8 @@ to
 shift"
 
 [node name="ShiftUnlocker" type="Area2D" parent="Background/Shift"]
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/ShiftUnlocker"]
 position = Vector2(39, 57.5)
@@ -96,6 +100,8 @@ revert to
 savepoint"
 
 [node name="RevertUnlocker" type="Area2D" parent="Background/Revert"]
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Background/Revert/RevertUnlocker"]
 polygon = PackedVector2Array(63, -2, 143, -2, 143, 117, -17, 117, -17, 77, 63, 77)

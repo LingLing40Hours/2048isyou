@@ -82,11 +82,6 @@ position = Vector2(980, 700)
 position = Vector2(1020, 620)
 power = -1
 
-[node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("5_mucte")]
-position = Vector2(140, 1140)
-is_player = true
-power = 0
-
 [node name="SavePoints" type="Node2D" parent="."]
 
 [node name="Goal4" parent="SavePoints" instance=ExtResource("6_dswkw")]

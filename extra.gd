@@ -617,3 +617,30 @@ func get_next_action():
 '''
 
 #const CM_TILE_GEN_POW_MAX:int = GV.TILE_GEN_POW_MAX; #for thread safety?
+
+'''
+		#unload chunks
+		unload_mutex.lock();
+		if not unload_queue.is_empty():
+			var unload_pos:Vector2i = unload_queue.keys().front();
+			unload_queue.erase(unload_pos);
+			unload_mutex.unlock();
+			#print("unload_positions: ", unload_positions);
+			loaded_mutex.lock();
+			loaded_chunks[unload_pos].queue_free();
+			loaded_chunks.erase(unload_pos);
+			loaded_mutex.unlock();
+		else:
+			unload_mutex.unlock();
+'''
+
+'''
+	#queue_free an unloaded chunk from active tree
+	elif not unloaded_chunks.is_empty():
+		var unload_pos:Vector2i = unloaded_chunks.keys().back();
+		unloaded_chunks.erase(unload_pos);
+		loaded_mutex.lock();
+		loaded_chunks[unload_pos].queue_free();
+		loaded_chunks.erase(unload_pos);
+		loaded_mutex.unlock();
+'''

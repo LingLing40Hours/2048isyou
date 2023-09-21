@@ -21,9 +21,10 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const CHUNK_WIDTH_T:int = 5;
+const CHUNK_WIDTH_T:int = 1;
+const CHUNK_AREA_T:int = CHUNK_WIDTH_T * CHUNK_WIDTH_T;
 const CHUNK_WIDTH:float = CHUNK_WIDTH_T * TILE_WIDTH;
-const BORDER_DISTANCE_T:int = 20; #2000000000;
+const BORDER_DISTANCE_T:int = 2000000000;
 const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
@@ -44,8 +45,8 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 const TILE_POW_MAX:int = 12;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
-const CHUNK_LOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
-const CHUNK_UNLOAD_BUFFER:float = 0.5 * CHUNK_WIDTH;
+const CHUNK_LOAD_BUFFER:float = CHUNK_WIDTH;
+const CHUNK_UNLOAD_BUFFER:float = CHUNK_WIDTH;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];
