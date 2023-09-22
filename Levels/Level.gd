@@ -28,7 +28,7 @@ var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
 #for input repeat delay
-var atimer:AccelTimer = AccelTimer.new();
+var atimer:AccelTimer;
 var last_input_type:int;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
@@ -45,6 +45,7 @@ func _ready():
 	savepoints = $SavePoints;
 	baddies = $Baddies;
 	
+	atimer = AccelTimer.new();
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv
@@ -289,3 +290,7 @@ func on_copy():
 		DisplayServer.clipboard_set(str(level_array));
 		
 		return level_array;
+
+func _exit_tree():
+	#print_orphan_nodes();
+	pass;
