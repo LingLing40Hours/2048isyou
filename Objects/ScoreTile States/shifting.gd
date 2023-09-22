@@ -2,7 +2,6 @@ extends State
 
 @onready var game:Node2D = $"/root/Game";
 
-var ray_target:Vector2;
 var target_velocity:Vector2;
 var distance:float;
 var to_area:Area2D;
@@ -13,19 +12,20 @@ func enter():
 	#add to snapshot
 	game.current_level.current_snapshot.add_tile(actor);
 	
-	#extend ray
-	ray_target = actor.shift_ray.target_position;
-	actor.shift_ray.target_position = actor.slide_dir * GV.SHIFT_RAY_LENGTH;
+	#extend shape
+	actor.shift_shape.collide_with_areas = false;
+	actor.shift_settings(actor.shift_shape, actor.slide_dir);
 	
 	#find target velocity (ignore friction and areas)
-	actor.shift_ray.collide_with_areas = false;
-	actor.shift_ray.force_raycast_update();
 	var total_distance = GV.SHIFT_RAY_LENGTH;
-	if actor.shift_ray.is_colliding():
-		total_distance = (actor.shift_ray.get_collision_point() - actor.position).length() - GV.TILE_WIDTH/2;
+	if actor.shift_shape.is_colliding():
+		var dpos:Vector2 = actor.shift_shape.get_collision_point(0) - actor.position;
+		total_distance = abs(dpos.x) if actor.slide_dir.x else abs(dpos.y);
+		total_distance -= GV.TILE_WIDTH/2;
+	print(total_distance);
 	target_velocity = total_distance * GV.SHIFT_DISTANCE_TO_SPEED_MAX * actor.slide_dir;
-	actor.shift_ray.collide_with_areas = true;
-	actor.shift_ray.force_raycast_update();
+	actor.shift_shape.collide_with_areas = true;
+	actor.shift_shape.force_shapecast_update();
 	
 	update_target_parameters();
 	
@@ -50,8 +50,8 @@ func inPhysicsProcess(delta):
 			actor.velocity = distance * 60 * actor.slide_dir;
 			
 			#update target parameters
-			actor.shift_ray.add_exception(to_area);
-			actor.shift_ray.force_raycast_update();
+			actor.shift_shape.add_exception(to_area);
+			actor.shift_shape.force_shapecast_update();
 			update_target_parameters();
 	
 	var collision = actor.move_and_collide(actor.velocity * delta);
@@ -64,9 +64,11 @@ func inPhysicsProcess(delta):
 func update_target_parameters():
 	#find distance (used for target velocity calculation)
 	to_area = null;
-	if actor.shift_ray.is_colliding():
-		distance = (actor.shift_ray.get_collision_point() - actor.position).length() - GV.TILE_WIDTH/2;
-		var collider = actor.shift_ray.get_collider();
+	if actor.shift_shape.is_colliding():
+		var dpos:Vector2i = actor.shift_shape.get_collision_point(0) - actor.position;
+		distance = abs(dpos.x) if actor.slide_dir.x else abs(dpos.y);
+		distance -= GV.TILE_WIDTH/2;
+		var collider = actor.shift_shape.get_collider(0);
 		if collider is Area2D:
 			distance = (round(distance/GV.TILE_WIDTH) + 1) * GV.TILE_WIDTH;
 			to_area = collider;
@@ -86,6 +88,5 @@ func changeParentState():
 	
 func exit():
 	#reset ray length, exceptions
-	actor.shift_ray.clear_exceptions();
-	actor.shift_ray.target_position = ray_target;
-	actor.shift_ray.force_raycast_update();
+	actor.shift_shape.clear_exceptions();
+	actor.slide_settings(actor.shift_shape);

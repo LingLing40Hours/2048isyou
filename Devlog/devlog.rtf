@@ -7,7 +7,7 @@
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww20140\viewh14660\viewkind0
+\margl1440\margr1440\vieww20760\viewh17080\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -261,14 +261,14 @@ Layers 5-32 all have player mask, player, tiles, walls*, baddies*\
 \cf0 \
 New Layers?\
 \pard\pardeftab560\pardirnatural\partightenfactor0
-\ls3\ilvl0\cf0 1. Inter-tile, baddie aggro\
+\ls3\ilvl0\cf0 1. Inter-tile\
 2. Tile physics enabling\
 3. Player, ability unlocking\
 4. All walls (including membrane)\
 32. Membrane (Gray wall)\
-31. Black wall\
-30. Blue wall\
-29. Red wall\
+31. Black wall, baddie aggro\
+30. Blue wall, baddie aggro\
+29. Red wall, baddie aggro\
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 \
 Stuff IDs\
@@ -612,6 +612,7 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f1\b0 \
 	fix shift not detecting far tiles and walls\
 	fix shifting into unloaded chunks bug\
+	fix shifting into walls\
 	fix undo in chunked levels\
 	fix restart in chunked levels\
 	add hostiles\
@@ -631,7 +632,11 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 	spread out queue_frees\
 		switch to free() and time it\
 	fix missing tiles bug\
-	remove raycasts (use shapcasts for shifting)?\
+	
+\f0\b remove raycasts (use shapcasts for shifting)?
+\f1\b0 \
+	pool before CM get_tile()\
+	time frame with and without visibleOnScreenNotifier\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \

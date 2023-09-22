@@ -25,7 +25,7 @@ var animators:Array[ScoreTileAnimator] = [];
 var pusheds:Array[ScoreTile] = []; #tiles pushed by self; to update collider's pusher after player is instantiated in split
 var pusher:ScoreTile; #player at start of line, not immediate neighbor
 var partner:ScoreTile;
-var shift_ray:RayCast2D = null;
+var shift_shape:ShapeCast2D = null;
 var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 at end)
 
 var physics_on:bool = true;
@@ -173,18 +173,6 @@ func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile):
 		texture_path += "i";
 	
 	s.texture = load(texture_path + ".png");
-
-func get_ray(dir:Vector2i) -> RayCast2D:
-	if dir == Vector2i(1, 0):
-		return $Ray1;
-	elif dir == Vector2i(0, -1):
-		return $Ray2;
-	elif dir == Vector2i(-1, 0):
-		return $Ray3;
-	elif dir == Vector2i(0, 1):
-		return $Ray4;
-	else:
-		return null;
 
 func get_shape(dir:Vector2i) -> ShapeCast2D:
 	if dir == Vector2i(1, 0):
@@ -388,14 +376,16 @@ func shift(dir:Vector2i) -> bool:
 	if not GV.abilities["shift"]:
 		return false;
 	
-	#get ray
-	var ray = get_ray(dir);
+	#get shape
+	var shape = get_shape(dir);
+	if next_moves:
+		shape.force_shapecast_update();
 
-	#consult ray if aligned with tile grid
+	#consult shape if aligned with tile grid
 	if (dir.x and is_xaligned()) or (dir.y and is_yaligned()):
 		#check for obstruction
-		if ray.is_colliding():
-			var collider = ray.get_collider();
+		for i in shape.get_collision_count():
+			var collider := shape.get_collider(i);
 			if collider is ScoreTile or collider.is_in_group("wall"):
 				return false;
 	
@@ -403,10 +393,17 @@ func shift(dir:Vector2i) -> bool:
 	start_action.emit();
 	
 	slide_dir = dir;
-	shift_ray = ray;
+	shift_shape = shape;
 	$FSM.curState.next_state = $FSM.states.shifting;
 	return true;
-	
+
+func shift_settings(shape:ShapeCast2D, dir:Vector2i):
+	shape.target_position = GV.SHIFT_RAY_LENGTH * dir;
+	shape.force_shapecast_update();
+
+func slide_settings(shape:ShapeCast2D):
+	shape.target_position = Vector2.ZERO;
+	shape.force_shapecast_update();
 
 func levelup():
 	if get_state() not in ["tile", "snap"]:
@@ -515,7 +512,8 @@ func set_layers(state, layer_one):
 		set_collision_layer_value(i, state);
 
 func set_masks(state):
-	set_collision_mask_value(1, state);
+	set_collision_mask_value(1, state); #inter-tile
+	set_collision_mask_value(32, state); #membrane
 
 func set_physics(state):
 	#set_process(state);
@@ -523,7 +521,6 @@ func set_physics(state):
 	$FSM.set_process(state);
 	$FSM.set_physics_process(state);
 	for i in range(1, 5):
-		get_node("Ray"+str(i)).enabled = state;
 		get_node("Shape"+str(i)).enabled = state;
 
 #doesn't affect layers or masks or physics
@@ -546,11 +543,8 @@ func player_settings():
 
 	#disable membrane collision
 	for i in range(1, 5):
-		var ray:RayCast2D = get_node("Ray"+str(i));
 		var shape:ShapeCast2D = get_node("Shape"+str(i));
-		ray.set_collision_mask_value(4, false);
 		shape.set_collision_mask_value(4, false);
-		ray.set_collision_mask_value(32, true);
 		shape.set_collision_mask_value(32, true);
 	
 	#reduce collider size
@@ -575,11 +569,8 @@ func tile_settings():
 	
 	#enable membrane collision
 	for i in range(1, 5):
-		var ray:RayCast2D = get_node("Ray"+str(i));
 		var shape:ShapeCast2D = get_node("Shape"+str(i));
-		ray.set_collision_mask_value(4, true);
 		shape.set_collision_mask_value(4, true);
-		ray.set_collision_mask_value(32, false);
 		shape.set_collision_mask_value(32, false);
 	
 	#reset collider size

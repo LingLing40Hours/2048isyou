@@ -113,7 +113,7 @@ func _on_cell_ready():
 			print("initial load time: ", load_end_time - load_start_time);
 
 func _process(_delta):
-	print(loaded_tiles.size());
+	#print(loaded_tiles.size());
 #	var process_start_time:int = Time.get_ticks_usec();
 	
 	#mark chunks for load/unload based on camera pos
