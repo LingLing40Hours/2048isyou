@@ -1,6 +1,8 @@
 extends Camera2D
 class_name TrackingCam
 
+signal transition_started(target:Vector2, track_dir:Vector2i);
+
 @onready var game:Node2D = $"/root/Game";
 @onready var level:Node2D = game.current_level;
 
@@ -11,18 +13,19 @@ var track_pos:Vector2;
 var track_dir:Vector2i;
 var clamped_track_dir:Vector2i; #track_dir but only if target is clamped
 
-var tracking:bool = true;
+var active:bool;
 var max_dx:float;
 var max_dy:float;
 
 var tween:Tween;
 var target:Vector2;
-var transitioned = true;
 var min_pos:Vector2;
 var max_pos:Vector2;
 
 
 func _ready():
+	active = true;
+	
 	#set zoom
 	zoom.x = GV.RESOLUTION.x / level.resolution.x;
 	zoom.y = GV.RESOLUTION.y / level.resolution.y;
@@ -48,7 +51,7 @@ func avg_player_pos() -> Vector2:
 	return ans / level.players.size();
 
 func _process(_delta):
-	if tracking and transitioned:
+	if active:
 		#update track_pos
 		track_pos = avg_player_pos();
 		
@@ -98,8 +101,7 @@ func _process(_delta):
 			tween.finished.connect(_on_tween_transitioned);
 			tween.set_process_mode(Tween.TWEEN_PROCESS_IDLE);
 			tween.tween_property(self, "position", target, GV.TRACKING_CAM_TRANSITION_TIME).set_trans(Tween.TRANS_QUINT);
-			#transitioned = false; #comment this line for continuous tracking
+			transition_started.emit(target, track_dir);
 
 func _on_tween_transitioned():
-	transitioned = true;
 	clamped_track_dir = Vector2i.ZERO;

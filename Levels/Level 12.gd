@@ -37,6 +37,9 @@ var free_queue:Array; #main thread
 var loaded_tiles:Dictionary; #shared; main adds/removes, CM adds
 var constructed_tiles:Dictionary; #shared; main removes, CM adds
 
+#pos_t, StuffId
+var loaded_cells:Dictionary;
+
 #bounding rect
 var loaded_pos_t_min:Vector2i;
 var loaded_pos_t_max:Vector2i; #inclusive
@@ -44,8 +47,6 @@ var loaded_pos_t_max:Vector2i; #inclusive
 var load_start_time:int;
 var load_end_time:int;
 var player_global_spawn_pos_t:Vector2i = Vector2i.ZERO;
-
-@onready var last_cam_pos:Vector2 = $TrackingCam.position;
 
 
 func _enter_tree():
@@ -57,6 +58,9 @@ func _enter_tree():
 func _ready():
 	pooled = true;
 	super._ready();
+	
+	#connect tracking cam
+	$TrackingCam.transition_started.connect(_on_camera_transition_started);
 	
 	#load player
 	initial_tiles_readied.connect(load_player);
@@ -93,8 +97,8 @@ func _ready():
 	initial_tiles_generated = false;
 	initial_tiles_ready = false;
 	initial_ready_count = 0;
-	loaded_pos_t_min = GV.world_to_pos_t(last_cam_pos - half_resolution - Vector2(GV.TILE_LOAD_BUFFER, GV.TILE_LOAD_BUFFER));
-	loaded_pos_t_max = GV.world_to_pos_t(last_cam_pos + half_resolution + Vector2(GV.TILE_LOAD_BUFFER, GV.TILE_LOAD_BUFFER));
+	loaded_pos_t_min = GV.world_to_pos_t($TrackingCam.position - half_resolution - Vector2(GV.TILE_LOAD_BUFFER, GV.TILE_LOAD_BUFFER));
+	loaded_pos_t_max = GV.world_to_pos_t($TrackingCam.position + half_resolution + Vector2(GV.TILE_LOAD_BUFFER, GV.TILE_LOAD_BUFFER));
 	initial_tile_count = (loaded_pos_t_max.x - loaded_pos_t_min.x + 1) * (loaded_pos_t_max.y - loaded_pos_t_min.y + 1);
 	print("INITIAL TILE COUNT: ", initial_tile_count);
 	enqueue_for_load(loaded_pos_t_min, loaded_pos_t_max);
@@ -112,32 +116,28 @@ func _on_cell_ready():
 			load_end_time = Time.get_ticks_usec();
 			print("initial load time: ", load_end_time - load_start_time);
 
+#mark tiles for load/unload based on camera target pos
+func _on_camera_transition_started(target:Vector2, track_dir:Vector2i):
+	#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
+	var temp_pos_t_min:Vector2i = loaded_pos_t_min;
+	var temp_pos_t_max:Vector2i = loaded_pos_t_max;
+	if track_dir.x:
+		var load_min_x:float = target.x - half_resolution.x - (GV.TILE_LOAD_BUFFER if track_dir.x < 0 else GV.TILE_UNLOAD_BUFFER);
+		var load_max_x:float = target.x + half_resolution.x + (GV.TILE_LOAD_BUFFER if track_dir.x > 0 else GV.TILE_UNLOAD_BUFFER);
+		temp_pos_t_min.x = GV.world_to_xt(load_min_x);
+		temp_pos_t_max.x = GV.world_to_xt(load_max_x);
+	if track_dir.y:
+		var load_min_y:float = target.y - half_resolution.y - (GV.TILE_LOAD_BUFFER if track_dir.y < 0 else GV.TILE_UNLOAD_BUFFER);
+		var load_max_y:float = target.y + half_resolution.y + (GV.TILE_LOAD_BUFFER if track_dir.y > 0 else GV.TILE_UNLOAD_BUFFER);
+		temp_pos_t_min.y = GV.world_to_xt(load_min_y);
+		temp_pos_t_max.y = GV.world_to_xt(load_max_y);
+	update_queues(loaded_pos_t_min, loaded_pos_t_max, temp_pos_t_min, temp_pos_t_max);
+	loaded_pos_t_min = temp_pos_t_min;
+	loaded_pos_t_max = temp_pos_t_max;
+
 func _process(_delta):
 	#print(loaded_tiles.size());
 #	var process_start_time:int = Time.get_ticks_usec();
-	
-	#mark chunks for load/unload based on camera pos
-	if initial_tiles_ready and $TrackingCam.position != last_cam_pos:
-		#update loaded_pos_c_min, loaded_pos_c_max, load_queue, unload_queue
-		var temp_pos_t_min:Vector2i = loaded_pos_t_min;
-		var temp_pos_t_max:Vector2i = loaded_pos_t_max;
-		var track_dir:Vector2i = ($TrackingCam.position - last_cam_pos).sign();
-		if track_dir.x:
-			var load_min_x:float = $TrackingCam.position.x - half_resolution.x - (GV.TILE_LOAD_BUFFER if track_dir.x < 0 else GV.TILE_UNLOAD_BUFFER);
-			var load_max_x:float = $TrackingCam.position.x + half_resolution.x + (GV.TILE_LOAD_BUFFER if track_dir.x > 0 else GV.TILE_UNLOAD_BUFFER);
-			temp_pos_t_min.x = GV.world_to_xt(load_min_x);
-			temp_pos_t_max.x = GV.world_to_xt(load_max_x);
-		if track_dir.y:
-			var load_min_y:float = $TrackingCam.position.y - half_resolution.y - (GV.TILE_LOAD_BUFFER if track_dir.y < 0 else GV.TILE_UNLOAD_BUFFER);
-			var load_max_y:float = $TrackingCam.position.y + half_resolution.y + (GV.TILE_LOAD_BUFFER if track_dir.y > 0 else GV.TILE_UNLOAD_BUFFER);
-			temp_pos_t_min.y = GV.world_to_xt(load_min_y);
-			temp_pos_t_max.y = GV.world_to_xt(load_max_y);
-		update_queues(loaded_pos_t_min, loaded_pos_t_max, temp_pos_t_min, temp_pos_t_max);
-		loaded_pos_t_min = temp_pos_t_min;
-		loaded_pos_t_max = temp_pos_t_max;
-		
-		#update last_cam_pos
-		last_cam_pos = $TrackingCam.position;
 	
 	#initialize constructed tiles (add to active tree if necessary)
 	constructed_mutex.lock();

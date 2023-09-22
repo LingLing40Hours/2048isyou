@@ -11,6 +11,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 
 @export var is_player:bool = false;
 @export var is_hostile:bool = false;
+@export var is_invincible:bool = false;
 @export var power:int = 1;
 @export var ssign:int = 1;
 @export var debug:bool = false;
@@ -115,7 +116,7 @@ func initialize():
 		physics_on = false;
 	
 	#set img texture
-	update_texture(img, power, ssign, is_player, is_hostile);
+	update_texture(img, power, ssign, is_player, is_hostile, is_invincible);
 	
 	#set initial state
 	var initial_state = "tile";
@@ -153,7 +154,7 @@ func debug_frame():
 		#print("physics on: ", physics_on);
 		pass;
 
-func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile):
+func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile, _is_invincible):
 	var texture_path:String = "res://Sprites/2_";
 	
 	#power
@@ -170,7 +171,7 @@ func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile):
 	if _is_player:
 		texture_path += "k";
 	elif _is_hostile:
-		texture_path += "i";
+		texture_path += "w" if _is_invincible else "i";
 	
 	s.texture = load(texture_path + ".png");
 

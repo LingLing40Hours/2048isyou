@@ -7,7 +7,7 @@
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww20760\viewh17080\viewkind0
+\margl1440\margr1440\vieww20760\viewh13080\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -578,7 +578,7 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 		use multi-threading\
 		is 'unloading' a chunk (by queue_freeing all the tiles inside when it goes out of range) worth all the calls to add_child and queue_free\
 	test gde global vars (bc static doesn\'92t work)\
-	fix memory leak from savepoints, obj pool\
+	fix memory leak from savepoints, obj pool, snapshots\
 	add tile grid (togglable in game settings)\
 	give savepoints a \'93used\'94 indicator\
 	
@@ -641,6 +641,10 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f1\b0 \
 	pool before CM get_tile()\
 	time frame with and without visibleOnScreenNotifier\
+	
+\f0\b use trackingCam.target_pos instead of checking every frame
+\f1\b0 \
+		assume bounding rect doesn\'92t change size?\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
