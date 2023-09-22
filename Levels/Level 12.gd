@@ -23,19 +23,19 @@ var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
 #pools
-var tile_pool:Array; #shared
+var tile_pool:Array; #shared; main adds, CM removes
 var max_tiles_per_frame:int = 4;
 
-#pos_t, bool
-var load_queue:Dictionary; #shared; dict for fast lookup
+#pos_t, bool; dict is used for fast lookup
+var load_queue:Dictionary; #shared; main adds/removes, CM removes
 var pool_queue:Dictionary; #main thread
 
 #ScoreTile
 var free_queue:Array; #main thread
 
 #pos_t, ScoreTile
-var loaded_tiles:Dictionary; #shared
-var constructed_tiles:Dictionary; #shared
+var loaded_tiles:Dictionary; #shared; main adds/removes, CM adds
+var constructed_tiles:Dictionary; #shared; main removes, CM adds
 
 #bounding rect
 var loaded_pos_t_min:Vector2i;
@@ -164,10 +164,11 @@ func _process(_delta):
 		loaded_mutex.unlock();
 		pool_tile(tile);
 	
-	for tile in free_queue:
+	#free unloaded tiles that weren't in tree
+	var free_tiles:Array = free_queue.slice(free_queue.size() - max_tiles_per_frame);
+	for tile in free_tiles:
 		tile.queue_free();
-		print("FREE");
-	free_queue.clear();
+		free_queue.pop_back();
 	
 #	var process_end_time:int = Time.get_ticks_usec();
 #	print("process time: ", process_end_time - process_start_time);
@@ -200,13 +201,6 @@ func enqueue_for_load(pos_t_min:Vector2i, pos_t_max:Vector2i):
 	for ty in range(pos_t_min.y, pos_t_max.y + 1):
 		for tx in range(pos_t_min.x, pos_t_max.x + 1):
 			var pos_t:Vector2i = Vector2i(tx, ty);
-#			queue_mutex.lock();
-#			if unload_queue.has(pos_t):
-#				unload_queue.erase(pos_t);
-#			else:
-#				load_queue[pos_t] = true;
-#				semaphore.post();
-#			queue_mutex.unlock();
 			
 			if pool_queue.has(pos_t):
 				pool_queue.erase(pos_t);
@@ -370,7 +364,7 @@ func pool_tile(tile:ScoreTile):
 		tile.tile_settings();
 	tile.is_player = false;
 	tile.is_hostile = false;
-	tile.debug = false;
+	#tile.debug = false;
 	pool_mutex.lock();
 	tile_pool.push_back(tile);
 	pool_mutex.unlock();

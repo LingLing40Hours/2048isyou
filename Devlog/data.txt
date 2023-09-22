@@ -1,0 +1,8 @@
+for constructed tiles not in tree:
+FREE TIME: 458
+FREE TIME: 325
+FREE TIME: 236
+FREE TIME: 252
+FREE TIME: 139
+FREE TIME: 134
+FREE TIME: 347
