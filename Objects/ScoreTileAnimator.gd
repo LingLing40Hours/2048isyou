@@ -64,9 +64,6 @@ func _ready():
 			anim_curr_angle = asin(clamp(GV.DWING_FACTOR/parent.img.scale.x, -1, 1));
 
 func _physics_process(_delta):
-	if is_queued_for_deletion():
-		return;
-	
 	if halted: #fade out img
 		img.modulate.a = maxf(0, img.modulate.a - anim_fade_speed);
 		if img.modulate.a == 0:

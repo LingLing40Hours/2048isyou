@@ -299,9 +299,6 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	tile.ssign = int(signf(n_tile));
 	n_tile = pow(absf(n_tile), 1); #use this step to bias toward/away from 0
 	tile.power = GV.TILE_GEN_POW_MAX if (n_tile == 1.0) else int((GV.TILE_GEN_POW_MAX + 2) * n_tile) - 1;
-
-	#re-enable tile collision
-	tile.get_node("CollisionPolygon2D").disabled = false;
 	
 	constructed_mutex.lock();
 	constructed_tiles[pos_t] = tile;
@@ -332,12 +329,18 @@ func load_player():
 	loaded_tiles[player_global_spawn_pos_t] = player;
 
 #called from CM
+#returned tile's physics is off
 #returned tile might not be in active tree (use is_inside_tree() to check)
 func get_tile() -> ScoreTile:
 	pool_mutex.lock();
 	if not tile_pool.is_empty(): #retrieve from tile_pool
 		var tile = tile_pool.pop_back();
 		pool_mutex.unlock();
+		assert(not tile.physics_on);
+		assert(tile.pusher == null);
+		assert(not tile in free_queue);
+		assert(not tile.is_queued_for_deletion());
+		assert(not tile.visible);
 		tile.show();
 		tile.set_process_mode(PROCESS_MODE_INHERIT);
 		return tile;
@@ -351,23 +354,27 @@ func get_tile() -> ScoreTile:
 #called from main
 #resets tile parameters
 func pool_tile(tile:ScoreTile):
-	tile.hide();
-	tile.set_process_mode(PROCESS_MODE_DISABLED);
 	tile.get_node("CollisionPolygon2D").disabled = true;
 	tile.snapshot_locations.clear();
 	tile.snapshot_locations_new.clear();
 	tile.remove_animators();
 	tile.pusheds.clear();
+	tile.pusher = null;
 	tile.next_dirs.clear();
 	tile.next_moves.clear();
 	if tile.is_player:
 		tile.tile_settings();
 	tile.is_player = false;
 	tile.is_hostile = false;
-	tile.set_physics(true);
-	tile.physics_on = true;
+	tile.set_physics(false);
+	tile.physics_on = false;
 	#tile.debug = false;
+	tile.hide();
+	tile.set_process_mode(PROCESS_MODE_DISABLED);
+	#tile.call_deferred("set_process_mode", PROCESS_MODE_DISABLED);
+	
 	pool_mutex.lock();
+	assert(not tile.physics_on);
 	tile_pool.push_back(tile);
 	pool_mutex.unlock();
 

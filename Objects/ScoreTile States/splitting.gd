@@ -44,6 +44,9 @@ func enter():
 		player.initialize();
 	else:
 		actor.get_parent().add_child(player);
+	#print("player physics: ", player.physics_on);
+	assert(actor.physics_on);
+	assert(actor.get_process_mode() == PROCESS_MODE_INHERIT);
 	
 	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
 	player.next_moves = actor.next_moves.duplicate();

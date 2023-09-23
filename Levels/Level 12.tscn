@@ -9,6 +9,7 @@
 process_mode = 1
 script = ExtResource("1_qjfa5")
 resolution_t = Vector2i(32, 24)
+max_pos = Vector2(0, 0)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 

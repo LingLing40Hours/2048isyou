@@ -27,8 +27,8 @@ func _ready():
 	active = true;
 	
 	#set zoom
-	zoom.x = GV.RESOLUTION.x / level.resolution.x;
-	zoom.y = GV.RESOLUTION.y / level.resolution.y;
+	zoom.x = minf(GV.RESOLUTION.x / level.resolution.x, GV.RESOLUTION.y / level.resolution.y);
+	zoom.y = zoom.x;
 	
 	#find max coord offsets from center of screen
 	max_dx = max_rx * level.resolution.x;

@@ -29,8 +29,8 @@ var partner:ScoreTile;
 var shift_shape:ShapeCast2D = null;
 var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 at end)
 
-var physics_on:bool = true;
-var physics_enabler_count:int = 0; #turn physics off when this reaches 0
+var physics_on:bool;
+var physics_enabler_count:int; #turn physics off when this reaches 0
 
 var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
@@ -49,6 +49,10 @@ func _init():
 	img = Sprite2D.new();
 
 func _ready():
+	#turn off physics
+	set_physics(false);
+	physics_on = false;
+	
 	#visibility
 	visibility_notifier.screen_entered.connect(sprites.show);
 	visibility_notifier.screen_exited.connect(sprites.hide);
@@ -94,8 +98,16 @@ func _ready():
 	initialize();
 
 func initialize():
+	#re-enable tile collision
+	physics_enabler_count = 0;
+	$CollisionPolygon2D.disabled = false;
+	
 	#settings
 	if is_player:
+		#turn on physics
+		set_physics(true);
+		physics_on = true;
+		
 		if splitted:
 			set_layers(false, true);
 			set_masks(false);
@@ -112,10 +124,6 @@ func initialize():
 	else:
 		set_layers(true, true);
 		set_masks(false);
-		
-		#turn off physics
-		set_physics(false);
-		physics_on = false;
 	
 	#set img texture
 	update_texture(img, power, ssign, is_player, is_hostile, is_invincible);
@@ -131,6 +139,8 @@ func _input(event):
 		if is_player:
 			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
+			
+			var tile = game.current_level.loaded_tiles.get(Vector2i(0, -1));
 		
 		#test pathfinder
 #		if is_player:
@@ -629,5 +639,9 @@ func _on_invincibility_timeout():
 
 func remove_animators():
 	for animator in animators:
+		animator.img.queue_free();
 		animator.queue_free();
 	animators.clear();
+	
+	#reset parent img modulate
+	img.modulate.a = 1;
