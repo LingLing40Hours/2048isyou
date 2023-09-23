@@ -31,6 +31,8 @@ var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 a
 
 var physics_on:bool = true;
 var physics_enabler_count:int = 0; #turn physics off when this reaches 0
+
+var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
 var next_dirs:Array[Vector2i] = []; #for premoving
 var next_moves:Array[String] = []; #slide, split, shift
@@ -126,25 +128,30 @@ func initialize():
 	
 func _input(event):
 	if event.is_action_pressed("debug"):
-		#test pathfinder
 		if is_player:
-			game.current_level.repeat_input.disconnect(_on_repeat_input);
-			game.current_level.new_snapshot();
-			var pos_t = GV.world_to_pos_t(position);
-			var path = $Pathfinder.pathfind(1, game.current_level.on_copy(), pos_t, Vector2i(9, 9));
-			print("path length: ", path.size());
-			print(path);
-			print("pos_t: ", pos_t);
-			for action in path:
-				next_dirs.push_back(Vector2i(action.x, action.y));
-				next_moves.push_back("split" if action.z else "slide");
+			print("POST: ", pos_t);
+			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
+		
+		#test pathfinder
+#		if is_player:
+#			game.current_level.repeat_input.disconnect(_on_repeat_input);
+#			game.current_level.new_snapshot();
+#			var pos_t = GV.world_to_pos_t(position);
+#			var path = $Pathfinder.pathfind(1, game.current_level.on_copy(), pos_t, Vector2i(9, 9));
+#			print("path length: ", path.size());
+#			print(path);
+#			print("pos_t: ", pos_t);
+#			for action in path:
+#				next_dirs.push_back(Vector2i(action.x, action.y));
+#				next_moves.push_back("split" if action.z else "slide");
 
 func _physics_process(_delta):
-	#debug_frame();
+	debug_frame();
 	pass;
 
 func debug_frame():
 	if debug:
+		#print(pos_t);
 		#print(get_collision_layer_value(1));
 		#print("state: ", get_state());
 		#print("value: ", pow(2, power) * ssign);
@@ -216,7 +223,7 @@ func _on_repeat_input(input_type:int):
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
-		#print("SLIDE FAILED, state is ", get_state());
+		print("SLIDE FAILED, state is ", get_state());
 		return false;
 	
 	#reset tile push count
@@ -226,6 +233,7 @@ func slide(dir:Vector2i) -> bool:
 	if is_instance_valid(pusher):
 		pusher.tile_push_count += 1;
 		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
+			print("SLIDE FAILED, push count");
 			return false;
 		
 		#join pusher.pusheds
@@ -260,12 +268,15 @@ func slide(dir:Vector2i) -> bool:
 			var collider := shape.get_collider(i);
 			
 			if collider.is_in_group("wall"): #obstructed
+				print("SLIDE FAILED, wall");
 				return false;
 				
 			if collider is ScoreTile:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
+					print("SLIDE FAILED, alignment");
 					return false;
 				if collider.get_state() not in ["tile", "snap"]:
+					print("SLIDE FAILED, collider state is ", collider.get_state());
 					return false;
 				
 				#set collider pusher (required to call collider.slide())
@@ -298,6 +309,7 @@ func slide(dir:Vector2i) -> bool:
 				else:
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
+					print("SLIDE FAILED, nan");
 					return false;
 			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
@@ -306,6 +318,7 @@ func slide(dir:Vector2i) -> bool:
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
 	if push_count > GV.abilities["tile_push_limit"]:
 		pusheds.clear(); #only necessary if self is pusher (pusher == null)
+		print("SLIDE FAILED, push limit 2");
 		return false;
 	
 	#signal
@@ -517,8 +530,8 @@ func set_masks(state):
 	set_collision_mask_value(32, state); #membrane
 
 func set_physics(state):
-	#set_process(state);
-	#set_physics_process(state);
+	set_process(state);
+	set_physics_process(state);
 	$FSM.set_process(state);
 	$FSM.set_physics_process(state);
 	for i in range(1, 5):
@@ -591,7 +604,7 @@ func is_yaligned():
 
 #use range = GV.PLAYER_SNAP_RANGE to fix collider offset
 func snap_range(offset_range:float):
-	var pos_t:Vector2i = GV.world_to_pos_t(position);
+#	var pos_t:Vector2i = GV.world_to_pos_t(position);
 	var offset:Vector2 = position - GV.pos_t_to_world(pos_t);
 	if offset.x and absf(offset.x) <= offset_range:
 		position.x -= offset.x;

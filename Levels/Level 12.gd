@@ -18,7 +18,6 @@ var load_mutex:Mutex;
 var pool_mutex:Mutex;
 var initial_mutex:Mutex;
 var constructed_mutex:Mutex;
-var loaded_mutex:Mutex;
 var exit_mutex:Mutex;
 var exit_thread:bool = false;
 
@@ -34,7 +33,7 @@ var pool_queue:Dictionary; #main thread
 var free_queue:Array; #main thread
 
 #pos_t, ScoreTile
-var loaded_tiles:Dictionary; #shared; main adds/removes, CM adds
+var loaded_tiles:Dictionary; #main thread;
 var constructed_tiles:Dictionary; #shared; main removes, CM adds
 
 #pos_t, StuffId
@@ -87,7 +86,6 @@ func _ready():
 	pool_mutex = Mutex.new();
 	initial_mutex = Mutex.new();
 	constructed_mutex = Mutex.new();
-	loaded_mutex = Mutex.new();
 	exit_mutex = Mutex.new();
 	semaphore = Semaphore.new();
 	exit_thread = false;
@@ -136,7 +134,7 @@ func _on_camera_transition_started(target:Vector2, track_dir:Vector2i):
 	loaded_pos_t_max = temp_pos_t_max;
 
 func _process(_delta):
-	#print(loaded_tiles.size());
+	#print(initial_ready_count);
 #	var process_start_time:int = Time.get_ticks_usec();
 	
 	#initialize constructed tiles (add to active tree if necessary)
@@ -150,18 +148,20 @@ func _process(_delta):
 		var tile:ScoreTile = constructed_tiles[pos_t];
 		constructed_tiles.erase(pos_t);
 		constructed_mutex.unlock();
+		
 		if not tile.is_inside_tree():
 			scoretiles.add_child(tile);
-		tile.initialize();
+		else:
+			tile.initialize();
+		
+		loaded_tiles[pos_t] = tile;
 	
 	#pool unloaded tiles
 	var pool_positions:Array = pool_queue.keys().slice(0, max_tiles_per_frame);
 	for pos_t in pool_positions:
 		pool_queue.erase(pos_t);
-		loaded_mutex.lock();
 		var tile:ScoreTile = loaded_tiles[pos_t];
 		loaded_tiles.erase(pos_t);
-		loaded_mutex.unlock();
 		pool_tile(tile);
 	
 	#free unloaded tiles that weren't in tree
@@ -234,9 +234,7 @@ func enqueue_for_unload(pos_t_min:Vector2i, pos_t_max:Vector2i):
 				constructed_tiles.erase(pos_t);
 				constructed_mutex.unlock();
 				if tile.is_inside_tree(): #pool tile
-					loaded_mutex.lock();
 					loaded_tiles[pos_t] = tile;
-					loaded_mutex.unlock();
 					pool_queue[pos_t] = true;
 				else:
 					free_queue.push_back(tile);
@@ -268,11 +266,7 @@ func generate_tiles():
 		load_queue.clear();
 		load_mutex.unlock();
 		for pos_t in load_positions:
-			var tile:ScoreTile = generate_cell(pos_t);
-			if tile != null:
-				loaded_mutex.lock();
-				loaded_tiles[pos_t] = tile;
-				loaded_mutex.unlock();
+			generate_cell(pos_t);
 		initial_load_count = min(initial_tile_count, initial_load_count + load_positions.size());
 		
 		#flag, signal
@@ -297,6 +291,7 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	
 	#tile, position
 	var tile:ScoreTile = get_tile();
+	tile.pos_t = pos_t;
 	tile.position = GV.pos_t_to_world(pos_t);
 	
 	#set power, ssign; this may set ssign of zero as -1
@@ -311,30 +306,30 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	constructed_mutex.lock();
 	constructed_tiles[pos_t] = tile;
 	constructed_mutex.unlock();
-	return tile;
+	
 	#debug
-	#if Vector2i(tx, ty) == Vector2i(0, 1):
-	#	tile.debug = true;
+#	if pos_t == Vector2i(0, -1):
+#		tile.debug = true;
+	return tile;
 
 func load_player():
 	#remove wall/tile at cell
-	loaded_mutex.lock();
 	if loaded_tiles.has(player_global_spawn_pos_t):
 		var tile:ScoreTile = loaded_tiles[player_global_spawn_pos_t];
 		loaded_tiles.erase(player_global_spawn_pos_t);
-		loaded_mutex.unlock();
 		pool_tile(tile);
-	else:
-		loaded_mutex.unlock();
 	$Walls.set_cell(0, player_global_spawn_pos_t, -1, Vector2i.ZERO);
 	
 	#add player
 	var player:ScoreTile = score_tile.instantiate();
+	player.pos_t = player_global_spawn_pos_t;
 	player.position = GV.pos_t_to_world(player_global_spawn_pos_t);
 	player.is_player = true;
 	player.power = -1;
 	player.ssign = 1;
+	#player.debug = true;
 	scoretiles.add_child(player);
+	loaded_tiles[player_global_spawn_pos_t] = player;
 
 #called from CM
 #returned tile might not be in active tree (use is_inside_tree() to check)
@@ -354,20 +349,43 @@ func get_tile() -> ScoreTile:
 	return tile;
 
 #called from main
+#resets tile parameters
 func pool_tile(tile:ScoreTile):
 	tile.hide();
 	tile.set_process_mode(PROCESS_MODE_DISABLED);
 	tile.get_node("CollisionPolygon2D").disabled = true;
 	tile.snapshot_locations.clear();
 	tile.snapshot_locations_new.clear();
+	tile.animators.clear();
+	tile.pusheds.clear();
+	tile.next_dirs.clear();
+	tile.next_moves.clear();
 	if tile.is_player:
 		tile.tile_settings();
 	tile.is_player = false;
 	tile.is_hostile = false;
+	tile.set_physics(true);
+	tile.physics_on = true;
 	#tile.debug = false;
 	pool_mutex.lock();
 	tile_pool.push_back(tile);
 	pool_mutex.unlock();
+
+func move_tile(old_pos_t:Vector2i, new_pos_t:Vector2i):
+	var tile:ScoreTile = loaded_tiles[old_pos_t];
+	loaded_tiles.erase(old_pos_t);
+	loaded_tiles[new_pos_t] = tile;
+
+func print_loaded_tiles(pos_t_min:Vector2i, pos_t_max:Vector2i):
+	for ty in range(pos_t_min.y, pos_t_max.y + 1):
+		var row:String = "";
+		for tx in range(pos_t_min.x, pos_t_max.x + 1):
+			var pos_t:Vector2i = Vector2i(tx, ty);
+			if loaded_tiles.has(pos_t):
+				row += "\tT";
+			else:
+				row += "\t0";
+		print(row);
 
 func contains_world_border(pos_c:Vector2i) -> bool:
 	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:

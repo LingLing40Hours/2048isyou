@@ -23,6 +23,8 @@ func inPhysicsProcess(delta):
 	slide_distance += slide_speed * delta;
 	if slide_distance >= GV.TILE_WIDTH: #done sliding
 		if game.current_level.pooled:
+			if not actor.splitted:
+				game.current_level.loaded_tiles.erase(actor.pos_t);
 			game.current_level.pool_tile(actor);
 		else:
 			if actor.is_player:

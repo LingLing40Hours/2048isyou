@@ -3,6 +3,7 @@ extends State
 @onready var game:Node2D = $"/root/Game";
 
 var target_velocity:Vector2;
+var total_distance:float;
 var distance:float;
 var to_area:Area2D;
 
@@ -17,12 +18,11 @@ func enter():
 	actor.shift_settings(actor.shift_shape, actor.slide_dir);
 	
 	#find target velocity (ignore friction and areas)
-	var total_distance = GV.SHIFT_RAY_LENGTH;
+	total_distance = GV.SHIFT_RAY_LENGTH;
 	if actor.shift_shape.is_colliding():
 		var dpos:Vector2 = actor.shift_shape.get_collision_point(0) - actor.position;
 		total_distance = abs(dpos.x) if actor.slide_dir.x else abs(dpos.y);
 		total_distance -= GV.TILE_WIDTH/2;
-	print(total_distance);
 	target_velocity = total_distance * GV.SHIFT_DISTANCE_TO_SPEED_MAX * actor.slide_dir;
 	actor.shift_shape.collide_with_areas = true;
 	actor.shift_shape.force_shapecast_update();
@@ -62,7 +62,7 @@ func inPhysicsProcess(delta):
 		actor.velocity = Vector2.ZERO;
 
 func update_target_parameters():
-	#find distance (used for target velocity calculation)
+	#find distance (considering areas)
 	to_area = null;
 	if actor.shift_shape.is_colliding():
 		var dpos:Vector2i = actor.shift_shape.get_collision_point(0) - actor.position;
@@ -74,7 +74,6 @@ func update_target_parameters():
 			to_area = collider;
 	else:
 		distance = GV.RESOLUTION.x;
-	#print("SHIFT DISTANCE: ", distance);
 
 func handleInput(_event):
 	#allow early input
@@ -87,6 +86,11 @@ func changeParentState():
 	return null;
 	
 func exit():
+	var new_pos_t:Vector2i = actor.pos_t + GV.world_to_xt(total_distance) * actor.slide_dir;
+	if game.current_level.pooled:
+		game.current_level.move_tile(actor.pos_t, new_pos_t);
+	actor.pos_t = new_pos_t;
+	
 	#reset ray length, exceptions
 	actor.shift_shape.clear_exceptions();
 	actor.slide_settings(actor.shift_shape);

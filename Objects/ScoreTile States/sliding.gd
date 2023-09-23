@@ -87,6 +87,15 @@ func changeParentState():
 	return null;
 
 func exit():
+	var new_pos_t:Vector2i = actor.pos_t + actor.slide_dir;
+	if game.current_level.pooled:
+		if actor.splitted: #add to loaded_tiles
+			game.current_level.loaded_tiles[new_pos_t] = actor;
+		else:
+			print("TILE MOVED");
+			game.current_level.move_tile(actor.pos_t, new_pos_t);
+	actor.pos_t = new_pos_t;
+	
 	#reset stuff
 	actor.pusher = null;
 	actor.pusheds.clear();

@@ -26,7 +26,7 @@ func enter():
 	actor.add_child(animator);
 	
 	#create and slide/merge player in slide_dir
-	player = actor.score_tile.instantiate();
+	player = game.current_level.get_tile() if game.current_level.pooled else actor.score_tile.instantiate();
 	player.pusheds = actor.pusheds.duplicate();
 	actor.pusheds.clear();
 	for tile in player.pusheds:
@@ -35,11 +35,15 @@ func enter():
 	player.is_player = true;
 	player.power = actor.power;
 	player.ssign = actor.ssign;
+	player.pos_t = actor.pos_t;
 	player.position = actor.position;
 	player.slide_dir = actor.slide_dir;
 	player.splitted = true;
 	
-	actor.get_parent().add_child(player);
+	if game.current_level.pooled and player.is_inside_tree():
+		player.initialize();
+	else:
+		actor.get_parent().add_child(player);
 	
 	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
 	player.next_moves = actor.next_moves.duplicate();
