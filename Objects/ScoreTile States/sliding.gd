@@ -92,7 +92,6 @@ func exit():
 		if actor.splitted: #add to loaded_tiles
 			game.current_level.loaded_tiles[new_pos_t] = actor;
 		else:
-			print("TILE MOVED");
 			game.current_level.move_tile(actor.pos_t, new_pos_t);
 	actor.pos_t = new_pos_t;
 	

@@ -223,7 +223,7 @@ func _on_repeat_input(input_type:int):
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
-		print("SLIDE FAILED, state is ", get_state());
+		#print("SLIDE FAILED, state is ", get_state());
 		return false;
 	
 	#reset tile push count
@@ -233,7 +233,7 @@ func slide(dir:Vector2i) -> bool:
 	if is_instance_valid(pusher):
 		pusher.tile_push_count += 1;
 		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
-			print("SLIDE FAILED, push count");
+			#print("SLIDE FAILED, push count");
 			return false;
 		
 		#join pusher.pusheds
@@ -268,15 +268,15 @@ func slide(dir:Vector2i) -> bool:
 			var collider := shape.get_collider(i);
 			
 			if collider.is_in_group("wall"): #obstructed
-				print("SLIDE FAILED, wall");
+				#print("SLIDE FAILED, wall");
 				return false;
 				
 			if collider is ScoreTile:
 				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
-					print("SLIDE FAILED, alignment");
+					#print("SLIDE FAILED, alignment");
 					return false;
 				if collider.get_state() not in ["tile", "snap"]:
-					print("SLIDE FAILED, collider state is ", collider.get_state());
+					#print("SLIDE FAILED, collider state is ", collider.get_state());
 					return false;
 				
 				#set collider pusher (required to call collider.slide())
@@ -309,7 +309,7 @@ func slide(dir:Vector2i) -> bool:
 				else:
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
-					print("SLIDE FAILED, nan");
+					#print("SLIDE FAILED, nan");
 					return false;
 			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
@@ -318,7 +318,7 @@ func slide(dir:Vector2i) -> bool:
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
 	if push_count > GV.abilities["tile_push_limit"]:
 		pusheds.clear(); #only necessary if self is pusher (pusher == null)
-		print("SLIDE FAILED, push limit 2");
+		#print("SLIDE FAILED, push limit 2");
 		return false;
 	
 	#signal
@@ -626,3 +626,8 @@ func duplicate_custom() -> ScoreTile:
 
 func _on_invincibility_timeout():
 	invincible = false;
+
+func remove_animators():
+	for animator in animators:
+		animator.queue_free();
+	animators.clear();

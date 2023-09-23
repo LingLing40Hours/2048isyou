@@ -23,7 +23,7 @@ var exit_thread:bool = false;
 
 #pools
 var tile_pool:Array; #shared; main adds, CM removes
-var max_tiles_per_frame:int = 4;
+var max_tiles_per_frame:int = 16;
 
 #pos_t, bool; dict is used for fast lookup
 var load_queue:Dictionary; #shared; main adds/removes, CM removes
@@ -356,7 +356,7 @@ func pool_tile(tile:ScoreTile):
 	tile.get_node("CollisionPolygon2D").disabled = true;
 	tile.snapshot_locations.clear();
 	tile.snapshot_locations_new.clear();
-	tile.animators.clear();
+	tile.remove_animators();
 	tile.pusheds.clear();
 	tile.next_dirs.clear();
 	tile.next_moves.clear();
