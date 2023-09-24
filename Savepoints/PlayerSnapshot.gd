@@ -33,7 +33,7 @@ func add_tile(tile):
 	tiles.push_back(tile);
 	
 	#check if non-player
-	if not tile.is_player:
+	if tile.color != GV.ColorId.GRAY:
 		tiles_all_player = false;
 	
 	#duplicate tile
@@ -43,7 +43,7 @@ func add_tile(tile):
 	tile.snapshot_locations.push_back(Vector2i(index, tiles.size() - 1));
 	
 	#save baddies
-	if tile.is_player:
+	if tile.color == GV.ColorId.GRAY:
 		save_baddies(tile.get_nearby_baddies(GV.PLAYER_SNAPSHOT_BADDIE_RANGE));
 	
 	#debug
@@ -81,7 +81,7 @@ func checkout(): #reset to snapshot
 	#remove new tiles
 	for new_tile in new_tiles:
 		if is_instance_valid(new_tile):
-			if new_tile.is_player:
+			if new_tile.color == GV.ColorId.GRAY:
 				new_tile.remove_from_players();
 			new_tile.queue_free();
 			
@@ -105,7 +105,7 @@ func reset_objects(objects_name, duplicates_name, category_name):
 		
 		#remove changed object
 		if is_instance_valid(object):
-			if object is ScoreTile and object.is_player:
+			if object is ScoreTile and object.color == GV.ColorId.GRAY:
 				object.remove_from_players();
 			object.queue_free();
 			#print("REMOVE TILE at ", object.position);

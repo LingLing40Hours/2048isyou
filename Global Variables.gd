@@ -166,6 +166,14 @@ enum StuffId {
 	GOAL = 192,
 };
 
+enum ColorId {
+	GRAY = 32,
+	BLACK = 31,
+	BLUE = 30,
+	RED = 29,
+	ALL = 4,
+};
+
 
 func _ready():
 	level_scores.resize(LEVEL_COUNT);

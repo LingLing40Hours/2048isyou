@@ -24,7 +24,7 @@ func enter():
 	
 	#disable collision when merging
 	actor.set_layers(false, GV.player_snap);
-	if actor.is_player:
+	if actor.color == GV.ColorId.GRAY:
 		actor.set_masks(false);
 	
 	#set z_index
@@ -39,7 +39,7 @@ func inPhysicsProcess(delta):
 	actor.move_and_collide(actor.velocity * delta);
 
 func handleInput(_event):
-	if actor.is_player: #get premove
+	if actor.color == GV.ColorId.GRAY: #get premove
 		await game.current_level.processed_action_input;
 		actor.get_next_action();
 	

@@ -46,7 +46,7 @@ func spawn_player(): #spawns player at spawn_point
 	spawned = true;
 	var player = score_tile.instantiate();
 	player_spawned = player;
-	player.is_player = true;
+	player.color = GV.ColorId.GRAY;
 	player.power = GV.current_savepoint_powers.pop_back();
 	player.ssign = GV.current_savepoint_ssigns.pop_back();
 	player.snapshot_locations = GV.temp_player_snapshot_locations;

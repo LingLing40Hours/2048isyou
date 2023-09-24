@@ -16,7 +16,7 @@ func enter():
 	
 	#update power, convert to tile
 	actor.power -= 1;
-	actor.is_player = false;
+	actor.color = GV.ColorId.ALL;
 	actor.is_hostile = false;
 	actor.set_masks(false);
 	actor.tile_settings();
@@ -32,7 +32,7 @@ func enter():
 	for tile in player.pusheds:
 		tile.pusher = player;
 	#player.debug = true;
-	player.is_player = true;
+	player.color = GV.ColorId.GRAY;
 	player.power = actor.power;
 	player.ssign = actor.ssign;
 	player.pos_t = actor.pos_t;

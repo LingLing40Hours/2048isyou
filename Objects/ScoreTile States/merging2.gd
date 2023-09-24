@@ -27,7 +27,7 @@ func inPhysicsProcess(delta):
 				game.current_level.loaded_tiles.erase(actor.pos_t);
 			game.current_level.pool_tile(actor);
 		else:
-			if actor.is_player:
+			if actor.color == GV.ColorId.GRAY:
 				actor.remove_from_players();
 			actor.queue_free();
 	else:

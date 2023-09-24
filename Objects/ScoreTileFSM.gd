@@ -8,7 +8,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
 @onready var sprites:Node2D = $Sprites;
 
-@export var is_player:bool = false;
+@export var color:int = 4;
 @export var is_hostile:bool = false;
 @export var is_invincible:bool = false;
 @export var power:int = 1;
@@ -86,7 +86,7 @@ func _ready():
 	$Shape4.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 
 	#spawn protection
-	if is_player and not splitted:
+	if color == GV.ColorId.GRAY and not splitted:
 		invincible = true;
 		var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
 		timer.timeout.connect(_on_invincibility_timeout);
@@ -102,7 +102,7 @@ func initialize():
 	$CollisionPolygon2D.disabled = false;
 	
 	#settings
-	if is_player:
+	if color == GV.ColorId.GRAY:
 		#turn on physics
 		set_physics(true);
 		physics_on = true;
@@ -125,17 +125,17 @@ func initialize():
 		set_masks(false);
 	
 	#set img texture
-	update_texture(img, power, ssign, is_player, is_hostile, is_invincible);
+	update_texture(img, power, ssign, color == GV.ColorId.GRAY, is_hostile, is_invincible);
 	
 	#set initial state
 	var initial_state = "tile";
-	if is_player:
+	if color == GV.ColorId.GRAY:
 		initial_state = "snap" if GV.player_snap else "slide";
 	$FSM.setState($FSM.states[initial_state]);
 	
 func _input(event):
 	if event.is_action_pressed("debug"):
-		if is_player:
+		if color == GV.ColorId.GRAY:
 			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
 			
@@ -144,7 +144,7 @@ func _input(event):
 				assert(tile.visible);
 		
 		#test pathfinder
-#		if is_player:
+#		if color == GV.ColorId.GRAY:
 #			game.current_level.repeat_input.disconnect(_on_repeat_input);
 #			game.current_level.new_snapshot();
 #			var pos_t = GV.world_to_pos_t(position);
@@ -261,7 +261,7 @@ func slide(dir:Vector2i) -> bool:
 	var next_state:Node2D;
 	var xaligned = is_xaligned();
 	var yaligned = is_yaligned();
-	if is_player: #ignore ray if not aligned with tile grid
+	if color == GV.ColorId.GRAY: #ignore ray if not aligned with tile grid
 		if (dir.x and not xaligned) or (dir.y and not yaligned):
 			next_state = $FSM.states.sliding;
 	
@@ -292,13 +292,13 @@ func slide(dir:Vector2i) -> bool:
 					return false;
 				
 				#set collider pusher (required to call collider.slide())
-				if not collider.is_player:
+				if collider.color != GV.ColorId.GRAY:
 					if is_instance_valid(pusher):
 						collider.pusher = pusher;
 					else:
 						collider.pusher = self;
 				
-				if collider.is_player and collider.slide(dir): #receding player
+				if collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
 					next_state = $FSM.states.sliding;
 				elif power in [-1, collider.power] and (power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge as 0 or equal power
 					partner = collider;
@@ -368,7 +368,7 @@ func split(dir:Vector2i) -> bool:
 			if collider.get_state() not in ["tile", "snap"]:
 				return false;
 			
-			if collider.is_player and collider.slide(dir): #recede split
+			if collider.color == GV.ColorId.GRAY and collider.slide(dir): #recede split
 				continue;
 			elif power - 1 == collider.power and collider.power < GV.TILE_POW_MAX: #merge split
 				continue;
@@ -451,9 +451,9 @@ func levelup():
 	is_hostile = partner.is_hostile;
 
 	#convert to player
-	if not is_player and partner.is_player:
+	if color != GV.ColorId.GRAY and partner.color == GV.ColorId.GRAY:
 		#print("CONVERT TO PLAYER");
-		is_player = true;
+		color = GV.ColorId.GRAY;
 		set_masks(true);
 		set_physics(true);
 		physics_on = true;
@@ -472,7 +472,7 @@ func change_state(s:String):
 
 
 func _on_physics_enabler_body_entered(body):
-	if body != self and body is ScoreTile and not body.is_player:
+	if body != self and body is ScoreTile and body.color != GV.ColorId.GRAY:
 		if body.physics_enabler_count == 0 and not body.physics_on:
 			body.set_physics(true);
 			body.physics_on = true;
@@ -480,7 +480,7 @@ func _on_physics_enabler_body_entered(body):
 		body.physics_enabler_count += 1;
 
 func _on_physics_enabler_body_exited(body):
-	if body != self and body is ScoreTile and not body.is_player:
+	if body != self and body is ScoreTile and body.color != GV.ColorId.GRAY:
 		body.physics_enabler_count -= 1;
 		if body.physics_enabler_count == 0 and body.physics_on:
 			body.set_physics(false);
@@ -493,7 +493,7 @@ func enable_physics_immediately():
 	for i in $PhysicsEnabler2.get_collision_count():
 		var body = $PhysicsEnabler2.get_collider(i);
 		
-		if body is ScoreTile and not body.is_player and not body.physics_on:
+		if body is ScoreTile and body.color != GV.ColorId.GRAY and not body.physics_on:
 			body.set_physics(true);
 			body.physics_on = true;
 	$PhysicsEnabler2.enabled = false;
@@ -539,7 +539,7 @@ func set_layers(state, layer_one):
 
 func set_masks(state):
 	set_collision_mask_value(1, state); #inter-tile
-	set_collision_mask_value(32, state); #membrane
+	set_collision_mask_value(GV.ColorId.GRAY, state); #membrane
 
 func set_physics(state):
 	set_process(state);
@@ -571,7 +571,7 @@ func player_settings():
 	for i in range(1, 5):
 		var shape:ShapeCast2D = get_node("Shape"+str(i));
 		shape.set_collision_mask_value(4, false);
-		shape.set_collision_mask_value(32, true);
+		shape.set_collision_mask_value(GV.ColorId.GRAY, true);
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
@@ -597,7 +597,7 @@ func tile_settings():
 	for i in range(1, 5):
 		var shape:ShapeCast2D = get_node("Shape"+str(i));
 		shape.set_collision_mask_value(4, true);
-		shape.set_collision_mask_value(32, false);
+		shape.set_collision_mask_value(GV.ColorId.GRAY, false);
 	
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;
@@ -628,7 +628,7 @@ func duplicate_custom() -> ScoreTile:
 	
 	dup.position = position;
 	dup.velocity = Vector2.ZERO;
-	dup.is_player = is_player;
+	dup.color = color;
 	dup.power = power;
 	dup.ssign = ssign;
 	dup.snapshot_locations = snapshot_locations.duplicate();

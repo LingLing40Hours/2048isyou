@@ -21,7 +21,7 @@ func enter():
 			game.current_level.current_snapshot.add_tile(actor);
 	
 	#set slide parameters
-	if actor.is_player:
+	if actor.color == GV.ColorId.GRAY:
 		slide_speed = GV.TILE_SLIDE_SPEED * GV.PLAYER_SPEED_RATIO;
 		stop_margin = slide_speed/60.0;
 	else:
@@ -45,7 +45,7 @@ func enter():
 	target_distance = (slide_target - actor.position).length();
 	#print("target distance: ", target_distance);
 	
-	#turn off latter layers (4-32) when sliding to ignore obstructing baddie
+	#turn off latter layers (5-32) when sliding to ignore obstructing baddie
 	#disable collision with player if in snap mode so player can follow through with slide
 	actor.set_layers(false, GV.player_snap);
 	
@@ -75,13 +75,13 @@ func inPhysicsProcess(delta):
 		slide_done = true;
 
 func handleInput(_event):
-	if actor.is_player: #allow early input
+	if actor.color == GV.ColorId.GRAY: #allow early input
 		await game.current_level.processed_action_input;
 		actor.get_next_action();
 
 func changeParentState():
 	if slide_done:
-		if actor.is_player:
+		if actor.color == GV.ColorId.GRAY:
 			return states.snap;
 		return states.tile;
 	return null;

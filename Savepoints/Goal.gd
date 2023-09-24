@@ -14,7 +14,7 @@ func _on_body_entered(body):
 		
 		#convert other players to tiles to prepare for save
 		for player in game.current_level.players:
-			player.is_player = false;
+			player.color = GV.ColorId.BLACK if player.power == GV.TILE_POW_MAX else GV.ColorId.ALL;
 		
 		#save level
 		game.save_level(-1);
@@ -31,7 +31,7 @@ func spawn_player(): #spawns player at spawn_point
 	spawned = true;
 	var player = score_tile.instantiate();
 	player_spawned = player;
-	player.is_player = true;
+	player.color = GV.ColorId.GRAY;
 	player.power = GV.player_power;
 	player.ssign = GV.player_ssign;
 	player.position = spawn_point;

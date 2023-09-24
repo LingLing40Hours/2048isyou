@@ -40,7 +40,7 @@ func _ready():
 	parent.img.z_index = anim_old_z;
 	img.z_index = anim_new_z;
 	img.modulate.a = 0;
-	parent.update_texture(img, anim_new_power, anim_new_ssign, parent.is_player, parent.is_hostile, parent.is_invincible);
+	parent.update_texture(img, anim_new_power, anim_new_ssign, parent.color == GV.ColorId.GRAY, parent.is_hostile, parent.is_invincible);
 	parent.sprites.add_child(img);
 	
 	#more anim parameters

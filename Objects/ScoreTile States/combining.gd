@@ -14,7 +14,7 @@ func enter():
 	actor.add_child(animator);
 	
 	#inherit partner's premoves
-	if actor.is_player:
+	if actor.color == GV.ColorId.GRAY:
 		actor.next_moves = actor.partner.next_moves;
 		actor.next_dirs = actor.partner.next_dirs;
 
@@ -22,13 +22,13 @@ func inPhysicsProcess(_delta):
 	frame_count += 1;
 
 func handleInput(_event):
-	if actor.is_player:
+	if actor.color == GV.ColorId.GRAY:
 		await game.current_level.processed_action_input;
 		actor.get_next_action();
 
 func changeParentState():
 	if frame_count == GV.COMBINING_FRAME_COUNT:
-		if actor.is_player:
+		if actor.color == GV.ColorId.GRAY:
 			if GV.player_snap:
 				return states.snap;
 			return states.slide;

@@ -329,7 +329,7 @@ func load_player():
 	var player:ScoreTile = score_tile.instantiate();
 	player.pos_t = player_global_spawn_pos_t;
 	player.position = GV.pos_t_to_world(player_global_spawn_pos_t);
-	player.is_player = true;
+	player.color = GV.ColorId.GRAY;
 	player.power = -1;
 	player.ssign = 1;
 	#player.debug = true;
@@ -373,9 +373,9 @@ func pool_tile(tile:ScoreTile):
 	tile.partner = null;
 	tile.next_dirs.clear();
 	tile.next_moves.clear();
-	if tile.is_player:
+	if tile.color == GV.ColorId.GRAY:
 		tile.tile_settings();
-	tile.is_player = false;
+	tile.color = GV.ColorId.ALL;
 	tile.is_hostile = false;
 	tile.is_invincible = false;
 	tile.splitted = false;
