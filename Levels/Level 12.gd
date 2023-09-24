@@ -397,8 +397,8 @@ func pool_tile(tile:ScoreTile):
 
 func move_tile(old_pos_t:Vector2i, new_pos_t:Vector2i):
 	#debug
-	if not loaded_tiles.has(old_pos_t):
-		print_loaded_tiles(old_pos_t - Vector2i(2, 2), old_pos_t + Vector2i(2, 2));
+#	if not loaded_tiles.has(old_pos_t):
+#		print_loaded_tiles(old_pos_t - Vector2i(2, 2), old_pos_t + Vector2i(2, 2));
 	
 	var tile:ScoreTile = loaded_tiles[old_pos_t];
 	loaded_tiles.erase(old_pos_t);

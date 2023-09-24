@@ -546,6 +546,10 @@ func set_masks(state):
 	set_collision_mask_value(GV.ColorId.GRAY, state); #membrane
 
 func set_physics(state):
+#	if state:
+#		set_process_mode(PROCESS_MODE_INHERIT);
+#	else:
+#		set_process_mode(PROCESS_MODE_DISABLED);
 	set_process(state);
 	set_physics_process(state);
 	$FSM.set_process(state);
