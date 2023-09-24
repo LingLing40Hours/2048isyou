@@ -643,5 +643,6 @@ func remove_animators():
 		animator.queue_free();
 	animators.clear();
 	
-	#reset parent img modulate
+	#reset parent img stuff
 	img.modulate.a = 1;
+	img.z_index = 0;
