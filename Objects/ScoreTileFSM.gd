@@ -4,7 +4,6 @@ extends CharacterBody2D
 signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
 signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
 
-@onready var GV:Node = $"/root/GV";
 @onready var game:Node2D = $"/root/Game";
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
 @onready var sprites:Node2D = $Sprites;
@@ -26,7 +25,7 @@ var animators:Array[ScoreTileAnimator] = [];
 var pusheds:Array[ScoreTile] = []; #tiles pushed by self; to update collider's pusher after player is instantiated in split
 var pusher:ScoreTile; #player at start of line, not immediate neighbor
 var partner:ScoreTile;
-var shift_shape:ShapeCast2D = null;
+var shift_shape:ShapeCast2D;
 var tile_push_count:int = 0; #if merge possible, don't multipush (except for 0 at end)
 
 var physics_on:bool;

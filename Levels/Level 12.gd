@@ -252,6 +252,7 @@ func generate_tiles():
 	var initial_load_count:int = 0;
 	
 	while true:
+		#push_error("START");
 		semaphore.wait(); #wait
 		
 		#check for exit
@@ -266,16 +267,19 @@ func generate_tiles():
 		var load_positions:Array = load_queue.keys();
 		load_queue.clear();
 		load_mutex.unlock();
+		#push_error("END");
 		for pos_t in load_positions:
 			generate_cell(pos_t);
 		initial_load_count = min(initial_tile_count, initial_load_count + load_positions.size());
 		
 		#flag, signal
+		#push_error("START SIG");
 		initial_mutex.lock();
 		if not initial_tiles_generated and initial_load_count == initial_tile_count:
 			initial_tiles_generated = true;
 			call_deferred("emit_signal", "initial_tiles_gennied");
 		initial_mutex.unlock();
+		#push_error("END_SIG");
 
 #inits a tile in constructed_tiles or updates tilemap accordingly
 func generate_cell(pos_t:Vector2i) -> ScoreTile:
@@ -355,18 +359,25 @@ func get_tile() -> ScoreTile:
 #called from main
 #resets tile parameters
 func pool_tile(tile:ScoreTile):
+	assert(not tile.is_queued_for_deletion());
+	
 	tile.get_node("CollisionPolygon2D").disabled = true;
 	tile.snapshot_locations.clear();
 	tile.snapshot_locations_new.clear();
 	tile.remove_animators();
 	tile.pusheds.clear();
 	tile.pusher = null;
+	tile.partner = null;
 	tile.next_dirs.clear();
 	tile.next_moves.clear();
 	if tile.is_player:
 		tile.tile_settings();
 	tile.is_player = false;
 	tile.is_hostile = false;
+	tile.is_invincible = false;
+	tile.splitted = false;
+	tile.snap_slid = false;
+	tile.invincible = false;
 	tile.set_physics(false);
 	tile.physics_on = false;
 	#tile.debug = false;
@@ -380,6 +391,10 @@ func pool_tile(tile:ScoreTile):
 	pool_mutex.unlock();
 
 func move_tile(old_pos_t:Vector2i, new_pos_t:Vector2i):
+	#debug
+	if not loaded_tiles.has(old_pos_t):
+		print_loaded_tiles(old_pos_t - Vector2i(2, 2), old_pos_t + Vector2i(2, 2));
+	
 	var tile:ScoreTile = loaded_tiles[old_pos_t];
 	loaded_tiles.erase(old_pos_t);
 	loaded_tiles[new_pos_t] = tile;
