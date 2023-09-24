@@ -173,10 +173,11 @@ func debug_frame():
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile, _is_invincible):
+	assert(score_pow <= GV.TILE_POW_MAX);
 	var texture_path:String = "res://Sprites/2_";
 	
 	#power
-	if score_pow < 0:
+	if score_pow == -1:
 		texture_path += "n";
 	else:
 		texture_path += str(score_pow);
@@ -299,7 +300,7 @@ func slide(dir:Vector2i) -> bool:
 				
 				if collider.is_player and collider.slide(dir): #receding player
 					next_state = $FSM.states.sliding;
-				elif power in [-1, collider.power] and power < GV.TILE_POW_MAX: #merge as 0 or equal power
+				elif power in [-1, collider.power] and (power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge as 0 or equal power
 					partner = collider;
 					collider.pusher = null;
 					collider.partner = self;
@@ -434,7 +435,7 @@ func levelup():
 	if get_state() not in ["tile", "snap"]:
 		return;
 	
-	#update power
+	#update value
 	if power == -1: #0, assume partner value
 		power = partner.power;
 		ssign = partner.ssign;
@@ -647,3 +648,10 @@ func remove_animators():
 	#reset parent img stuff
 	img.modulate.a = 1;
 	img.z_index = 0;
+
+#only works for one layer at a time
+func set_color_collision(layer:int, state:bool):
+	for i in range(1, 5):
+		var shape:ShapeCast2D = get_node("Shape"+str(i));
+		shape.set_collision_mask_value(4, state);
+		shape.set_collision_mask_value(layer, !state);
