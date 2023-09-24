@@ -48,462 +48,198 @@ layer_0/tile_data = PackedInt32Array(0, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 6, 2, 0
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1460, 460)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile11" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1020, 380)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1420, 460)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 4
-ssign = null
-debug = null
 
 [node name="ScoreTile3" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1420, 420)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 0
-ssign = null
-debug = null
 
 [node name="ScoreTile4" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile5" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 3
-ssign = null
-debug = null
 
 [node name="ScoreTile6" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 2
-ssign = null
-debug = null
 
 [node name="ScoreTile33" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 660)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile34" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 660)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 3
-ssign = null
-debug = null
 
 [node name="ScoreTile35" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 660)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile36" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 700)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile37" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 700)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile38" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 700)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile44" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 540)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile39" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 740)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile40" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 740)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile41" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 740)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 2
-ssign = null
-debug = null
 
 [node name="ScoreTile32" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1380, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile42" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 380)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile45" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 540)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile46" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1380, 540)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile43" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 540)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 4
-ssign = null
-debug = null
 
 [node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 140)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 11
-ssign = null
-debug = null
 
 [node name="ScoreTile12" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(860, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile13" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(60, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile31" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1220, 540)
-is_player = true
-is_hostile = null
-is_invincible = null
+color = 32
 power = 11
-ssign = null
-debug = null
 
 [node name="ScoreTile47" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1180, 580)
-is_player = null
-is_hostile = null
-is_invincible = null
+color = 31
 power = 12
-ssign = null
-debug = null
 
 [node name="ScoreTile48" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1140, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
+color = 31
 power = 12
 ssign = -1
-debug = null
 
 [node name="ScoreTile49" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1100, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 11
-ssign = null
-debug = null
 
 [node name="ScoreTile50" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1060, 620)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 11
 ssign = -1
-debug = null
 
 [node name="ScoreTile51" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1060, 580)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 11
 ssign = -1
-debug = null
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(60, 220)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile15" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(60, 260)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile20" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(60, 300)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile23" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(100, 260)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile24" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(140, 260)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile25" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(180, 260)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile26" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(220, 260)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile27" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(220, 220)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile16" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(100, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 2
-ssign = null
-debug = null
 
 [node name="ScoreTile17" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(140, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile28" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(100, 220)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile29" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(100, 300)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile18" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(180, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
-power = null
-ssign = null
-debug = null
 
 [node name="ScoreTile21" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(140, 300)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 2
-ssign = null
-debug = null
 
 [node name="ScoreTile22" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(180, 300)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 3
-ssign = null
-debug = null
 
 [node name="ScoreTile30" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(220, 300)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 4
-ssign = null
-debug = null
 
 [node name="ScoreTile19" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(220, 180)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = -1
-ssign = null
-debug = null
 
 [node name="ScoreTile10" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 140)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 11
-ssign = null
-debug = null
 
 [node name="ScoreTile7" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(620, 860)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 0
-ssign = null
-debug = null
 
 [node name="ScoreTile8" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(660, 860)
-is_player = null
-is_hostile = null
-is_invincible = null
 power = 0
-ssign = null
-debug = null
 
 [node name="SavePoints" type="Node2D" parent="."]
 

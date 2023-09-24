@@ -115,12 +115,15 @@ func initialize():
 			set_masks(true);
 		
 		player_settings();
+		set_color(GV.ColorId.GRAY, true);
 		
 		#set level's initial player value
 		if not GV.current_level_from_save:
 			GV.level_initial_player_powers[GV.current_level_index] = power;
 			GV.level_initial_player_ssigns[GV.current_level_index] = ssign;
 	else:
+		if color == GV.ColorId.BLACK:
+			set_color(GV.ColorId.BLACK, true);
 		set_layers(true, true);
 		set_masks(false);
 	
@@ -459,6 +462,7 @@ func levelup():
 		physics_on = true;
 		
 		player_settings();
+		set_color(GV.ColorId.GRAY, true);
 		enable_physics_immediately();
 	
 	$FSM.curState.next_state = $FSM.states.combining;
@@ -566,12 +570,6 @@ func player_settings():
 	
 	#add to unlocker layer
 	set_collision_layer_value(3, true);
-
-	#disable membrane collision
-	for i in range(1, 5):
-		var shape:ShapeCast2D = get_node("Shape"+str(i));
-		shape.set_collision_mask_value(4, false);
-		shape.set_collision_mask_value(GV.ColorId.GRAY, true);
 	
 	#reduce collider size
 	$CollisionPolygon2D.scale = GV.PLAYER_COLLIDER_SCALE * Vector2.ONE;
@@ -592,12 +590,6 @@ func tile_settings():
 	
 	#remove from unlocker layer
 	set_collision_layer_value(3, false);
-	
-	#enable membrane collision
-	for i in range(1, 5):
-		var shape:ShapeCast2D = get_node("Shape"+str(i));
-		shape.set_collision_mask_value(4, true);
-		shape.set_collision_mask_value(GV.ColorId.GRAY, false);
 	
 	#reset collider size
 	$CollisionPolygon2D.scale = Vector2.ONE;
@@ -649,9 +641,9 @@ func remove_animators():
 	img.modulate.a = 1;
 	img.z_index = 0;
 
-#only works for one layer at a time
-func set_color_collision(layer:int, state:bool):
+#only set one layer on at a time
+func set_color(layer:int, state:bool):
 	for i in range(1, 5):
 		var shape:ShapeCast2D = get_node("Shape"+str(i));
-		shape.set_collision_mask_value(4, state);
-		shape.set_collision_mask_value(layer, !state);
+		shape.set_collision_mask_value(layer, state);
+		shape.set_collision_mask_value(4, !state);

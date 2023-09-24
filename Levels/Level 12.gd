@@ -307,6 +307,7 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	tile.ssign = int(signf(n_tile));
 	n_tile = pow(absf(n_tile), 1); #use this step to bias toward/away from 0
 	tile.power = GV.TILE_GEN_POW_MAX if (n_tile == 1.0) else int((GV.TILE_GEN_POW_MAX + 2) * n_tile) - 1;
+	tile.color = GV.ColorId.BLACK if tile.power == GV.TILE_POW_MAX else GV.ColorId.ALL;
 	
 	constructed_mutex.lock();
 	constructed_tiles[pos_t] = tile;
@@ -375,6 +376,7 @@ func pool_tile(tile:ScoreTile):
 	tile.next_moves.clear();
 	if tile.color == GV.ColorId.GRAY:
 		tile.tile_settings();
+	tile.set_color(tile.color, false);
 	tile.color = GV.ColorId.ALL;
 	tile.is_hostile = false;
 	tile.is_invincible = false;

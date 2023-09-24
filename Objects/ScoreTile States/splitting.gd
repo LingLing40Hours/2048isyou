@@ -20,6 +20,7 @@ func enter():
 	actor.is_hostile = false;
 	actor.set_masks(false);
 	actor.tile_settings();
+	actor.set_color(GV.ColorId.GRAY, false);
 	
 	#start animation
 	var animator = ScoreTileAnimator.new(actor.power, actor.ssign, GV.ScaleAnim.DWING, 2, 1);
