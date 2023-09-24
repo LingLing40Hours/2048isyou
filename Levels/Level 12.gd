@@ -105,6 +105,7 @@ func _ready():
 	load_start_time = Time.get_ticks_usec();
 	thread.start(generate_tiles);
 
+#called in main
 func _on_cell_ready():
 	if initial_ready_count < initial_tile_count:
 		initial_ready_count += 1;
@@ -282,11 +283,11 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	var n_wall:float = wall_noise.get_noise_2d(pos_t.x, pos_t.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
 		$Walls.set_cell(0, pos_t, 2, Vector2i.ZERO);
-		_on_cell_ready();
+		call_deferred("_on_cell_ready");
 		return null;
 	if absf(n_wall) < 0.02:
 		$Walls.set_cell(0, pos_t, 1, Vector2i.ZERO);
-		_on_cell_ready();
+		call_deferred("_on_cell_ready");
 		return null;
 	
 	#tile, position
