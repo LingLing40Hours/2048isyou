@@ -155,6 +155,7 @@ func _process(_delta):
 		else:
 			tile.initialize();
 		
+		assert(not tile.is_queued_for_deletion());
 		loaded_tiles[pos_t] = tile;
 	
 	#pool unloaded tiles
@@ -286,11 +287,13 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(pos_t.x, pos_t.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
-		$Walls.set_cell(0, pos_t, 2, Vector2i.ZERO);
+		#$Walls.set_cell(0, pos_t, 2, Vector2i.ZERO);
+		$Walls.call_deferred("set_cell", 0, pos_t, 2, Vector2i.ZERO);
 		call_deferred("_on_cell_ready");
 		return null;
 	if absf(n_wall) < 0.02:
-		$Walls.set_cell(0, pos_t, 1, Vector2i.ZERO);
+		#$Walls.set_cell(0, pos_t, 1, Vector2i.ZERO);
+		$Walls.call_deferred("set_cell", 0, pos_t, 1, Vector2i.ZERO);
 		call_deferred("_on_cell_ready");
 		return null;
 	

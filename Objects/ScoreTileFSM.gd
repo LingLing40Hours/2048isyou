@@ -139,7 +139,9 @@ func _input(event):
 			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
 			
-			var tile = game.current_level.loaded_tiles.get(Vector2i(0, -1));
+			for temp_pos_t in game.current_level.loaded_tiles.keys():
+				var tile:ScoreTile = game.current_level.loaded_tiles[temp_pos_t];
+				assert(tile.visible);
 		
 		#test pathfinder
 #		if is_player:
