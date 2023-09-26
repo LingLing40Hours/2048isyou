@@ -1,13 +1,13 @@
 {\rtf1\ansi\ansicpg1252\cocoartf2638
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Bold;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Italic;
 \f3\fnil\fcharset0 HelveticaNeue-BoldItalic;}
-{\colortbl;\red255\green255\blue255;\red220\green161\blue13;}
-{\*\expandedcolortbl;;\cssrgb\c89412\c68627\c3922;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red220\green161\blue13;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c89412\c68627\c3922;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww17700\viewh16920\viewkind0
+\margl1440\margr1440\vieww17700\viewh15080\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -635,7 +635,9 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b 	spread out queue_frees\
 		switch to free() and time it
 \f1\b0 \
-	fix missing tiles bug\
+	
+\f0\b fix missing tiles bug
+\f1\b0 \
 	
 \f0\b remove raycasts (use shapcasts for shifting)?
 \f1\b0 \
@@ -645,8 +647,13 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b use trackingCam.target_pos instead of checking every frame
 \f1\b0 \
 		
-\f0\b assume bounding rect doesn\'92t change size? (NAH)
-\f1\b0 \
+\f0\b assume bounding rect doesn\'92t change size? (NAH)\
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f1\b0 \cf0 	\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 physicsenabler needs to be +shaped, and size based on tile_push_limit\
+	keep shapecasts disabled until use\
+		remove physicsEnabler altogether? time it\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -667,7 +674,7 @@ Variants\
 	I, Bot - write bot(s) to compete in weekly bot tournaments (like micro-mouse)\
 		use server to store user bots\
 		game on local\
-		game on website {\field{\*\fldinst{HYPERLINK "http://2048isyou.com"}}{\fldrslt \cf2 2048isyou.com}}\
+		game on website {\field{\*\fldinst{HYPERLINK "http://2048isyou.com"}}{\fldrslt \cf3 2048isyou.com}}\
 	Tile Run\
 		Large snake\
 		Wall of glitchy tiles\
@@ -767,8 +774,9 @@ Pathfinder\
 	rerun search when min_box updates\
 	ignore maze corridor nodes\
 	ignore middle-of-empty-space nodes\
+\pard\pardeftab560\slleading20\partightenfactor0
 
-\f0\b 	stop search if target enclosed by wall
+\f0\b \cf0 	stop search if target enclosed by wall
 \f1\b0 \
 
 \f0\b 		trace wall upon encountering it, mark as traced (NAH)\
@@ -830,7 +838,7 @@ Fixing Scene Parse Error Bug\
 \
 Sources\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://github.com/mphe/GDNative-Ropesim"}}{\fldrslt \cf2 https://github.com/mphe/GDNative-Ropesim}}\
+{\field{\*\fldinst{HYPERLINK "https://github.com/mphe/GDNative-Ropesim"}}{\fldrslt \cf3 https://github.com/mphe/GDNative-Ropesim}}\
 \
 \
 \pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
@@ -841,72 +849,72 @@ Sources\
 \f1\b0  \
 Art tools:\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://colorhunt.co/"}}{\fldrslt \cf2 https://colorhunt.co/}} Palette suggestions \
+{\field{\*\fldinst{HYPERLINK "https://colorhunt.co/"}}{\fldrslt \cf3 https://colorhunt.co/}} Palette suggestions \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://lospec.com/palette-list"}}{\fldrslt \cf2 https://lospec.com/palette-list}} Lo-bit palettes \
+{\field{\*\fldinst{HYPERLINK "https://lospec.com/palette-list"}}{\fldrslt \cf3 https://lospec.com/palette-list}} Lo-bit palettes \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://kenney.nl/assets"}}{\fldrslt \cf2 https://kenney.nl/assets}} Free ccby0 Assets 2D and 3D plus isometric\
+{\field{\*\fldinst{HYPERLINK "https://kenney.nl/assets"}}{\fldrslt \cf3 https://kenney.nl/assets}} Free ccby0 Assets 2D and 3D plus isometric\
 2D Art Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Free, licensed art assets \
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf3 https://opengameart.org/}} Free, licensed art assets \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://pixabay.com/"}}{\fldrslt \cf2 https://pixabay.com/}} 2D images \
+{\field{\*\fldinst{HYPERLINK "https://pixabay.com/"}}{\fldrslt \cf3 https://pixabay.com/}} 2D images \
 2D Art Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://krita.org/"}}{\fldrslt \cf2 https://krita.org/}} Drawing program, also works for image manipulation \
+{\field{\*\fldinst{HYPERLINK "https://krita.org/"}}{\fldrslt \cf3 https://krita.org/}} Drawing program, also works for image manipulation \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://libresprite.github.io/"}}{\fldrslt \cf2 https://libresprite.github.io/}} (Old version of Aseprite, free) \
+{\field{\*\fldinst{HYPERLINK "https://libresprite.github.io/"}}{\fldrslt \cf3 https://libresprite.github.io/}} (Old version of Aseprite, free) \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.gimp.org/"}}{\fldrslt \cf2 https://www.gimp.org/}} Free, open source image editor \
+{\field{\*\fldinst{HYPERLINK "https://www.gimp.org/"}}{\fldrslt \cf3 https://www.gimp.org/}} Free, open source image editor \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.aseprite.org/"}}{\fldrslt \cf2 https://www.aseprite.org/}} Pixel art program (not free) \
+{\field{\*\fldinst{HYPERLINK "https://www.aseprite.org/"}}{\fldrslt \cf3 https://www.aseprite.org/}} Pixel art program (not free) \
 3D Art Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.poliigon.com/search?credit=0"}}{\fldrslt \cf2 https://www.poliigon.com/search?credit=0}} Free textures (priced textures available) \
+{\field{\*\fldinst{HYPERLINK "https://www.poliigon.com/search?credit=0"}}{\fldrslt \cf3 https://www.poliigon.com/search?credit=0}} Free textures (priced textures available) \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://polyhaven.com/"}}{\fldrslt \cf2 https://polyhaven.com/}} Free, license cc0 textures \
+{\field{\*\fldinst{HYPERLINK "https://polyhaven.com/"}}{\fldrslt \cf3 https://polyhaven.com/}} Free, license cc0 textures \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.openfootage.net/textures/"}}{\fldrslt \cf2 https://www.openfootage.net/textures/}} Free, licensed images and textures \
+{\field{\*\fldinst{HYPERLINK "https://www.openfootage.net/textures/"}}{\fldrslt \cf3 https://www.openfootage.net/textures/}} Free, licensed images and textures \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.mixamo.com/#/"}}{\fldrslt \cf2 https://www.mixamo.com/#/}} 3D animations \
+{\field{\*\fldinst{HYPERLINK "https://www.mixamo.com/#/"}}{\fldrslt \cf3 https://www.mixamo.com/#/}} 3D animations \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.turbosquid.com/"}}{\fldrslt \cf2 https://www.turbosquid.com/}} 3D models (not free)\
+{\field{\*\fldinst{HYPERLINK "https://www.turbosquid.com/"}}{\fldrslt \cf3 https://www.turbosquid.com/}} 3D models (not free)\
 3D Art Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.blender.org/"}}{\fldrslt \cf2 https://www.blender.org/}} Free, open source, 3D modelling software \
+{\field{\*\fldinst{HYPERLINK "https://www.blender.org/"}}{\fldrslt \cf3 https://www.blender.org/}} Free, open source, 3D modelling software \
 Sound Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://incompetech.com/music/royalty-free/music.html"}}{\fldrslt \cf2 https://incompetech.com/music/royalty-free/music.html}} Royalty free music \
+{\field{\*\fldinst{HYPERLINK "https://incompetech.com/music/royalty-free/music.html"}}{\fldrslt \cf3 https://incompetech.com/music/royalty-free/music.html}} Royalty free music \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://freesound.org/"}}{\fldrslt \cf2 https://freesound.org/}} Free, licensed sound effects\
+{\field{\*\fldinst{HYPERLINK "https://freesound.org/"}}{\fldrslt \cf3 https://freesound.org/}} Free, licensed sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://freemusicarchive.org/"}}{\fldrslt \cf2 https://freemusicarchive.org/}} Music\
+{\field{\*\fldinst{HYPERLINK "https://freemusicarchive.org/"}}{\fldrslt \cf3 https://freemusicarchive.org/}} Music\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Sound effects\
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf3 https://opengameart.org/}} Sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.kenney.nl/assets?q=audio"}}{\fldrslt \cf2 https://www.kenney.nl/assets?q=audio}} Music, sound effects\
+{\field{\*\fldinst{HYPERLINK "https://www.kenney.nl/assets?q=audio"}}{\fldrslt \cf3 https://www.kenney.nl/assets?q=audio}} Music, sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://sonniss.com/gameaudiogdc"}}{\fldrslt \cf2 https://sonniss.com/gameaudiogdc}} Sound effects\
+{\field{\*\fldinst{HYPERLINK "https://sonniss.com/gameaudiogdc"}}{\fldrslt \cf3 https://sonniss.com/gameaudiogdc}} Sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.shockwave-sound.com/"}}{\fldrslt \cf2 https://www.shockwave-sound.com/}}\
+{\field{\*\fldinst{HYPERLINK "https://www.shockwave-sound.com/"}}{\fldrslt \cf3 https://www.shockwave-sound.com/}}\
 Sound Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.audacityteam.org/"}}{\fldrslt \cf2 https://www.audacityteam.org/}} Free, open source DAW \
+{\field{\*\fldinst{HYPERLINK "https://www.audacityteam.org/"}}{\fldrslt \cf3 https://www.audacityteam.org/}} Free, open source DAW \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://lmms.io/"}}{\fldrslt \cf2 https://lmms.io/}} DAW \
+{\field{\*\fldinst{HYPERLINK "https://lmms.io/"}}{\fldrslt \cf3 https://lmms.io/}} DAW \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://sfxr.me/"}}{\fldrslt \cf2 https://sfxr.me/}} 8-bit sound and effects \
+{\field{\*\fldinst{HYPERLINK "https://sfxr.me/"}}{\fldrslt \cf3 https://sfxr.me/}} 8-bit sound and effects \
 Other: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://github.com/"}}{\fldrslt \cf2 https://github.com/}} Source/version control \
+{\field{\*\fldinst{HYPERLINK "https://github.com/"}}{\fldrslt \cf3 https://github.com/}} Source/version control \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://code.visualstudio.com/"}}{\fldrslt \cf2 https://code.visualstudio.com/}} IDE \
+{\field{\*\fldinst{HYPERLINK "https://code.visualstudio.com/"}}{\fldrslt \cf3 https://code.visualstudio.com/}} IDE \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://trello.com/home"}}{\fldrslt \cf2 https://trello.com/home}} Project management tool \
+{\field{\*\fldinst{HYPERLINK "https://trello.com/home"}}{\fldrslt \cf3 https://trello.com/home}} Project management tool \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://thebookofshaders.com/"}}{\fldrslt \cf2 https://thebookofshaders.com/}} Shader maths and info \
+{\field{\*\fldinst{HYPERLINK "https://thebookofshaders.com/"}}{\fldrslt \cf3 https://thebookofshaders.com/}} Shader maths and info \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://jannikboysen.itch.io/easy-releasy"}}{\fldrslt \cf2 https://jannikboysen.itch.io/easy-releasy}} itch.io page decoration templates\
+{\field{\*\fldinst{HYPERLINK "https://jannikboysen.itch.io/easy-releasy"}}{\fldrslt \cf3 https://jannikboysen.itch.io/easy-releasy}} itch.io page decoration templates\
 \
 Remember ALWAYS check the license of any tools or assets you use as you may have to include that in the game information. Free does not mean you can use it without consequence.\uc0\u8232 \u8232 \
 \
