@@ -297,8 +297,19 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 		call_deferred("_on_cell_ready");
 		return null;
 	
-	#tile, position
 	var tile:ScoreTile = get_tile();
+	if tile.is_inside_tree():
+		call_deferred("build_tile", tile, pos_t);
+	else:
+		build_tile(tile, pos_t);
+	
+	constructed_mutex.lock();
+	constructed_tiles[pos_t] = tile;
+	constructed_mutex.unlock();
+	
+	return tile;
+
+func build_tile(tile:ScoreTile, pos_t:Vector2i):
 	tile.pos_t = pos_t;
 	tile.position = GV.pos_t_to_world(pos_t);
 	
@@ -308,15 +319,6 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	n_tile = pow(absf(n_tile), 1); #use this step to bias toward/away from 0
 	tile.power = GV.TILE_GEN_POW_MAX if (n_tile == 1.0) else int((GV.TILE_GEN_POW_MAX + 2) * n_tile) - 1;
 	tile.color = GV.ColorId.BLACK if tile.power == GV.TILE_POW_MAX else GV.ColorId.ALL;
-	
-	constructed_mutex.lock();
-	constructed_tiles[pos_t] = tile;
-	constructed_mutex.unlock();
-	
-	#debug
-#	if pos_t == Vector2i(0, -1):
-#		tile.debug = true;
-	return tile;
 
 func load_player():
 	#remove wall/tile at cell
