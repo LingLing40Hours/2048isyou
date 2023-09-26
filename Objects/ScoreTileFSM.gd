@@ -141,10 +141,6 @@ func _input(event):
 		if color == GV.ColorId.GRAY:
 			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
-			
-			for temp_pos_t in game.current_level.loaded_tiles.keys():
-				var tile:ScoreTile = game.current_level.loaded_tiles[temp_pos_t];
-				assert(tile.visible);
 		
 		#test pathfinder
 #		if color == GV.ColorId.GRAY:
