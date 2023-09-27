@@ -646,3 +646,17 @@ func get_next_action():
 '''
 
 #mutex.lock(); exit_thread = true; mutex.unlock(); return; #debug
+
+''' in slide(), after get_shape()
+		#if splitted, tile was newly added, shapecast hasn't updated
+		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
+		#if next_moves nonempty, premoved, last shapecast update may have caught a tile corner
+		if splitted or (pusher != null and pusher.splitted) or next_moves:
+			shape.force_shapecast_update();
+'''
+
+'''
+	#scale physicsEnablers
+	$PhysicsEnabler/CollisionShape2D.shape.set_size($PhysicsEnabler/CollisionShape2D.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
+	$PhysicsEnabler2.shape.set_size($PhysicsEnabler2.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
+'''

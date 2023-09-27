@@ -174,6 +174,9 @@ enum ColorId {
 	ALL = 4,
 };
 
+#const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
+#const PHYSICS_ENABLER_BASE_SIZE:Vector2 = Vector2(144, 144); #px, px; at tile_push_limit = 0
+
 
 func _ready():
 	level_scores.resize(LEVEL_COUNT);
@@ -191,7 +194,15 @@ func _ready():
 			SHIFT_LERP_WEIGHT_TOTAL += term_sign * combinations_dp(frame, term) * pow(SHIFT_LERP_WEIGHT, term);
 			term_sign *= -1;
 	SHIFT_DISTANCE_TO_SPEED_MAX = 60 / SHIFT_LERP_WEIGHT_TOTAL;
-
+	
+#	#init physics enabler size
+#	set_tile_push_limit(abilities["tile_push_limit"]);
+#
+#	#scale shapecasts (bc inspector can't handle precise floats)
+#	var shape_LR:RectangleShape2D = preload("res://Objects/ShapeCastShapeLR.tres");
+#	var shape_UD:RectangleShape2D = preload("res://Objects/ShapeCastShapeUD.tres");
+#	shape_LR.size.y *= GV.PLAYER_COLLIDER_SCALE;
+#	shape_UD.size.x *= GV.PLAYER_COLLIDER_SCALE;
 
 func same_sign_inclusive(a, b) -> bool:
 	if a == 0:
@@ -281,3 +292,10 @@ func is_approx_equal(a:float, b:float, tolerance:float) -> bool:
 	if absf(a - b) <= tolerance:
 		return true;
 	return false;
+
+#func set_tile_push_limit(_tile_push_limit):
+#	abilities["tile_push_limit"] = _tile_push_limit;
+#
+#	#change physicsEnabler size
+#	var size:Vector2 = PHYSICS_ENABLER_BASE_SIZE + abilities["tile_push_limit"] * 2 * GV.TILE_WIDTH * Vector2.ONE;
+#	PHYSICS_ENABLER_SHAPE.set_size(size);

@@ -17,11 +17,10 @@ func enter():
 	if actor.next_moves:
 		#var debug_dir = actor.next_dirs.front();
 		
-		var action = Callable(actor, actor.next_moves.front());
+		var action = Callable(actor, actor.next_moves.pop_front());
 		var moved = action.call(actor.next_dirs.pop_front());
-		if moved:
-			actor.next_moves.pop_front(); #pop afterwards so call can check if it's a premove
-		else: #move failed, clear all premoves
+		
+		if not moved: #move failed, clear all premoves
 			#debug
 			#print(actor.next_moves.front());
 			#print(debug_dir);
@@ -39,9 +38,8 @@ func handleInput(_event):
 	await game.current_level.processed_action_input;
 	actor.get_next_action();
 	if actor.next_moves:
-		var action = Callable(actor, actor.next_moves.front());
+		var action = Callable(actor, actor.next_moves.pop_front());
 		action.call(actor.next_dirs.pop_front());
-		actor.next_moves.pop_front(); #pop afterwards so call can check if it's a premove
 
 func changeParentState():
 	return next_state;

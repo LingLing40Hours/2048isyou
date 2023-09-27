@@ -3,26 +3,26 @@
 [ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="1_4wq03"]
 [ext_resource type="PackedScene" uid="uid://b5xshtev3l7ey" path="res://Objects/scoretile_fsm.tscn" id="2_6q1l5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_v04qv"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xcrd5"]
 resource_local_to_scene = true
 size = Vector2(9, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5pb3o"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dnsv5"]
 resource_local_to_scene = true
 size = Vector2(40, 9)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ef7xw"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4g2ba"]
 resource_local_to_scene = true
 size = Vector2(9, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_i8nir"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q2k8g"]
 resource_local_to_scene = true
 size = Vector2(40, 9)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_35qgv"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hnaww"]
 size = Vector2(224, 224)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3f48n"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wbx2j"]
 resource_local_to_scene = true
 size = Vector2(224, 224)
 
@@ -38,28 +38,32 @@ polygon = PackedVector2Array(-16, -19, -14, -20, 14, -20, 16, -19, 19, -16, 20, 
 [node name="Shape1" type="ShapeCast2D" parent="."]
 visible = false
 position = Vector2(25.5, 0)
-shape = SubResource("RectangleShape2D_v04qv")
+enabled = false
+shape = SubResource("RectangleShape2D_xcrd5")
 target_position = Vector2(0, 0)
 collision_mask = 9
 
 [node name="Shape2" type="ShapeCast2D" parent="."]
 visible = false
 position = Vector2(0, -25.5)
-shape = SubResource("RectangleShape2D_5pb3o")
+enabled = false
+shape = SubResource("RectangleShape2D_dnsv5")
 target_position = Vector2(0, 0)
 collision_mask = 9
 
 [node name="Shape3" type="ShapeCast2D" parent="."]
 visible = false
 position = Vector2(-25.5, 0)
-shape = SubResource("RectangleShape2D_ef7xw")
+enabled = false
+shape = SubResource("RectangleShape2D_4g2ba")
 target_position = Vector2(0, 0)
 collision_mask = 9
 
 [node name="Shape4" type="ShapeCast2D" parent="."]
 visible = false
 position = Vector2(0, 25.5)
-shape = SubResource("RectangleShape2D_i8nir")
+enabled = false
+shape = SubResource("RectangleShape2D_q2k8g")
 target_position = Vector2(0, 0)
 collision_mask = 9
 
@@ -72,13 +76,13 @@ monitorable = false
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsEnabler"]
-shape = SubResource("RectangleShape2D_35qgv")
+shape = SubResource("RectangleShape2D_hnaww")
 metadata/_edit_lock_ = true
 
 [node name="PhysicsEnabler2" type="ShapeCast2D" parent="."]
 visible = false
 enabled = false
-shape = SubResource("RectangleShape2D_3f48n")
+shape = SubResource("RectangleShape2D_wbx2j")
 target_position = Vector2(0, 0)
 max_results = 36
 collision_mask = 2

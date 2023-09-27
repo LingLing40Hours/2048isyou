@@ -14,8 +14,10 @@ func enter():
 	game.current_level.current_snapshot.add_tile(actor);
 	
 	#extend shape
+	actor.shift_shape.enabled = true;
 	actor.shift_shape.collide_with_areas = false;
-	actor.shift_settings(actor.shift_shape, actor.slide_dir);
+	actor.shift_shape.target_position = GV.SHIFT_RAY_LENGTH * actor.slide_dir;
+	actor.shift_shape.force_shapecast_update();
 	
 	#find target velocity (ignore friction and areas)
 	total_distance = GV.SHIFT_RAY_LENGTH;
@@ -93,4 +95,5 @@ func exit():
 	
 	#reset ray length, exceptions
 	actor.shift_shape.clear_exceptions();
-	actor.slide_settings(actor.shift_shape);
+	actor.shift_shape.target_position = Vector2.ZERO;
+	actor.shift_shape.enabled = false;

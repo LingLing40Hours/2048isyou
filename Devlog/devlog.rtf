@@ -7,7 +7,7 @@
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww17700\viewh15080\viewkind0
+\margl1440\margr1440\vieww17700\viewh13100\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -642,7 +642,6 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b remove raycasts (use shapcasts for shifting)?
 \f1\b0 \
 	pool before CM get_tile()\
-	time frame with and without visibleOnScreenNotifier\
 	
 \f0\b use trackingCam.target_pos instead of checking every frame
 \f1\b0 \
@@ -650,10 +649,16 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b assume bounding rect doesn\'92t change size? (NAH)\
 \pard\pardeftab560\slleading20\partightenfactor0
 
-\f1\b0 \cf0 	\expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 physicsenabler needs to be +shaped, and size based on tile_push_limit\
-	keep shapecasts disabled until use\
-		remove physicsEnabler altogether? time it\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\f1\b0 \cf0 	
+\f0\b make \expnd0\expndtw0\kerning0
+physicsenabler +shaped (NAH)
+\f1\b0 \
+		scale based on tile_push_limit\
+	
+\f0\b keep shapecasts disabled until use
+\f1\b0 \
+		remove physicsEnabler altogether? time it\
+	\kerning1\expnd0\expndtw0 remove visibleOnScreenNotifier? time it\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \

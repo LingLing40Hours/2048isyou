@@ -78,7 +78,7 @@ func _ready():
 		else:
 			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
 			break;
-	
+
 	#scale shapecasts (bc inspector can't handle precise floats)
 	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
@@ -269,11 +269,8 @@ func slide(dir:Vector2i) -> bool:
 		
 		#find shapecast in slide direction
 		var shape = get_shape(dir);
-		#if splitted, tile was newly added, shapecast hasn't updated
-		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
-		#if next_moves nonempty, premoved, last shapecast update may have caught a tile corner
-		if splitted or (pusher != null and pusher.splitted) or next_moves:
-			shape.force_shapecast_update();
+		shape.enabled = true;
+		shape.force_shapecast_update();
 		
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
@@ -324,6 +321,7 @@ func slide(dir:Vector2i) -> bool:
 					return false;
 			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
+		shape.enabled = false;
 	
 	#check pusher tile count
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
@@ -352,8 +350,8 @@ func split(dir:Vector2i) -> bool:
 	
 	#get shapecast in direction
 	var shape = get_shape(dir);
-	if next_moves:
-		shape.force_shapecast_update();
+	shape.enabled = true;
+	shape.force_shapecast_update();
 	
 	for i in shape.get_collision_count():
 		var collider := shape.get_collider(i);
@@ -386,6 +384,7 @@ func split(dir:Vector2i) -> bool:
 					pass;
 				else: #obstructed
 					return false;
+	shape.enabled = false;
 	
 	#signal
 	start_action.emit();
@@ -400,19 +399,22 @@ func shift(dir:Vector2i) -> bool:
 		return false;
 	if not GV.abilities["shift"]:
 		return false;
-	
+
 	#get shape
 	var shape = get_shape(dir);
-	if next_moves:
-		shape.force_shapecast_update();
-
+	
 	#consult shape if aligned with tile grid
 	if (dir.x and is_xaligned()) or (dir.y and is_yaligned()):
+		#enable shape
+		shape.enabled = true;
+		shape.force_shapecast_update();
+	
 		#check for obstruction
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
 			if collider is ScoreTile or collider.is_in_group("wall"):
 				return false;
+		shape.enabled = false;
 	
 	#signal
 	start_action.emit();
@@ -421,14 +423,6 @@ func shift(dir:Vector2i) -> bool:
 	shift_shape = shape;
 	$FSM.curState.next_state = $FSM.states.shifting;
 	return true;
-
-func shift_settings(shape:ShapeCast2D, dir:Vector2i):
-	shape.target_position = GV.SHIFT_RAY_LENGTH * dir;
-	shape.force_shapecast_update();
-
-func slide_settings(shape:ShapeCast2D):
-	shape.target_position = Vector2.ZERO;
-	shape.force_shapecast_update();
 
 func levelup():
 	if get_state() not in ["tile", "snap"]:
@@ -550,8 +544,8 @@ func set_physics(state):
 	set_physics_process(state);
 	$FSM.set_process(state);
 	$FSM.set_physics_process(state);
-	for i in range(1, 5):
-		get_node("Shape"+str(i)).enabled = state;
+#	for i in range(1, 5):
+#		get_node("Shape"+str(i)).enabled = state;
 
 #doesn't affect layers or masks or physics
 func player_settings():
