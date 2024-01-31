@@ -94,6 +94,9 @@ func _ready():
 	#add img
 	sprites.add_child(img);
 	
+	#init pos_t
+	pos_t = GV.world_to_pos_t(position);
+	
 	initialize();
 
 func initialize():

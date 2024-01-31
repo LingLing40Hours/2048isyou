@@ -310,7 +310,7 @@ func generate_cell(pos_t:Vector2i) -> ScoreTile:
 	return tile;
 
 func build_tile(tile:ScoreTile, pos_t:Vector2i):
-	tile.pos_t = pos_t;
+	#tile.pos_t = pos_t;
 	tile.position = GV.pos_t_to_world(pos_t);
 	
 	#set power, ssign; this may set ssign of zero as -1
