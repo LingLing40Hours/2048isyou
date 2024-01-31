@@ -43,6 +43,8 @@ func inPhysicsProcess(_delta):
 			
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
+				actor.tile_push_count = 0;
+				collider.pusher = actor;
 				collider.slide(Vector2i(slide_dir));
 				game.current_level.current_snapshot.add_tile(actor);
 

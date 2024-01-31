@@ -256,7 +256,9 @@ func slide(dir:Vector2i) -> bool:
 	#find if at push limit
 	var at_push_limit:bool = false;
 	var push_count:int = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
-	if push_count == GV.abilities["tile_push_limit"]:
+	if push_count > GV.abilities["tile_push_limit"]: #exit early
+		return false;
+	elif push_count == GV.abilities["tile_push_limit"]:
 		at_push_limit = true;
 	
 	#determine whether to slide or merge or, if obstructed, idle
