@@ -28,8 +28,8 @@ const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for
 const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
-const LEVEL_COUNT:int = 13;
-var current_level_index:int = 12;
+const LEVEL_COUNT:int = 14;
+var current_level_index:int = 6;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -127,7 +127,7 @@ const SHIFT_RAY_LENGTH:float = RESOLUTION.x;
 const SHIFT_TIME:float = 6; #in frames
 const SHIFT_LERP_WEIGHT:float = 0.6;
 var SHIFT_LERP_WEIGHT_TOTAL:float = 0;
-var SHIFT_DISTANCE_TO_SPEED_MAX:float;
+var SHIFT_DISTANCE_TO_MAX_SPEED:float;
 
 var player_snap:bool = true; #move mode
 
@@ -193,7 +193,7 @@ func _ready():
 		for term in range(1, frame+1):
 			SHIFT_LERP_WEIGHT_TOTAL += term_sign * combinations_dp(frame, term) * pow(SHIFT_LERP_WEIGHT, term);
 			term_sign *= -1;
-	SHIFT_DISTANCE_TO_SPEED_MAX = 60 / SHIFT_LERP_WEIGHT_TOTAL;
+	SHIFT_DISTANCE_TO_MAX_SPEED = 60 / SHIFT_LERP_WEIGHT_TOTAL;
 	
 #	#init physics enabler size
 #	set_tile_push_limit(abilities["tile_push_limit"]);
