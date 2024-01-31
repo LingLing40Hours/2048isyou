@@ -688,14 +688,21 @@ Variants\
 		Large snake\
 		Wall of glitchy tiles\
 		Hostiles - hostile tiles\
-			cannot slide (else overpowered)\
-			if in empty space for too long, turns to wall\
-			if negative-valued, chase player to merge with it\
-			upon merge, player becomes non-player 0\
-			(if player absolute value is larger than hostile or hostile positive-valued, it cannot kill player)\
+			Rules\
+				cannot slide (else overpowered)\
+				if in empty space for too long, turns to wall\
+				if opposite-signed, chase player to merge with it\
+				if same-signed, (merge results in player?) also chase player to merge with it\
+				after merge, player becomes regular tile\
+				cannot push player\
+			if player absolute value is larger than hostile (or hostile positive-valued?), it cannot kill player\
 			but it can still obstruct/interfere player path\
 			multiple small abs valued hostiles will merge in order to kill player\
-			If stuck, create a 4096 tile and continue onward\
+			Behavior\
+				1. immediate merge\
+				2. trap (with comb/split) or comb and merge with player; calculate both\
+				account for comb-induced player value changes\
+			If stuck, player can create a 4096 tile to pass through walls\
 			if a change in lv affects computed path or endpoint (player) moves, redo pathfind\
 			increase tile push limit\
 				as power increases\
@@ -710,8 +717,9 @@ Variants\
 				merge if path doesn\'92t require splitting and resulting value matches player\
 				one of the hostiles waits\
 			any-valued hostile can kill player if player is 0\
-			regular hostiles die when becoming 0; player can use this to \'91kill\'92 them\
-			immortal hostiles retain hostility when becoming 0\
+			regular hostiles die when becoming 0 (cannot change sign); player can use this to \'91kill\'92 them\
+			if player is about to push opposite sign, same abs-value tile to hostile, run away\
+			immortal/invincible hostiles retain hostility when becoming 0\
 		Weak Hostile (is_weak = true)\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
