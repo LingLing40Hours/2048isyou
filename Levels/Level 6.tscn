@@ -69,7 +69,7 @@ position = Vector2(140, 1020)
 
 [node name="ScoreTile388" parent="ScoreTiles" instance=ExtResource("5_x480x")]
 position = Vector2(80, 1120)
-is_player = true
+color = 32
 power = 0
 
 [node name="ScoreTile4" parent="ScoreTiles" instance=ExtResource("5_x480x")]
