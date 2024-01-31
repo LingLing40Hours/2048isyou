@@ -1,0 +1,309 @@
+[gd_scene load_steps=5 format=3 uid="uid://ct5k4r14mb7c4"]
+
+[ext_resource type="Script" path="res://Levels/Level 13.gd" id="1_aja12"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_qja4o"]
+[ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="4_uqgiv"]
+[ext_resource type="PackedScene" uid="uid://bs5pnnv5k17ao" path="res://Objects/ScoreTile.tscn" id="5_4e3em"]
+
+[node name="Level" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_aja12")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
+
+[node name="LevelName" type="Label" parent="Background"]
+modulate = Color(1, 1, 1, 0)
+z_index = 20
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -11.5
+offset_right = 88.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_qja4o")
+theme_override_font_sizes/font_size = 50
+text = "Map"
+metadata/_edit_lock_ = true
+
+[node name="Walls" type="TileMap" parent="." groups=["wall"]]
+tile_set = ExtResource("4_uqgiv")
+format = 2
+
+[node name="ScoreTiles" type="Node2D" parent="."]
+
+[node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 340)
+
+[node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 380)
+power = 2
+
+[node name="ScoreTile3" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 380)
+power = 2
+
+[node name="ScoreTile4" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 340)
+power = 2
+
+[node name="ScoreTile5" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 420)
+power = 2
+
+[node name="ScoreTile6" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 380)
+
+[node name="ScoreTile7" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(580, 420)
+
+[node name="ScoreTile8" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 420)
+color = 32
+power = 0
+
+[node name="ScoreTile52" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 1100)
+color = 32
+power = 0
+
+[node name="ScoreTile9" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 420)
+
+[node name="ScoreTile10" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 420)
+
+[node name="ScoreTile11" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(780, 420)
+power = 0
+
+[node name="ScoreTile12" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(580, 460)
+
+[node name="ScoreTile13" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 460)
+
+[node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 460)
+
+[node name="ScoreTile15" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 460)
+
+[node name="ScoreTile16" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 460)
+power = 2
+
+[node name="ScoreTile17" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 500)
+
+[node name="ScoreTile18" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 500)
+
+[node name="ScoreTile19" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 500)
+power = 2
+
+[node name="ScoreTile20" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 500)
+power = 2
+
+[node name="ScoreTile21" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(620, 540)
+
+[node name="ScoreTile22" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(180, 660)
+is_hostile = true
+is_invincible = true
+power = 0
+
+[node name="ScoreTile31" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(380, 700)
+is_hostile = true
+is_invincible = true
+power = 0
+
+[node name="ScoreTile23" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(220, 660)
+
+[node name="ScoreTile36" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(220, 700)
+
+[node name="ScoreTile37" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(180, 700)
+
+[node name="ScoreTile38" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(180, 740)
+
+[node name="ScoreTile39" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(220, 740)
+
+[node name="ScoreTile40" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(340, 740)
+
+[node name="ScoreTile41" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(380, 740)
+
+[node name="ScoreTile24" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(260, 660)
+
+[node name="ScoreTile25" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(300, 660)
+power = 2
+
+[node name="ScoreTile26" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(340, 660)
+
+[node name="ScoreTile27" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(380, 660)
+
+[node name="ScoreTile28" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(260, 700)
+color = 32
+
+[node name="ScoreTile29" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(300, 700)
+
+[node name="ScoreTile32" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(260, 740)
+
+[node name="ScoreTile34" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(260, 780)
+
+[node name="ScoreTile44" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(340, 780)
+
+[node name="ScoreTile45" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(380, 780)
+
+[node name="ScoreTile46" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(300, 820)
+
+[node name="ScoreTile47" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(340, 820)
+
+[node name="ScoreTile48" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(380, 820)
+power = 2
+
+[node name="ScoreTile49" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 1100)
+
+[node name="ScoreTile56" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 1100)
+power = 2
+
+[node name="ScoreTile57" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 1100)
+power = -1
+
+[node name="ScoreTile58" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(780, 1100)
+power = 3
+
+[node name="ScoreTile59" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(820, 1100)
+power = 4
+
+[node name="ScoreTile60" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(860, 1100)
+power = 5
+
+[node name="ScoreTile61" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(900, 1100)
+power = 4
+
+[node name="ScoreTile50" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 1140)
+
+[node name="ScoreTile51" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(660, 1180)
+
+[node name="ScoreTile53" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 1180)
+
+[node name="ScoreTile66" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 1180)
+power = 3
+
+[node name="ScoreTile67" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(820, 1180)
+power = 3
+
+[node name="ScoreTile68" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(860, 1180)
+power = 3
+
+[node name="ScoreTile69" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(940, 1180)
+power = 4
+
+[node name="ScoreTile70" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(780, 1180)
+power = -1
+
+[node name="ScoreTile71" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(900, 1180)
+power = -1
+
+[node name="ScoreTile54" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(700, 1140)
+
+[node name="ScoreTile55" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(740, 1140)
+
+[node name="ScoreTile62" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(780, 1140)
+power = 2
+
+[node name="ScoreTile63" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(820, 1140)
+power = 3
+
+[node name="ScoreTile64" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(860, 1140)
+power = 3
+
+[node name="ScoreTile65" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(900, 1140)
+power = 4
+
+[node name="ScoreTile72" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(940, 1140)
+power = 5
+
+[node name="ScoreTile73" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(980, 1140)
+power = 5
+
+[node name="ScoreTile35" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(300, 780)
+power = -1
+
+[node name="ScoreTile33" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(300, 740)
+power = 2
+
+[node name="ScoreTile42" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(180, 780)
+power = 2
+
+[node name="ScoreTile43" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(220, 780)
+power = 2
+
+[node name="ScoreTile30" parent="ScoreTiles" instance=ExtResource("5_4e3em")]
+position = Vector2(340, 700)
+
+[node name="SavePoints" type="Node2D" parent="."]
+
+[node name="Baddies" type="Node2D" parent="."]
