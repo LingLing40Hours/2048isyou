@@ -87,7 +87,7 @@ func changeParentState():
 	return null;
 
 func exit():
-	var new_pos_t:Vector2i = actor.pos_t + actor.slide_dir;
+	var new_pos_t:Vector2i = GV.world_to_pos_t(actor.position);
 	if game.current_level.pooled:
 		if actor.splitted: #add to loaded_tiles
 			game.current_level.loaded_tiles[new_pos_t] = actor;

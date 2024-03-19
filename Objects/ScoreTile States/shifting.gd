@@ -89,7 +89,7 @@ func changeParentState():
 	return null;
 	
 func exit():
-	var new_pos_t:Vector2i = actor.pos_t + GV.world_to_xt(total_shift_distance) * actor.slide_dir;
+	var new_pos_t:Vector2i = GV.world_to_pos_t(actor.position);
 	if game.current_level.pooled:
 		game.current_level.move_tile(actor.pos_t, new_pos_t);
 	actor.pos_t = new_pos_t;

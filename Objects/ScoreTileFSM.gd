@@ -142,7 +142,6 @@ func initialize():
 func _input(event):
 	if event.is_action_pressed("debug"):
 		if color == GV.ColorId.GRAY:
-			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
 		
 		#test pathfinder

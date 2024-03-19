@@ -5,6 +5,7 @@ var next_state:Node2D;
 
 
 func enter():
+	print("pos_t: ", actor.pos_t)
 	next_state = null;
 	
 	actor.velocity = Vector2.ZERO;
