@@ -50,9 +50,14 @@ func _input(event):
 		
 		#update player(s) state
 		for player in current_level.players:
-			var state = player.get_state();
-			if state not in ["merging1", "merging2", "combining", "splitting"]:
-				var next_state = "snap" if GV.player_snap else "slide";
+			if player.get_state() not in ["merging1", "merging2", "combining", "splitting"]:
+				var next_state;
+				if GV.player_snap:
+					next_state = "snap";
+					#update player pos_t
+					player.pos_t = GV.world_to_pos_t(player.position);
+				else:
+					next_state = "slide";
 				player.change_state(next_state);
 	elif event.is_action_pressed("ui_cancel"):
 		game_paused = !game_paused;
