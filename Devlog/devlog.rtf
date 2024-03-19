@@ -663,6 +663,10 @@ physicsenabler +shaped (NAH)
 		remove physicsEnabler altogether? time it\
 		fix occasional incomplete slide bug (followed by move_tile() error)\
 	\kerning1\expnd0\expndtw0 remove visibleOnScreenNotifier? time it\
+	fix 0 getting popped when multiple 0s at end of line, even though push limit not exceeded\
+	fix shift alignment (after shift, a move is wasted to re-align player)\
+	slide mode not available in current map\
+		remove tile colliders in lv12, maybe also FSM\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -688,6 +692,30 @@ Variants\
 		Large snake\
 		Wall of glitchy tiles\
 		Hostiles - hostile tiles\
+			Roguelike\
+				turn-based puzzles\
+				player loses if stalemated/eaten\
+				a stalemated hostile can pass its turn\
+				player wins upon\
+					entering portal\
+					surviving n moves\
+					stalemating hostiles (NAH)\
+				hostiles can pass if not stalemated\
+				
+\f2 can player pass if not stalemated?
+\f1 \
+			Pathfinding implementation\
+				func is_player_trapped()\
+				calculate path when player enters range\
+				follow path until no more moves or next move invalid, then recalculate path\
+				after each hostile tick, check if player is dead/trapped\
+				prioritize blocking direction in which player last moved\
+					but don\'92t get juked by player oscillating back and forth\
+				Roguelike (minimax-optimal)\
+				Optimal (player static)\
+				Approx\
+					1h\
+						\
 			Rules\
 				cannot slide (else overpowered)\
 				if in empty space for too long, turns to wall\
