@@ -2,7 +2,7 @@
 
 ## Demo
 
-Demo video url here.
+See [this video](https://youtu.be/ZlPlCk1zcuc) for a quick demo.
 The next few sections outline my vision for the completed game. Not everything listed below has been fully implemented.
 
 ## Overview 
