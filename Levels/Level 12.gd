@@ -284,6 +284,9 @@ func generate_tiles():
 
 #inits a tile in constructed_tiles or updates tilemap accordingly
 func generate_cell(pos_t:Vector2i) -> ScoreTile:
+	if is_world_border(pos_t):
+		$Walls.call_deferred("set_cell", 0, pos_t, 0, Vector2i.ZERO);
+		return null;
 	#print("generate tile ", global_tile_pos);
 	var n_wall:float = wall_noise.get_noise_2d(pos_t.x, pos_t.y); #[-1, 1]
 	if absf(n_wall) < 0.009:
