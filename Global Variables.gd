@@ -29,7 +29,7 @@ const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
 const LEVEL_COUNT:int = 14;
-var current_level_index:int = 7;
+var current_level_index:int = 12;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
