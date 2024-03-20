@@ -298,30 +298,29 @@ func slide(dir:Vector2i) -> bool:
 					else:
 						collider.pusher = self;
 				
+				print("sliding pow ", power);
 				if collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
 					next_state = $FSM.states.sliding;
-				elif power in [-1, collider.power] and (power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge as 0 or equal power
+					print("receding player");
+				elif (power == -1 and collider.power != -1) or \
+				(collider.power == -1 and at_push_limit) or \
+				(power != -1 and power == collider.power and (power < GV.TILE_POW_MAX or ssign != collider.ssign)): #merge
 					partner = collider;
 					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
-				elif at_push_limit and collider.power == -1: #merge with 0
-					partner = collider;
-					collider.pusher = null;
-					collider.partner = self;
-					next_state = $FSM.states.merging1;
-				elif collider.slide(dir): #try to slide collider
+					print("merge");
+				elif not at_push_limit and \
+				(collider.power == -1 or (power != collider.power and power != -1)) and \
+				collider.slide(dir): #push
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
-				elif collider.power == -1: #merge with 0
-					partner = collider;
-					collider.pusher = null;
-					collider.partner = self;
-					next_state = $FSM.states.merging1;
-				else:
+					print("push");
+				else: #fail
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
-					#print("SLIDE FAILED, nan");
+					shape.enabled = false;
+					print("SLIDE FAILED, nan");
 					return false;
 			else: #collider not wall or scoretile, proceed with slide
 				next_state = $FSM.states.sliding;
