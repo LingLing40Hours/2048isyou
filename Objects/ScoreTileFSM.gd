@@ -311,11 +311,23 @@ func slide(dir:Vector2i) -> bool:
 					next_state = $FSM.states.merging1;
 					print("merge");
 				elif not at_push_limit and \
-				(collider.power == -1 or (power != collider.power and power != -1)) and \
-				collider.slide(dir): #push
-					collider.snap_slid = true;
-					next_state = $FSM.states.sliding;
-					print("push");
+				(collider.power == -1 or (power != collider.power and power != -1)): #try push
+					if collider.slide(dir): #push
+						collider.snap_slid = true;
+						next_state = $FSM.states.sliding;
+						print("push");
+					elif collider.power == -1: #push failed, merge possible
+						partner = collider;
+						collider.pusher = null;
+						collider.partner = self;
+						next_state = $FSM.states.merging1;
+						print("merge");
+					else: #fail
+						collider.pusher = null;
+						pusheds.clear(); #only necessary if self is pusher (pusher == null)
+						shape.enabled = false;
+						print("SLIDE FAILED, nan");
+						return false;
 				else: #fail
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
