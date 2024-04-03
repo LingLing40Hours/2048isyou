@@ -264,32 +264,36 @@ func slide(dir:Vector2i) -> bool:
 	var next_state:Node2D;
 	var xaligned = is_xaligned();
 	var yaligned = is_yaligned();
-	if color == GV.ColorId.GRAY: #ignore ray if not aligned with tile grid
-		if (dir.x and not xaligned) or (dir.y and not yaligned):
-			next_state = $FSM.states.sliding;
 	
-	if next_state == null:
+	if color == GV.ColorId.GRAY and ((dir.x and not xaligned) or (dir.y and not yaligned)): #ignore shape if not aligned with tile grid
+		next_state = $FSM.states.sliding;
+	else:
 		next_state = $FSM.states.sliding;
 		
-		#find shapecast in slide direction
+		#get collision info in slide direction
 		var shape = get_shape(dir);
 		shape.enabled = true;
 		shape.force_shapecast_update();
+		shape.enabled = false;
+		
+		if shape.get_collision_count() and (not xaligned or not yaligned): #must be aligned to push/merge
+			return false;
 		
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
 			
 			if collider.is_in_group("wall"): #obstructed
-				#print("SLIDE FAILED, wall");
 				return false;
 				
 			if collider is ScoreTile:
-				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
-					#print("SLIDE FAILED, alignment");
-					return false;
 				if collider.get_state() not in ["tile", "snap"]:
 					#print("SLIDE FAILED, collider state is ", collider.get_state());
 					return false;
+				if not collider.is_xaligned() or not collider.is_yaligned():
+					return false;
+				
+				#print("pow: ", power, "  push count: ", push_count);
+				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.abilities["tile_push_limit"] - push_count);
 				
 				#set collider pusher (required to call collider.slide())
 				if collider.color != GV.ColorId.GRAY:
@@ -297,46 +301,32 @@ func slide(dir:Vector2i) -> bool:
 						collider.pusher = pusher;
 					else:
 						collider.pusher = self;
-				
-				print("sliding pow ", power);
-				if collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
-					next_state = $FSM.states.sliding;
-					print("receding player");
-				elif (power == -1 and collider.power != -1) or \
-				(collider.power == -1 and at_push_limit) or \
-				(power != -1 and power == collider.power and (power < GV.TILE_POW_MAX or ssign != collider.ssign)): #merge
+
+				if zeros: #bubble (manually)
+					for zero in zeros:
+						zero.slide_dir = dir;
+						var fsm = zero.get_node("FSM");
+						fsm.curState.next_state = fsm.states.sliding;
+					print("bubble");
+				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
+					pass;
+				elif (power == -1 or collider.power == -1 or power == collider.power) and \
+				(power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge
 					partner = collider;
 					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
 					print("merge");
-				elif not at_push_limit and \
-				(collider.power == -1 or (power != collider.power and power != -1)): #try push
-					if collider.slide(dir): #push
-						collider.snap_slid = true;
-						next_state = $FSM.states.sliding;
-						print("push");
-					elif collider.power == -1: #push failed, merge possible
-						partner = collider;
-						collider.pusher = null;
-						collider.partner = self;
-						next_state = $FSM.states.merging1;
-						print("merge");
-					else: #fail
-						collider.pusher = null;
-						pusheds.clear(); #only necessary if self is pusher (pusher == null)
-						shape.enabled = false;
-						print("SLIDE FAILED, nan");
-						return false;
+				elif not at_push_limit and collider.slide(dir): #push
+					collider.snap_slid = true;
+					next_state = $FSM.states.sliding;
+					print("push");
 				else: #fail
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
-					shape.enabled = false;
 					print("SLIDE FAILED, nan");
 					return false;
-			else: #collider not wall or scoretile, proceed with slide
-				next_state = $FSM.states.sliding;
-		shape.enabled = false;
+			#else collider not wall or scoretile, proceed with slide
 	
 	#check pusher tile count
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
@@ -352,6 +342,42 @@ func slide(dir:Vector2i) -> bool:
 	$FSM.curState.next_state = next_state;
 	return true;
 
+#assume self is base pusher, aligned, and in tile/snap mode
+#returns the row of 0s if bubbling possible, else empty array
+func pushable_zeros(dir:Vector2i, tile_push_limit:int) -> Array[ScoreTile]:
+	var ans:Array[ScoreTile];
+	var zero_count:int = 0;
+	var curr_tile:ScoreTile = self;
+	
+	while zero_count <= tile_push_limit:
+		#find shapecast in slide direction
+		var shape = curr_tile.get_shape(dir);
+		shape.enabled = true;
+		shape.force_shapecast_update();
+		shape.enabled = false;
+		
+		var collid:bool = false;
+		for i in shape.get_collision_count():
+			var collider := shape.get_collider(i);
+			if zero_count == tile_push_limit and collider is ScoreTile:
+				return [];
+			if collider.is_in_group("wall"):
+				return [];
+			if collider is ScoreTile:
+				if collider.power == -1:
+					if collider.get_state() not in ["tile", "snap"]:
+						return [];
+					if not collider.is_xaligned() or not collider.is_yaligned():
+						return [];
+					ans.push_back(collider);
+					zero_count += 1;
+					curr_tile = collider;
+					collid = true;
+				else:
+					return [];
+		if not collid:
+			return ans;
+	return [];
 
 func split(dir:Vector2i) -> bool:
 	if power <= 0: #1, -1, 0 cannot split
