@@ -307,6 +307,8 @@ func slide(dir:Vector2i) -> bool:
 						zero.slide_dir = dir;
 						var fsm = zero.get_node("FSM");
 						fsm.curState.next_state = fsm.states.sliding;
+						zero.pusher = collider.pusher;
+						zero.snap_slid = true;
 					print("bubble");
 				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
 					pass;
