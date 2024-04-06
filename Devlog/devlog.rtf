@@ -292,9 +292,8 @@ New Layers?\
 29. Red wall, baddie aggro\
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 \
-Stuff IDs\
-	border		-1\
-\
+Stuff IDs (uint16_t)\
+5 tileID bits, 3 typeID bits, 8 backID bits\
 	-2^14		1\
 	-2^13		2\
 	\'85			\'85\
@@ -307,13 +306,19 @@ Stuff IDs\
 	2^13		30\
 	2^14		31\
 \
+	player		0\
+	invincible		32\
+	hostile		64\
+	regular		96\
+\
 	empty		0\
-	membrane	32\
-	black wall	64\
-	blue wall		96\
-	red wall		128\
-	savepoint	160\
-	goal			192\
+	border		256\
+	membrane	512\
+	black wall	768\
+	blue wall		1024\
+	red wall		1280\
+	savepoint	1536\
+	goal			1792\
 \
 Todo\
 	learn procedural animation (animation too restrictive)\
@@ -712,6 +717,15 @@ Variants\
 	Tile Run\
 		Large snake\
 		Wall of glitchy tiles\
+		Tentacle Monster\
+			looks identical to black wall, occasional tentacle movement reveals its nature\
+				if recent disturbance (change to adjacent tile), avg tentacle every 12s\
+				gradually reduce to avg tentacle every 120s\
+			tentacle monster used to be a player/hostile, then it got infected by tentacle virus\
+			lure hostiles to adjacent cell and make them stay there for 2s to kill hostile via tentacle monster\
+			if adjacent black tile (4096+/-4096-), fade in regular-tile-colored text to indicate merge possible (don\'92t round corners yet)\
+				kill tentacle monster by performing merge, resulting in regular tile\
+				tentacle monster value is same as tile for 4096, 8192, -4096, -8192, and 0 for +-16384\
 		Hostiles - hostile tiles\
 			Roguelike\
 				turn-based puzzles\
