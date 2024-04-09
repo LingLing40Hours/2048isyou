@@ -294,6 +294,9 @@ New Layers?\
 \cf0 \
 Stuff IDs (uint16_t)\
 5 tileID bits, 3 typeID bits, 8 backID bits\
+\
+TileId\
+	empty		0\
 	-2^14		1\
 	-2^13		2\
 	\'85			\'85\
@@ -306,19 +309,34 @@ Stuff IDs (uint16_t)\
 	2^13		30\
 	2^14		31\
 \
-	player		0\
-	invincible		32\
-	hostile		64\
-	regular		96\
+TypeId\
+	player		0 << 5\
+	invincible		1 << 5\
+	hostile		2 << 5\
+	regular		3 << 5\
+	void			4 << 5\
 \
-	empty		0\
-	border		256\
-	membrane	512\
-	black wall	768\
-	blue wall		1024\
-	red wall		1280\
-	savepoint	1536\
-	goal			1792\
+BackId\
+	empty			0 << 8\
+	border_round		1 << 8\
+	border_square	2 << 8\
+	membrane		3 << 8\
+	black wall		4 << 8\
+	blue wall			5 << 8\
+	red wall			6 << 8\
+	savepoint		7 << 8\
+	goal				8 << 8\
+\
+LayerId (tilemap)\
+	back	0\
+	tile		1\
+\
+ColorId (collision)\
+	all		4\
+	red		29\
+	blue		30\
+	black	31\
+	gray		32\
 \
 Todo\
 	learn procedural animation (animation too restrictive)\
