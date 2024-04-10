@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bs18ouhqw13ql"]
 
-[ext_resource type="Texture2D" uid="uid://qadvpep5kndn" path="res://Sprites/Baddie 2.png" id="1_obos3"]
+[ext_resource type="Texture2D" uid="uid://qadvpep5kndn" path="res://Sprites/Sprites/Baddie 2.png" id="1_obos3"]
 [ext_resource type="Script" path="res://Enemy/Baddie 2.gd" id="1_q6gw4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8pie5"]
