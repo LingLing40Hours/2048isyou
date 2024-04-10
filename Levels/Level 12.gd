@@ -2,6 +2,7 @@ extends Level
 
 signal initial_tiles_gennied;
 signal initial_tiles_readied;
+
 var initial_tiles_generated:bool; #shared
 var initial_tiles_ready:bool;
 var initial_tile_count:int; #main then chunker
@@ -36,7 +37,7 @@ var free_queue:Array; #main thread
 var loaded_tiles:Dictionary; #main thread;
 var constructed_tiles:Dictionary; #shared; main removes, CM adds
 
-#pos_t, StuffId
+#pos_t, CellId
 var loaded_cells:Dictionary;
 
 #bounding rect
@@ -61,9 +62,9 @@ func _ready():
 	#connect tracking cam
 	$TrackingCam.transition_started.connect(_on_camera_transition_started);
 	
-	#load player
+	#signals
 	initial_tiles_readied.connect(load_player);
-	
+
 	#randomize();
 	tile_noise.set_seed(2);
 	wall_noise.set_seed(2);
@@ -151,7 +152,7 @@ func _process(_delta):
 		constructed_mutex.unlock();
 		
 		if not tile.is_inside_tree():
-			scoretiles.add_child(tile);
+			add_child(tile);
 		else:
 			tile.initialize();
 		
@@ -182,18 +183,18 @@ func update_queues(old_pos_t_min:Vector2i, old_pos_t_max:Vector2i, new_pos_t_min
 	if overlap_min.x > overlap_max.x or overlap_min.y > overlap_max.y: #no overlap
 		enqueue_for_load(new_pos_t_min, new_pos_t_max);
 		enqueue_for_unload(old_pos_t_min, old_pos_t_max);
-	
-	#old rect
-	enqueue_for_unload(old_pos_t_min, Vector2i(old_pos_t_max.x, overlap_min.y - 1));
-	enqueue_for_unload(Vector2i(old_pos_t_min.x, overlap_min.y), Vector2i(overlap_min.x - 1, overlap_max.y));
-	enqueue_for_unload(Vector2i(overlap_max.x + 1, overlap_min.y), Vector2i(old_pos_t_max.x, overlap_max.y));
-	enqueue_for_unload(Vector2i(old_pos_t_min.x, overlap_max.y + 1), old_pos_t_max);
-	
-	#new rect
-	enqueue_for_load(new_pos_t_min, Vector2i(new_pos_t_max.x, overlap_min.y - 1));
-	enqueue_for_load(Vector2i(new_pos_t_min.x, overlap_min.y), Vector2i(overlap_min.x - 1, overlap_max.y));
-	enqueue_for_load(Vector2i(overlap_max.x + 1, overlap_min.y), Vector2i(new_pos_t_max.x, overlap_max.y));
-	enqueue_for_load(Vector2i(new_pos_t_min.x, overlap_max.y + 1), new_pos_t_max);
+	else:
+		#old rect
+		enqueue_for_unload(old_pos_t_min, Vector2i(old_pos_t_max.x, overlap_min.y - 1));
+		enqueue_for_unload(Vector2i(old_pos_t_min.x, overlap_min.y), Vector2i(overlap_min.x - 1, overlap_max.y));
+		enqueue_for_unload(Vector2i(overlap_max.x + 1, overlap_min.y), Vector2i(old_pos_t_max.x, overlap_max.y));
+		enqueue_for_unload(Vector2i(old_pos_t_min.x, overlap_max.y + 1), old_pos_t_max);
+		
+		#new rect
+		enqueue_for_load(new_pos_t_min, Vector2i(new_pos_t_max.x, overlap_min.y - 1));
+		enqueue_for_load(Vector2i(new_pos_t_min.x, overlap_min.y), Vector2i(overlap_min.x - 1, overlap_max.y));
+		enqueue_for_load(Vector2i(overlap_max.x + 1, overlap_min.y), Vector2i(new_pos_t_max.x, overlap_max.y));
+		enqueue_for_load(Vector2i(new_pos_t_min.x, overlap_max.y + 1), new_pos_t_max);
 	
 	#post
 	#semaphore.post();
@@ -340,7 +341,7 @@ func load_player():
 	player.power = -1;
 	player.ssign = 1;
 	#player.debug = true;
-	scoretiles.add_child(player);
+	add_child(player);
 	loaded_tiles[player_global_spawn_pos_t] = player;
 
 #called from CM
@@ -378,8 +379,8 @@ func pool_tile(tile:ScoreTile):
 	tile.pusheds.clear();
 	tile.pusher = null;
 	tile.partner = null;
-	tile.next_dirs.clear();
-	tile.next_moves.clear();
+	tile.premove_dirs.clear();
+	tile.premoves.clear();
 	if tile.color == GV.ColorId.GRAY:
 		tile.tile_settings();
 	tile.set_color(tile.color, false);
@@ -421,15 +422,6 @@ func print_loaded_tiles(pos_t_min:Vector2i, pos_t_max:Vector2i):
 				row += "\t0";
 		print(row);
 
-func contains_world_border(pos_c:Vector2i) -> bool:
-	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
-		if pos_c.y >= GV.BORDER_MIN_POS_C.y and pos_c.y <= GV.BORDER_MAX_POS_C.y:
-			return true;
-	if pos_c.y == GV.BORDER_MIN_POS_C.y or pos_c.y == GV.BORDER_MAX_POS_C.y:
-		if pos_c.x >= GV.BORDER_MIN_POS_C.x and pos_c.x <= GV.BORDER_MAX_POS_C.x:
-			return true;
-	return false;
-
 func is_world_border(pos_t:Vector2i) -> bool:
 	if pos_t.x == GV.BORDER_MIN_POS_T.x or pos_t.x == GV.BORDER_MAX_POS_T.x:
 		if pos_t.y >= GV.BORDER_MIN_POS_T.y and pos_t.y <= GV.BORDER_MAX_POS_T.y:
@@ -438,13 +430,15 @@ func is_world_border(pos_t:Vector2i) -> bool:
 		if pos_t.x >= GV.BORDER_MIN_POS_T.x and pos_t.x <= GV.BORDER_MAX_POS_T.x:
 			return true;
 	return false;
-
-func set_level_name():
-	if $ParallaxBackground/Background.has_node("LevelName"):
-		game.current_level_name = $ParallaxBackground/Background/LevelName;
-		game.current_level_name.modulate.a = 0;
-	else:
-		game.current_level_name = null;
+	
+func contains_world_border(pos_c:Vector2i) -> bool:
+	if pos_c.x == GV.BORDER_MIN_POS_C.x or pos_c.x == GV.BORDER_MAX_POS_C.x:
+		if pos_c.y >= GV.BORDER_MIN_POS_C.y and pos_c.y <= GV.BORDER_MAX_POS_C.y:
+			return true;
+	if pos_c.y == GV.BORDER_MIN_POS_C.y or pos_c.y == GV.BORDER_MAX_POS_C.y:
+		if pos_c.x >= GV.BORDER_MIN_POS_C.x and pos_c.x <= GV.BORDER_MAX_POS_C.x:
+			return true;
+	return false;
 
 func _exit_tree():
 	super._exit_tree();

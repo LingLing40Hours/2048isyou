@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://bv6q31jc36kmy"]
+
+[ext_resource type="Script" path="res://Levels/Level 14.gd" id="1_40yuo"]
+[ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_yeoy2"]
+[ext_resource type="PackedScene" uid="uid://ck3d8d70jxrvw" path="res://Camera/TrackingCam.tscn" id="3_kswx5"]
+[ext_resource type="TileSet" uid="uid://bfrmys3k41wsd" path="res://Tilesets/full_set.tres" id="4_34x2b"]
+[ext_resource type="Script" path="res://Camera/TrackingCamWorld.gd" id="4_hn5kj"]
+
+[node name="Level 14" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_40yuo")
+resolution_t = null
+min_pos = null
+max_pos = null
+player_pos_t = null
+
+[node name="LevelName" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+z_index = 10
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -325.0
+offset_top = -26.5
+offset_right = 325.0
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_yeoy2")
+theme_override_font_sizes/font_size = 50
+text = "Shallow Drive"
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Background" type="ColorRect" parent="ParallaxBackground"]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
+
+[node name="TrackingCam" parent="." instance=ExtResource("3_kswx5")]
+script = ExtResource("4_hn5kj")
+
+[node name="Cells" type="TileMap" parent="." groups=["wall"]]
+tile_set = ExtResource("4_34x2b")
+format = 2
+layer_0/name = "back"
+layer_1/name = "tile"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 1
+layer_1/tile_data = PackedInt32Array()

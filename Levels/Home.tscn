@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://cpvd85brlalf7"]
 
 [ext_resource type="Script" path="res://Levels/Home.gd" id="1_bmr3k"]
-[ext_resource type="Texture2D" uid="uid://cbyh4r4eh3h03" path="res://Sprites/Start 1.png" id="2_2vele"]
-[ext_resource type="Texture2D" uid="uid://5q3f5bti6xcw" path="res://Sprites/Start 3.png" id="3_2owvy"]
-[ext_resource type="Texture2D" uid="uid://di128fkqi754d" path="res://Sprites/Start 2.png" id="4_duckd"]
-[ext_resource type="BitMap" uid="uid://c3aqxnolm8do4" path="res://Sprites/Start Mask.png" id="5_xx14d"]
+[ext_resource type="Texture2D" uid="uid://cbyh4r4eh3h03" path="res://Sprites/Sprites/Start 1.png" id="2_2vele"]
+[ext_resource type="Texture2D" uid="uid://5q3f5bti6xcw" path="res://Sprites/Sprites/Start 3.png" id="3_2owvy"]
+[ext_resource type="Texture2D" uid="uid://di128fkqi754d" path="res://Sprites/Sprites/Start 2.png" id="4_duckd"]
+[ext_resource type="BitMap" uid="uid://c3aqxnolm8do4" path="res://Sprites/Sprites/Start Mask.png" id="5_xx14d"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_b4r7t"]
 device = -1

@@ -13,31 +13,30 @@
 process_mode = 1
 script = ExtResource("1_g4a75")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.666667, 0.666667, 0.666667, 1)
-metadata/_edit_lock_ = true
-
-[node name="LevelName" type="Label" parent="Background"]
+[node name="LevelName" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 200.0
+offset_top = 573.5
+offset_right = 1400.0
+offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_krwqn")
 theme_override_font_sizes/font_size = 50
 text = "Slow, Steady, Savepoints"
+metadata/_edit_lock_ = true
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]

@@ -17,26 +17,18 @@ size = Vector2(480, 40)
 process_mode = 1
 script = ExtResource("1_o5law")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.666667, 0.666667, 0.666667, 1)
-metadata/_edit_lock_ = true
-
-[node name="LevelName" type="Label" parent="Background"]
+[node name="LevelName" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 525.0
+offset_top = 573.5
+offset_right = 1075.0
+offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_me7to")
@@ -44,47 +36,54 @@ theme_override_font_sizes/font_size = 50
 text = "Hello World"
 metadata/_edit_lock_ = true
 
-[node name="Move" type="Label" parent="Background"]
+[node name="Move" type="Label" parent="."]
 visible = false
-layout_mode = 1
+z_index = -10
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 410.0
-offset_top = -210.0
+offset_top = 990.0
 offset_right = 880.0
-offset_bottom = -190.0
+offset_bottom = 1010.0
 grow_vertical = 0
 theme = ExtResource("2_me7to")
 text = "press WASD/arrow keys to move
 "
 metadata/_edit_lock_ = true
 
-[node name="Shift" type="Label" parent="Background"]
+[node name="Shift" type="Label" parent="."]
 visible = false
-layout_mode = 1
+z_index = -10
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 890.0
-offset_top = -907.0
+offset_top = 293.0
 offset_right = 1360.0
-offset_bottom = -887.0
+offset_bottom = 313.0
 grow_vertical = 0
 theme = ExtResource("2_me7to")
 text = "press Shift+movement to shift"
 metadata/_edit_lock_ = true
 
-[node name="Unlocker" type="Area2D" parent="Background/Shift"]
+[node name="Unlocker" type="Area2D" parent="Shift"]
 collision_layer = 0
 collision_mask = 4
 monitoring = false
 monitorable = false
 metadata/_edit_lock_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/Unlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Shift/Unlocker"]
 position = Vector2(230, 7)
 shape = SubResource("RectangleShape2D_adef3")
+metadata/_edit_lock_ = true
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
@@ -101,7 +100,7 @@ position = Vector2(300, 1100)
 
 [node name="ScoreTile15" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
 position = Vector2(60, 1120)
-is_player = true
+color = 32
 power = 0
 
 [node name="ScoreTile2" parent="ScoreTiles" instance=ExtResource("5_ecrt2")]
@@ -408,4 +407,4 @@ position = Vector2(200, 680)
 id = 3
 spawn_point = Vector2(200, 620)
 
-[connection signal="body_entered" from="Background/Shift/Unlocker" to="." method="_on_unlocker_body_entered"]
+[connection signal="body_entered" from="Shift/Unlocker" to="." method="_on_unlocker_body_entered"]

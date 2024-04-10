@@ -12,30 +12,29 @@
 process_mode = 1
 script = ExtResource("1_uhj3u")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.666667, 0.666667, 0.666667, 1)
-
-[node name="LevelName" type="Label" parent="Background"]
+[node name="LevelName" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 575.0
+offset_top = 573.5
+offset_right = 1025.0
+offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_smusb")
 theme_override_font_sizes/font_size = 50
 text = "Wall I Am"
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("3_cuvmq")
@@ -127,6 +126,9 @@ position = Vector2(1260, 860)
 [node name="ScoreTile75" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1340, 1060)
 
+[node name="ScoreTile77" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1300, 1100)
+
 [node name="ScoreTile56" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1300, 860)
 power = -1
@@ -153,6 +155,14 @@ power = -1
 
 [node name="ScoreTile73" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
 position = Vector2(1260, 1060)
+power = -1
+
+[node name="ScoreTile76" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1260, 1100)
+power = -1
+
+[node name="ScoreTile78" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
+position = Vector2(1340, 1100)
 power = -1
 
 [node name="ScoreTile74" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
@@ -227,17 +237,17 @@ position = Vector2(60, 180)
 power = -1
 
 [node name="ScoreTile31" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
-position = Vector2(1220, 540)
+position = Vector2(1220, 580)
 color = 32
 power = 11
 
 [node name="ScoreTile47" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
-position = Vector2(1180, 580)
+position = Vector2(1100, 660)
 color = 31
 power = 12
 
 [node name="ScoreTile48" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
-position = Vector2(1140, 620)
+position = Vector2(1140, 660)
 color = 31
 power = 12
 ssign = -1

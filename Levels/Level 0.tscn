@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://hoeoow4ned02"]
 
 [ext_resource type="Script" path="res://Levels/Level 0.gd" id="1_qtly1"]
-[ext_resource type="Texture2D" uid="uid://csyjsmyupt3u5" path="res://Sprites/2048_Is_You.png" id="2_fdd0n"]
+[ext_resource type="Texture2D" uid="uid://csyjsmyupt3u5" path="res://Sprites/Sprites/2048_Is_You.png" id="2_fdd0n"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="2_tkk78"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_y4jbc"]
 [ext_resource type="PackedScene" uid="uid://ccfedk60ha7ud" path="res://Enemy/Baddie 1.tscn" id="3_unses"]
@@ -22,19 +22,12 @@ size = Vector2(80, 119)
 process_mode = 1
 script = ExtResource("1_qtly1")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Move" type="Label" parent="."]
 z_index = -10
-offset_top = 35.0
-offset_right = 1600.0
-offset_bottom = 1235.0
-color = Color(0.345098, 0.345098, 0.345098, 1)
-
-[node name="Move" type="Label" parent="Background"]
-layout_mode = 1
 offset_left = 41.0
-offset_top = 43.0
+offset_top = 78.0
 offset_right = 121.0
-offset_bottom = 200.0
+offset_bottom = 235.0
 theme = ExtResource("2_y4jbc")
 text = "press
 WASD/
@@ -43,32 +36,32 @@ keys
 to
 move"
 
-[node name="Restart" type="Label" parent="Background"]
-layout_mode = 1
+[node name="Restart" type="Label" parent="."]
+z_index = -10
 offset_left = 134.0
-offset_top = 83.0
+offset_top = 118.0
 offset_right = 288.0
-offset_bottom = 160.0
+offset_bottom = 195.0
 theme = ExtResource("2_y4jbc")
 text = "press Cmd
 /Ctrl+R
 to resta-
 rt level"
 
-[node name="RestartUnlocker" type="Area2D" parent="Background/Restart"]
+[node name="RestartUnlocker" type="Area2D" parent="Restart"]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Restart/RestartUnlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Restart/RestartUnlocker"]
 position = Vector2(66.5, 37)
 shape = SubResource("RectangleShape2D_y1ucs")
 
-[node name="Shift" type="Label" parent="Background"]
-layout_mode = 1
+[node name="Shift" type="Label" parent="."]
+z_index = -10
 offset_left = 521.0
-offset_top = 83.0
+offset_top = 118.0
 offset_right = 601.0
-offset_bottom = 200.0
+offset_bottom = 235.0
 theme = ExtResource("2_y4jbc")
 text = "press
 Shift
@@ -77,20 +70,20 @@ ement
 to
 shift"
 
-[node name="ShiftUnlocker" type="Area2D" parent="Background/Shift"]
+[node name="ShiftUnlocker" type="Area2D" parent="Shift"]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Shift/ShiftUnlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Shift/ShiftUnlocker"]
 position = Vector2(39, 57.5)
 shape = SubResource("RectangleShape2D_xxfp6")
 
-[node name="Revert" type="Label" parent="Background"]
-layout_mode = 1
+[node name="Revert" type="Label" parent="."]
+z_index = -10
 offset_left = 297.0
-offset_top = 83.0
+offset_top = 118.0
 offset_right = 441.0
-offset_bottom = 200.0
+offset_bottom = 235.0
 theme = ExtResource("2_y4jbc")
 text = "    press
     Cmd/
@@ -99,12 +92,19 @@ text = "    press
 revert to
 savepoint"
 
-[node name="RevertUnlocker" type="Area2D" parent="Background/Revert"]
+[node name="RevertUnlocker" type="Area2D" parent="Revert"]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Background/Revert/RevertUnlocker"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Revert/RevertUnlocker"]
 polygon = PackedVector2Array(63, -2, 143, -2, 143, 117, -17, 117, -17, 77, 63, 77)
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_top = 35.0
+offset_right = 1600.0
+offset_bottom = 1235.0
+color = Color(0.345098, 0.345098, 0.345098, 1)
 
 [node name="Title" type="Sprite2D" parent="."]
 z_index = -9
@@ -126,7 +126,6 @@ power = 2
 
 [node name="ScoreTile14" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
 position = Vector2(332, 992)
-is_player = true
 power = 0
 
 [node name="ScoreTile3" parent="ScoreTiles" instance=ExtResource("4_35c3b")]
@@ -853,6 +852,6 @@ vy = 1.0
 [node name="Baddie 6" parent="Baddies" instance=ExtResource("9_w18hv")]
 position = Vector2(896, 992)
 
-[connection signal="body_entered" from="Background/Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
-[connection signal="body_entered" from="Background/Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
-[connection signal="body_entered" from="Background/Revert/RevertUnlocker" to="." method="_on_revert_unlocker_body_entered"]
+[connection signal="body_entered" from="Restart/RestartUnlocker" to="." method="_on_restart_unlocker_body_entered"]
+[connection signal="body_entered" from="Shift/ShiftUnlocker" to="." method="_on_shift_unlocker_body_entered"]
+[connection signal="body_entered" from="Revert/RevertUnlocker" to="." method="_on_revert_unlocker_body_entered"]

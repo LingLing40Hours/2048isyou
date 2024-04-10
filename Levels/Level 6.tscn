@@ -14,22 +14,16 @@ size = Vector2(200, 80)
 process_mode = 1
 script = ExtResource("1_t8gj1")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.364706, 0.521569, 0.462745, 1)
-
-[node name="Undo" type="Label" parent="Background"]
+[node name="Undo" type="Label" parent="."]
 visible = false
-layout_mode = 1
+z_index = -10
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 90.0
-offset_top = -225.0
+offset_top = 975.0
 offset_right = 255.0
-offset_bottom = -160.0
+offset_bottom = 1040.0
 grow_vertical = 0
 theme = ExtResource("2_dif2f")
 text = "press Cmd
@@ -37,17 +31,23 @@ text = "press Cmd
 to undo"
 metadata/_edit_lock_ = true
 
-[node name="Unlocker" type="Area2D" parent="Background/Undo"]
+[node name="Unlocker" type="Area2D" parent="Undo"]
 collision_layer = 0
 collision_mask = 4
 monitoring = false
 monitorable = false
 metadata/_edit_lock_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Undo/Unlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Undo/Unlocker"]
 position = Vector2(90, 25)
 shape = SubResource("RectangleShape2D_wykcq")
 metadata/_edit_lock_ = true
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.364706, 0.521569, 0.462745, 1)
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("1_yi3b3")
@@ -1486,4 +1486,4 @@ position = Vector2(1520, 80)
 
 [node name="Baddies" type="Node2D" parent="."]
 
-[connection signal="body_entered" from="Background/Undo/Unlocker" to="." method="_on_unlocker_body_entered"]
+[connection signal="body_entered" from="Undo/Unlocker" to="." method="_on_unlocker_body_entered"]

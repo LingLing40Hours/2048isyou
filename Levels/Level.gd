@@ -1,7 +1,6 @@
+#unlocker areas must not be collision layer1, else they interfere with tile movement
 class_name Level
 extends Node2D
-
-#unlocker areas must not be collision layer1, else they interfere with tile movement
 
 signal repeat_input(input_type);
 signal processed_action_input;
@@ -28,44 +27,110 @@ var player_snapshots:Array[PlayerSnapshot] = [];
 var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, baddie flags not reset
 
 #for input repeat delay
-var atimer:AccelTimer;
+var atimer:AccelTimer = AccelTimer.new();
 var last_input_type:int;
 var last_input_modifier:String = "slide";
 var last_input_move:String;
 var last_action_finished:bool = false;
 
 
-func _enter_tree():
-	#set resolution (before tracking cam _ready())
-	resolution = Vector2(resolution_t * GV.TILE_WIDTH);
-	half_resolution = resolution / 2;
-	
+func set_level_name():
+	if has_node("LevelName"):
+		game.current_level_name = $LevelName;
+		game.current_level_name.modulate.a = 0;
+	else:
+		game.current_level_name = null;
+
 func _ready():
+	print("level player saved: ", player_saved);
 	scoretiles = $ScoreTiles;
 	savepoints = $SavePoints;
 	baddies = $Baddies;
 	
-	atimer = AccelTimer.new();
 	set_level_name();
 	
 	if not GV.current_level_from_save: #first time entering lv
 		#print("set initial SVID to ", GV.savepoint_id);
 		GV.level_initial_savepoint_ids[GV.current_level_index] = GV.savepoint_id;
-	
-	#connect signals
+
+	#init input repeat delay stuff
 	atimer.timeout.connect(_on_atimer_timeout);
 	repeat_input.connect(_on_repeat_input);
-	
-	#add timer
 	add_child(atimer);
 
-func _on_atimer_timeout():
-	if last_input_type != GV.InputType.MOVE or last_action_finished:
-		atimer.repeat();
-		if last_input_type == GV.InputType.MOVE:
-			new_snapshot();
-		repeat_input.emit(last_input_type);
-		last_action_finished = false;
+func on_undo():
+	if GV.abilities["undo"] and player_snapshots:
+		var snapshot = player_snapshots.pop_back();
+		if snapshot.meaningful():
+			#print("USING CURR SNAPSHOT");
+			snapshot.reset_baddie_flags();
+			snapshot.checkout();
+		elif player_snapshots:
+			#print("USING PREV SNAPSHOT");
+			snapshot.remove();
+			snapshot = player_snapshots.pop_back();
+			snapshot.checkout();
+
+		#if undid past savepoint, remove the savepoint save, reset savepoint status
+		if GV.current_savepoint_ids and player_snapshots.size() < GV.current_snapshot_sizes.back():
+			var id = GV.current_savepoint_ids.pop_back();
+			for savepoint in savepoints.get_children():
+				if savepoint.id == id:
+					savepoint.saved = false;
+			GV.current_savepoint_saves.pop_back();
+			GV.current_snapshot_sizes.pop_back();
+			GV.current_savepoint_powers.pop_back();
+			GV.current_savepoint_ssigns.pop_back();
+			
+			#update last savepoint id
+			if GV.current_savepoint_ids:
+				GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoint_ids.back();
+			else:
+				GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
+
+func on_copy():
+	if GV.abilities["copy"]:
+		#declare and init level array
+		var level_array = [];
+		for row_itr in resolution_t.y:
+			var row = [];
+			row.resize(resolution_t.x);
+			row.fill(GV.StuffId.EMPTY);
+			level_array.push_back(row);
+		
+		#store tilemap stuff ids
+		for row_itr in resolution_t.y:
+			for col_itr in resolution_t.x:
+				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
+				if id == 0:
+					level_array[row_itr][col_itr] = GV.StuffId.BORDER;
+				else:
+					level_array[row_itr][col_itr] = id * GV.StuffId.MEMBRANE;
+		
+		#store savepoint stuff ids (there's no overlap with tilemap)
+		for savepoint in savepoints.get_children():
+			if savepoint is Goal:
+				for node in savepoint.tile_centers.get_children():
+					var pos_t = GV.world_to_pos_t(node.global_position);
+					#bound check
+					if pos_t.x >= 0 and pos_t.x < resolution_t.x and pos_t.y >= 0 and pos_t.y < resolution_t.y:
+						level_array[pos_t.y][pos_t.x] = GV.StuffId.GOAL;
+			else:
+				var pos_t = GV.world_to_pos_t(savepoint.position);
+				level_array[pos_t.y][pos_t.x] = GV.StuffId.SAVEPOINT;
+		
+		#store tile stuff ids (add value id as offset)
+		for tile in scoretiles.get_children():
+			var pos_t = GV.world_to_pos_t(tile.position);
+			var id = GV.tile_val_to_id(tile.power, tile.ssign);
+			if id == GV.StuffId.ZERO:
+				id = GV.StuffId.EMPTY; #reduces astar branching
+			level_array[pos_t.y][pos_t.x] += id;
+		
+		#add to clipboard
+		DisplayServer.clipboard_set(str(level_array));
+		
+		return level_array;
 
 #repeat if input held down
 func _on_player_enter_snap(prev_state):
@@ -80,21 +145,13 @@ func _on_player_enter_snap(prev_state):
 		repeat_input.emit(last_input_type);
 		last_action_finished = false;
 
-func _on_repeat_input(input_type:int):
-	if input_type != GV.InputType.UNDO:
-		return;
-	
-	on_undo();
-	if not player_snapshots:
-		atimer.stop();
-
 #updates last_input_mod/move, starts input repeat delay, then emits signal
 func process_action_input(event) -> bool:
 	var nothing_changed:bool = false;
 	var modifier_changed:bool = false;
 	
 	#last input modifier
-	if event.is_action_pressed("cc"):
+	if event.is_action_pressed("cc"): #Cmd/Ctrl
 		last_input_modifier = "split";
 		modifier_changed = true;
 	elif event.is_action_pressed("shift"):
@@ -160,12 +217,6 @@ func _input(event):
 			on_revert();
 			atimer.stop();
 
-
-func save():
-	var save_dict = {
-		
-	};
-
 func on_home():
 	if GV.abilities["home"]:
 		GV.changing_level = true;
@@ -188,55 +239,25 @@ func on_restart():
 		GV.player_ssign = GV.level_initial_player_ssigns[GV.current_level_index];
 		game.change_level_faded(GV.current_level_index);
 
-func new_snapshot():
-	#print("NEW SNAPSHOT");
-	remove_last_snapshot_if_not_meaningful();
-	current_snapshot = PlayerSnapshot.new(self);
-	player_snapshots.push_back(current_snapshot);
-
-func on_undo():
-	if GV.abilities["undo"] and player_snapshots:
-		var snapshot = player_snapshots.pop_back();
-		if snapshot.meaningful():
-			#print("USING CURR SNAPSHOT");
-			snapshot.reset_baddie_flags();
-			snapshot.checkout();
-		elif player_snapshots:
-			#print("USING PREV SNAPSHOT");
-			snapshot.remove();
-			snapshot = player_snapshots.pop_back();
-			snapshot.checkout();
-		
-		#if undid past savepoint, remove the savepoint save, reset savepoint status
-		if GV.current_savepoint_ids and player_snapshots.size() < GV.current_snapshot_sizes.back():
-			var id = GV.current_savepoint_ids.pop_back();
-			for savepoint in savepoints.get_children():
-				if savepoint.id == id:
-					savepoint.saved = false;
-			GV.current_savepoint_saves.pop_back();
-			GV.current_snapshot_sizes.pop_back();
-			GV.current_savepoint_powers.pop_back();
-			GV.current_savepoint_ssigns.pop_back();
-			
-			#update last savepoint id
-			if GV.current_savepoint_ids:
-				GV.level_last_savepoint_ids[GV.current_level_index] = GV.current_savepoint_ids.back();
-			else:
-				GV.level_last_savepoint_ids[GV.current_level_index] = GV.level_initial_savepoint_ids[GV.current_level_index];
-
 func on_revert():
 	if GV.abilities["revert"]: #if savepoint save exists load it else do a discount restart
 		GV.changing_level = true;
 		GV.reverting = true;
 		game.change_level_faded(GV.current_level_index);
-			
 
-func set_level_name():
-	if $Background.has_node("LevelName"):
-		game.current_level_name = $"Background/LevelName";
-		game.current_level_name.modulate.a = 0;
-	else:
-		game.current_level_name = null;
+func _on_repeat_input(input_type:int):
+	if input_type != GV.InputType.UNDO:
+		return;
+	
+	on_undo();
+	if not player_snapshots:
+		atimer.stop();
+
+func new_snapshot():
+	#print("NEW SNAPSHOT");
+	remove_last_snapshot_if_not_meaningful();
+	current_snapshot = PlayerSnapshot.new(self);
+	player_snapshots.push_back(current_snapshot);
 
 func remove_last_snapshot_if_not_meaningful():
 	if is_instance_valid(current_snapshot):
@@ -247,50 +268,10 @@ func remove_last_snapshot_if_not_meaningful():
 			current_snapshot = null;
 			#print("OVERWRITE LAST SNAPSHOT");
 
-func on_copy():
-	if GV.abilities["copy"]:
-		#declare and init level array
-		var level_array = [];
-		for row_itr in resolution_t.y:
-			var row = [];
-			row.resize(resolution_t.x);
-			row.fill(GV.StuffId.EMPTY);
-			level_array.push_back(row);
-		
-		#store tilemap stuff ids
-		for row_itr in resolution_t.y:
-			for col_itr in resolution_t.x:
-				var id = $Walls.get_cell_source_id(0, Vector2i(col_itr, row_itr));
-				if id == 0:
-					level_array[row_itr][col_itr] = GV.StuffId.BORDER;
-				else:
-					level_array[row_itr][col_itr] = id * GV.StuffId.MEMBRANE;
-		
-		#store savepoint stuff ids (there's no overlap with tilemap)
-		for savepoint in savepoints.get_children():
-			if savepoint is Goal:
-				for node in savepoint.tile_centers.get_children():
-					var pos_t = GV.world_to_pos_t(node.global_position);
-					#bound check
-					if pos_t.x >= 0 and pos_t.x < resolution_t.x and pos_t.y >= 0 and pos_t.y < resolution_t.y:
-						level_array[pos_t.y][pos_t.x] = GV.StuffId.GOAL;
-			else:
-				var pos_t = GV.world_to_pos_t(savepoint.position);
-				level_array[pos_t.y][pos_t.x] = GV.StuffId.SAVEPOINT;
-		
-		#store tile stuff ids (add value id as offset)
-		for tile in scoretiles.get_children():
-			var pos_t = GV.world_to_pos_t(tile.position);
-			var id = GV.tile_val_to_id(tile.power, tile.ssign);
-			if id == GV.StuffId.ZERO:
-				id = GV.StuffId.EMPTY; #reduces astar branching
-			level_array[pos_t.y][pos_t.x] += id;
-		
-		#add to clipboard
-		DisplayServer.clipboard_set(str(level_array));
-		
-		return level_array;
-
-func _exit_tree():
-	#print_orphan_nodes();
-	pass;
+func _on_atimer_timeout():
+	if last_input_type != GV.InputType.MOVE or last_action_finished:
+		atimer.repeat();
+		if last_input_type == GV.InputType.MOVE:
+			new_snapshot();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
