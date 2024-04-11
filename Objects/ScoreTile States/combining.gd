@@ -15,16 +15,16 @@ func enter():
 	
 	#inherit partner's premoves
 	if actor.color == GV.ColorId.GRAY:
-		actor.next_moves = actor.partner.next_moves;
-		actor.next_dirs = actor.partner.next_dirs;
+		actor.premoves = actor.partner.premoves;
+		actor.premove_dirs = actor.partner.premove_dirs;
 
 func inPhysicsProcess(_delta):
 	frame_count += 1;
 
-func handleInput(_event):
-	if actor.color == GV.ColorId.GRAY:
-		await game.current_level.processed_action_input;
-		actor.get_next_action();
+func handleInput(event):
+	var accelerate:bool = (game.current_level.last_input_move == "");
+	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
+		actor.add_premove(false, accelerate);
 
 func changeParentState():
 	if frame_count == GV.COMBINING_FRAME_COUNT:

@@ -15,7 +15,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 @export var ssign:int = 1;
 @export var debug:bool = false;
 
-#ref locations in snapshot arrays, must be copied in custom duplicate
+#ref locations in snapshot arrays, must be copied in a custom duplicate function
 var snapshot_locations:Array[Vector2i] = [];
 var snapshot_locations_new:Array[Vector2i] = [];
 
@@ -33,8 +33,8 @@ var physics_enabler_count:int; #turn physics off when this reaches 0
 
 var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
-var next_dirs:Array[Vector2i] = []; #for premoving
-var next_moves:Array[String] = []; #slide, split, shift
+var premove_dirs:Array[Vector2i] = [];
+var premoves:Array[String] = []; #slide, split, shift
 #var func_slide:Callable = Callable(self, "slide");
 #var func_split:Callable = Callable(self, "split");
 #var func_shift:Callable = Callable(self, "shift");
@@ -154,8 +154,8 @@ func _input(event):
 #			print(path);
 #			print("pos_t: ", pos_t);
 #			for action in path:
-#				next_dirs.push_back(Vector2i(action.x, action.y));
-#				next_moves.push_back("split" if action.z else "slide");
+#				premove_dirs.push_back(Vector2i(action.x, action.y));
+#				premoves.push_back("split" if action.z else "slide");
 
 func _physics_process(_delta):
 	debug_frame();
@@ -169,13 +169,13 @@ func debug_frame():
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
 		#print("pusher: ", pusher);
-		#print(next_dirs);
+		#print(premove_dirs);
 		#print("physics on: ", physics_on);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile, _is_invincible):
 	assert(score_pow <= GV.TILE_POW_MAX);
-	var texture_path:String = "res://Sprites/2_";
+	var texture_path:String = "res://Sprites/Sprites/2_";
 	
 	#power
 	if score_pow == -1:
@@ -207,32 +207,21 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 	else:
 		return null;
 
-#if input, pushes to next_moves and next_dirs
-func get_next_action():
-	#check if movement held
-	if game.current_level.last_input_move:
-		#get event name
-		var prefix = game.current_level.last_input_modifier;
-		if prefix == "slide":
-			prefix = "move";
-		var event_name = prefix + "_" + game.current_level.last_input_move;
-		
-		#check if just pressed
-		if Input.is_action_just_pressed(event_name):
-			#print("PREMOVE ADDED");
-			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
-			next_moves.push_back(game.current_level.last_input_modifier);
+#push to premoves and premove_dirs
+func add_premove(is_repeat:bool, accelerate:bool):
+	premove_dirs.push_back(GV.directions[game.current_level.last_input_move]);
+	premoves.push_back(game.current_level.last_input_modifier);
+	if premoves.size() == 1 and not is_repeat: #start accel timer
+		if accelerate:
+			game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);	
+		else:
+			game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_FMIN, 0, 0, GV.MOVE_REPEAT_DELAY_FMIN);
 
-#assume level.last_input is valid
 func _on_repeat_input(input_type:int):
-	#don't repeat input if undo or there are unconsumed premoves
-	if input_type != GV.InputType.MOVE or get_state() != "snap" or next_moves:
+	if input_type != GV.InputType.MOVE or premoves or get_state() in ["merging1", "merging2"]:
 		return;
-	
-	#var action:Callable = get("func_" + game.current_level.last_input_modifier);
-	var action:Callable = Callable(self, game.current_level.last_input_modifier);
-	action.call(GV.directions[game.current_level.last_input_move]);
-		
+	assert(game.current_level.last_input_move);
+	add_premove(true, true);
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
@@ -309,7 +298,7 @@ func slide(dir:Vector2i) -> bool:
 						fsm.curState.next_state = fsm.states.sliding;
 						zero.pusher = collider.pusher;
 						zero.snap_slid = true;
-					print("bubble");
+					#print("bubble");
 				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
 					pass;
 				elif (power == -1 or collider.power == -1 or power == collider.power) and \
@@ -318,7 +307,7 @@ func slide(dir:Vector2i) -> bool:
 					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
-					print("merge");
+					#print("merge");
 				elif not at_push_limit and collider.slide(dir): #push
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
@@ -500,6 +489,16 @@ func levelup():
 	
 	$FSM.curState.next_state = $FSM.states.combining;
 
+func try_premove():
+	assert($FSM.curState == $FSM.states.snap);
+	if premoves and $FSM.curState.next_state == null:
+		game.current_level.new_snapshot();
+		var action = Callable(self, premoves.pop_front());
+		var moved = action.call(premove_dirs.pop_front());
+		
+		if not moved: #move failed, clear all premoves
+			premoves.clear();
+			premove_dirs.clear();
 	
 func get_state() -> String:
 	return $FSM.curState.name;

@@ -711,6 +711,23 @@ physicsenabler +shaped (NAH)
 	add \'93slide mode not available in current map\'94 msg to open world\
 		remove tile colliders in lv12, maybe also FSM\
 	In Pathfinder.cpp, replace within_bound() check at each iteration with dist_to_border variable\
+	
+\f0\b if undo when there are unfinished premoves, clear premoves and return\
+	fix undoing multiple moves if they were done in quick succession (current snapshot getting overwritten)
+\f1\b0 \
+	
+\f0\b only create new snapshot for valid moves\
+
+\f1\b0 	
+\f0\b fix repeated merge too quick
+\f1\b0 \
+	fix no repeat after releasing Cmd\
+	fix random stopping during repeat\
+	fix input repeating even though move released\
+	fix re-accelerating when changing direction\
+	
+\f0\b what does atimer frame_count represent?
+\f1\b0 \
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \

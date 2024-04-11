@@ -234,7 +234,7 @@ func _physics_process(_delta):
 
 '''
 	if actor.next_move.is_null(): #check for premove
-		actor.get_next_action();
+		actor.add_premove();
 		if actor.next_move.is_valid():
 			duang_speed *= 6;
 			fade_speed *= 6;
@@ -537,8 +537,8 @@ func is_snapshot_valid(snapshot):
 '''
 
 '''
-#if input, pushes to next_moves and next_dirs
-func get_next_action():
+#if input, pushes to premoves and premove_dirs
+func add_premove():
 	var event_name:String = "";
 	var action:Callable;
 	var s_dir:String;
@@ -569,8 +569,8 @@ func get_next_action():
 		#check if movement just pressed
 		event_name += s_dir;
 		if Input.is_action_just_pressed(event_name):
-			next_dirs.push_back(GV.directions[s_dir]);
-			next_moves.push_back(action);
+			premove_dirs.push_back(GV.directions[s_dir]);
+			premoves.push_back(action);
 '''
 
 ''' wall grains
@@ -650,8 +650,8 @@ func get_next_action():
 ''' in slide(), after get_shape()
 		#if splitted, tile was newly added, shapecast hasn't updated
 		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
-		#if next_moves nonempty, premoved, last shapecast update may have caught a tile corner
-		if splitted or (pusher != null and pusher.splitted) or next_moves:
+		#if premoves nonempty, premoved, last shapecast update may have caught a tile corner
+		if splitted or (pusher != null and pusher.splitted) or premoves:
 			shape.force_shapecast_update();
 '''
 

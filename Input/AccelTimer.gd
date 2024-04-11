@@ -1,3 +1,5 @@
+#call start(initial frame count, velocity, acceleration, minimum frame count) to start timer
+#after timeout, call repeat() to repeat with reduced frame count
 class_name AccelTimer
 extends Node
 
@@ -16,8 +18,6 @@ func _physics_process(_delta):
 		frames_left -= 1;
 		if not frames_left:
 			timeout.emit();
-			if not is_stopped():
-				repeat();
 
 func start(t, dt, ddt, min_t):
 	repeat_count = 1;
@@ -40,4 +40,5 @@ func repeat():
 	repeat_count += 1;
 	frames_total = maxi(min_frames_total, frames_total + d_frames_total);
 	frames_left = frames_total;
-	d_frames_total += dd_frames_total;
+	if frames_total != min_frames_total:
+		d_frames_total += dd_frames_total; #accelerate

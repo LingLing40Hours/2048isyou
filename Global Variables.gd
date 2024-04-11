@@ -21,15 +21,15 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const BORDER_DISTANCE_T:int = 128; #2000000000;
+const BORDER_DISTANCE_T:int = 12; #128; #2000000000;
 const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
 const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
-const LEVEL_COUNT:int = 14;
-var current_level_index:int = 12;
+const LEVEL_COUNT:int = 15;
+var current_level_index:int = 7;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -37,7 +37,7 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 #var through_goal:bool = false; #changing level via goal
 
 #procgen-related stuff
-const TILE_POW_MAX:int = 12;
+const TILE_POW_MAX:int = 14;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
 const TILE_LOAD_BUFFER:float = 8 * TILE_WIDTH;
@@ -89,20 +89,25 @@ const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
 const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies before premove
 const TILE_SLIDE_SPEED:float = 320;
-const COMBINING_MERGE_RATIO:float = 0; #1/2.7;
+const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const INPUT_REPEAT_DELAY_F0:int = 16; #when movement held down, delay (frames) between action calls
-const INPUT_REPEAT_DELAY_DF:int = -1; #every time input repeats, delay time decreases
-const INPUT_REPEAT_DELAY_DDF:int = -1;
-const INPUT_REPEAT_DELAY_FMIN:int = 10;
+const COMBINING_FRAME_COUNT:int = 6; #9; #1;
+const SPLITTING_FRAME_COUNT:int = 6; #9; #1;
+
+const MOVE_REPEAT_DELAY_F0:int = 16;
+const MOVE_REPEAT_DELAY_DF:int = -1;
+const MOVE_REPEAT_DELAY_DDF:int = -1;
+const MOVE_REPEAT_DELAY_FMIN:int = 10;
+
+const UNDO_REPEAT_DELAY_F0:int = 20;
+const UNDO_REPEAT_DELAY_DF:int = -1;
+const UNDO_REPEAT_DELAY_DDF:int = -1;
+const UNDO_REPEAT_DELAY_FMIN:int = 14;
 
 enum InputType {
 	MOVE=0,
 	UNDO
 }
-
-const COMBINING_FRAME_COUNT:int = 1; #6; #9;
-const SPLITTING_FRAME_COUNT:int = 1; #6; #9;
 
 enum ScaleAnim {
 	DUANG=0,
@@ -151,27 +156,42 @@ var abilities = {
 	"tile_push_limit" : 3,
 };
 
-#stuff ids
-enum StuffId {
-	BORDER = -1,
-	ZERO = 16, #pow offset
-	NEG_ONE = 1,
-	POS_ONE = 31,
+enum TileId { #5 bits
 	EMPTY = 0,
-	MEMBRANE = 32,
-	BLACK_WALL = 64,
-	BLUE_WALL = 96,
-	RED_WALL = 128,
-	SAVEPOINT = 160,
-	GOAL = 192,
+	ZERO = 16,
 };
 
+enum TypeId { #3 bits
+	PLAYER = 0,
+	INVINCIBLE,
+	HOSTILE,
+	REGULAR,
+	VOID,
+}
+
+enum BackId { #8 bits
+	EMPTY = 0,
+	BORDER_ROUND,
+	BORDER_SQUARE,
+	MEMBRANE,
+	BLACK_WALL,
+	BLUE_WALL,
+	RED_WALL,
+	SAVEPOINT,
+	GOAL,
+}
+
+enum LayerId {
+	BACK,
+	TILE
+}
+
 enum ColorId {
-	GRAY = 32,
-	BLACK = 31,
-	BLUE = 30,
-	RED = 29,
 	ALL = 4,
+	RED = 29,
+	BLUE = 30,
+	BLACK = 31,
+	GRAY = 32,
 };
 
 #const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
@@ -273,20 +293,14 @@ func xt_to_world(x:int) -> float:
 #doesn't do ZERO->EMPTY optimization
 func tile_val_to_id(power:int, ssign:int) -> int:
 	if power == -1: #zero
-		return StuffId.ZERO;
-	if power == 0: #plus/minus one
-		return StuffId.POS_ONE if ssign == 1 else StuffId.NEG_ONE;
-	return power * ssign + StuffId.ZERO;
+		return TileId.ZERO;
+	return (power + 1) * ssign + TileId.ZERO;
 
 func id_to_tile_val(id:int):
-	if id == StuffId.ZERO:
+	if id == TileId.ZERO:
 		return [-1, 1];
-	if id == StuffId.NEG_ONE:
-		return [0, -1];
-	if id == StuffId.POS_ONE:
-		return [0, 1];
-	var signed_pow:int = id - StuffId.ZERO;
-	return [absi(signed_pow), signi(signed_pow)];
+	var signed_incremented_pow:int = id - TileId.ZERO;
+	return [absi(signed_incremented_pow) - 1, signi(signed_incremented_pow)];
 
 func is_approx_equal(a:float, b:float, tolerance:float) -> bool:
 	if absf(a - b) <= tolerance:

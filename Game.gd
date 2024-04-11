@@ -106,10 +106,11 @@ func add_level(n):
 	current_level = level;
 	
 	#remove and free saved player
-	var player_saved = current_level.player_saved;
-	if is_instance_valid(player_saved):
-		current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
-		player_saved.free();
+	if current_level is Level:
+		var player_saved = current_level.player_saved;
+		if is_instance_valid(player_saved):
+			current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
+			player_saved.free();
 	
 	#migrate old snapshot locations
 	if GV.reverting and GV.current_level_from_save:
@@ -143,7 +144,7 @@ func change_level(n):
 	
 	if GV.reverting: #save player snapshots
 		GV.temp_player_snapshots = current_level.player_snapshots.duplicate();
-	else: #clear saves for old level
+	elif current_level is Level: #clear saves for old level
 		current_level.player_snapshots.clear();
 		GV.current_savepoint_ids.clear();
 		GV.current_savepoint_saves.clear();
