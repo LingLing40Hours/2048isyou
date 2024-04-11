@@ -37,18 +37,9 @@ func _ready():
 	#find position limits
 	min_pos = Vector2(level.min_pos.x + level.resolution.x/2, level.min_pos.y + level.resolution.y/2);
 	max_pos = Vector2(level.max_pos.x - level.resolution.x/2, level.max_pos.y - level.resolution.y/2);
-	
-	#set initial position
-	if level.players:
-		track_pos = avg_player_pos();
-		position = track_pos.clamp(min_pos, max_pos);
 
-#returns (0, 0) if no players present
 func avg_player_pos() -> Vector2:
-	var ans = Vector2.ZERO;
-	for player in level.players:
-		ans += player.global_position;
-	return ans / level.players.size();
+	return Vector2.ZERO; #override in child class
 
 func _process(_delta):
 	if active:
