@@ -158,8 +158,8 @@ func update_last_input(event) -> bool:
 		modifier_pressed = true;
 	elif event.is_action_released("cc") or event.is_action_released("shift"):
 		last_input_modifier = "slide";
-		print("RELEASE")
 		#if move is still held, wait for timeout before starting move
+		print("RELEASE")
 		print("last input move: ", last_input_move)
 		if last_input_move:
 			last_input_type = GV.InputType.MOVE;
@@ -207,7 +207,8 @@ func _on_player_enter_snap(prev_state):
 		last_action_finished = false;
 
 func _on_atimer_timeout():
-	#print("last action finished: ", last_action_finished)
+	print("TIMEOUT")
+	print("last action finished: ", last_action_finished)
 	if last_input_type != GV.InputType.MOVE or last_action_finished:
 		#print("timeout repeat")
 		atimer.repeat();

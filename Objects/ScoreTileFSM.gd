@@ -217,6 +217,18 @@ func add_premove(is_repeat:bool, accelerate:bool):
 		else:
 			game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_FMIN, 0, 0, GV.MOVE_REPEAT_DELAY_FMIN);
 
+func try_premove():
+	assert($FSM.curState == $FSM.states.snap);
+	if premoves and $FSM.curState.next_state == null:
+		game.current_level.new_snapshot();
+		var action = Callable(self, premoves.pop_front());
+		var moved = action.call(premove_dirs.pop_front());
+		
+		if not moved: #move failed, clear all premoves
+			premoves.clear();
+			premove_dirs.clear();
+			game.current_level.last_action_finished = true;
+
 func _on_repeat_input(input_type:int):
 	if input_type != GV.InputType.MOVE or premoves or get_state() in ["merging1", "merging2"]:
 		return;
@@ -488,17 +500,6 @@ func levelup():
 		enable_physics_immediately();
 	
 	$FSM.curState.next_state = $FSM.states.combining;
-
-func try_premove():
-	assert($FSM.curState == $FSM.states.snap);
-	if premoves and $FSM.curState.next_state == null:
-		game.current_level.new_snapshot();
-		var action = Callable(self, premoves.pop_front());
-		var moved = action.call(premove_dirs.pop_front());
-		
-		if not moved: #move failed, clear all premoves
-			premoves.clear();
-			premove_dirs.clear();
 	
 func get_state() -> String:
 	return $FSM.curState.name;
