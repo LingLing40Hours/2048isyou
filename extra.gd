@@ -660,3 +660,94 @@ func add_premove():
 	$PhysicsEnabler/CollisionShape2D.shape.set_size($PhysicsEnabler/CollisionShape2D.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
 	$PhysicsEnabler2.shape.set_size($PhysicsEnabler2.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
 '''
+
+'''
+func update_last_input(event) -> bool:
+	var modifier_pressed:bool = false;
+	var move_changed:bool = false;
+	
+	#last input modifier
+	if event.is_action_pressed("cc"): #Cmd/Ctrl
+		last_input_modifier = "split";
+		modifier_pressed = true;
+	elif event.is_action_pressed("shift"):
+		last_input_modifier = "shift";
+		modifier_pressed = true;
+	elif event.is_action_released("cc") or event.is_action_released("shift"):
+		last_input_modifier = "slide";
+		#if move is still held, wait for timeout before starting move
+		if Input.is_action_pressed("move_" + last_input_move):
+			last_input_type = GV.InputType.MOVE;
+			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
+			return false;
+	
+	#last input move
+	elif event.is_action_pressed("move_left"):
+		last_input_move = "left";
+		move_changed = true;
+	elif event.is_action_pressed("move_right"):
+		last_input_move = "right";
+		move_changed = true;
+	elif event.is_action_pressed("move_up"):
+		last_input_move = "up";
+		move_changed = true;
+	elif event.is_action_pressed("move_down"):
+		last_input_move = "down";
+		move_changed = true;
+	
+	if modifier_pressed or move_changed: #stop repeat
+		atimer.stop();
+		print("last input move: ", last_input_move)
+		if Input.is_action_pressed("move_"+last_input_move): #add premove
+			last_input_type = GV.InputType.MOVE;
+			print("added premove")
+			return true;
+	
+	return false;
+'''
+
+'''
+	#enter snap
+	enter_snap.connect(game.current_level._on_player_enter_snap);
+	
+func _on_player_enter_snap(prev_state):
+	if prev_state == null: #initial ready doesn't count
+		return;
+	
+	last_action_finished = true;
+	if atimer.is_timeouted(): #input hasn't changed, repeat last action
+		#print("enter snap repeat")
+		atimer.repeat();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
+'''
+
+'''
+signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
+	#emit signal (after slide_dir reset)
+	actor.enter_snap.emit(get_parent().prevState);
+'''
+
+''' in Level.gd:
+	atimer.timeout.connect(_on_atimer_timeout);
+	repeat_input.connect(_on_repeat_input);
+	
+func _on_atimer_timeout():
+	if not last_action_finished:
+		#don't trigger repeat, leave it to the callback function
+		#callback function should check for timeout before triggering repeat
+		return;
+	if (last_input_type == GV.InputType.UNDO and Input.is_action_pressed("undo")) or \
+		(last_input_type == GV.InputType.MOVE and is_last_action_held()):
+		atimer.repeat();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
+
+func _on_repeat_input(input_type:int):
+	if input_type != GV.InputType.UNDO:
+		return;
+	
+	on_undo();
+	if not player_snapshots: #no more history
+		atimer.stop();
+'''

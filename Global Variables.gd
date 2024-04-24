@@ -95,9 +95,9 @@ const COMBINING_FRAME_COUNT:int = 6; #9; #1;
 const SPLITTING_FRAME_COUNT:int = 6; #9; #1;
 
 const MOVE_REPEAT_DELAY_F0:int = 16;
-const MOVE_REPEAT_DELAY_DF:int = -1;
-const MOVE_REPEAT_DELAY_DDF:int = -1;
-const MOVE_REPEAT_DELAY_FMIN:int = 10;
+const MOVE_REPEAT_DELAY_DF:int = -3;
+const MOVE_REPEAT_DELAY_DDF:int = 1;
+const MOVE_REPEAT_DELAY_FMIN:int = 11;
 
 const UNDO_REPEAT_DELAY_F0:int = 20;
 const UNDO_REPEAT_DELAY_DF:int = -1;

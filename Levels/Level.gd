@@ -2,8 +2,6 @@
 class_name Level
 extends Node2D
 
-signal repeat_input(input_type);
-
 #the first player to enter any savepoint, whose value will be respawned
 #on save, other players will become regular tiles
 @export var player_saved:ScoreTile;
@@ -28,8 +26,8 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 #for input repeat delay
 var atimer:AccelTimer = AccelTimer.new();
 var last_input_type:int;
-var last_input_modifier:String = "slide";
-var last_input_move:String;
+var last_input_modifier:String = "slide"; #one of ["split", "shift", "slide"], always non-empty
+var last_input_move:String = "left"; #one of ["left", "right", "up", "down"]; always non-empty
 var last_action_finished:bool = true;
 
 
@@ -54,7 +52,6 @@ func _ready():
 
 	#init input repeat delay stuff
 	atimer.timeout.connect(_on_atimer_timeout);
-	repeat_input.connect(_on_repeat_input);
 	add_child(atimer);
 
 func on_undo():
@@ -143,108 +140,99 @@ func on_copy():
 		
 		return level_array;
 
-#update last_input_mod/move and accel timer
+func get_event_modifier(event) -> String:
+	for modifier in ["split", "shift"]:
+		if event.is_action_pressed(modifier):
+			return modifier;
+	for modifier in ["split", "shift"]:
+		if event.is_action_released(modifier):
+			return "slide";
+	return "";
+
+func get_event_move(event) -> String:
+	for move in ["left", "right", "up", "down"]:
+		if event.is_action_pressed(move):
+			return move;
+	return "";
+
+func is_move_released(event) -> bool:
+	for move in ["left", "right", "up", "down"]:
+		if event.is_action_released(move):
+			return true;
+	return false;
+
+func is_last_move_held() -> bool:
+	return Input.is_action_pressed(last_input_move);
+
+func is_last_modifier_held() -> bool:
+	return Input.is_action_pressed(last_input_modifier);
+
+func is_last_action_held() -> bool:
+	if last_input_modifier == "slide":
+		return is_last_move_held();
+	return Input.is_action_pressed(last_input_modifier + "_" + last_input_move);
+
+func is_last_modifier_or_move_held() -> bool:
+	return is_last_modifier_held() or is_last_move_held();
+
+#update last_input_modifier/move/type
+#stop atimer if last_input_modifier/move changed/released
 #return true to add premove
 func update_last_input(event) -> bool:
-	var modifier_pressed:bool = false;
-	var move_changed:bool = false;
-	
-	#last input modifier
-	if event.is_action_pressed("cc"): #Cmd/Ctrl
-		last_input_modifier = "split";
-		modifier_pressed = true;
-	elif event.is_action_pressed("shift"):
-		last_input_modifier = "shift";
-		modifier_pressed = true;
-	elif event.is_action_released("cc") or event.is_action_released("shift"):
-		last_input_modifier = "slide";
-		#if move is still held, wait for timeout before starting move
-		print("RELEASE")
-		print("last input move: ", last_input_move)
-		if last_input_move:
+	var m:String = get_event_modifier(event);
+	if m: #shift/split pressed/released
+		atimer.stop();
+		var temp_last_input_modifier:String = last_input_modifier;
+		last_input_modifier = m;
+		
+		if m != "slide":
+			#shift/split pressed, add premove
+			last_input_type = GV.InputType.MOVE;
+			#return event.is_action_pressed(m + "_" + last_input_move);
+			return is_last_move_held();
+		if temp_last_input_modifier != "slide" and m == "slide" and is_last_move_held():
+			#shift/split released but slide held, wait for timeout before starting move
+			print("start MODREL timer")
 			last_input_type = GV.InputType.MOVE;
 			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
 			return false;
-	
-	#last input move
-	elif event.is_action_pressed("move_left"):
-		last_input_move = "left";
-		move_changed = true;
-	elif event.is_action_pressed("move_right"):
-		last_input_move = "right";
-		move_changed = true;
-	elif event.is_action_pressed("move_up"):
-		last_input_move = "up";
-		move_changed = true;
-	elif event.is_action_pressed("move_down"):
-		last_input_move = "down";
-		move_changed = true;
-	elif	(event.is_action_released("move_left") and last_input_move == "left") or \
-			(event.is_action_released("move_right") and last_input_move == "right") or \
-			(event.is_action_released("move_up") and last_input_move == "up") or \
-			(event.is_action_released("move_down") and last_input_move == "down"):
-		last_input_move = "";
-		move_changed = true;
-	
-	if (modifier_pressed and last_input_move) or move_changed: #stop repeat
-		atimer.stop();
 		
-		if last_input_move: #add premove
-			last_input_type = GV.InputType.MOVE;
-			return true;
+	m = get_event_move(event);
+	if m:
+		atimer.stop();
+		last_input_move = m;
+		last_input_type = GV.InputType.MOVE;
+		return true;
+	elif is_move_released(event):
+		atimer.stop();
 	
-	return false;
-
-func _on_player_enter_snap(prev_state):
-	if prev_state == null: #initial ready doesn't count
-		return;
-	
-	last_action_finished = true;
-	if atimer.is_timeouted(): #input hasn't changed, repeat last action
-		#print("enter snap repeat")
-		atimer.repeat();
-		repeat_input.emit(last_input_type);
-		last_action_finished = false;
+	return false; #event is unrelated to modifier/move, don't add premove
 
 func _on_atimer_timeout():
-	print("TIMEOUT")
-	print("last action finished: ", last_action_finished)
-	if last_input_type != GV.InputType.MOVE or last_action_finished:
-		#print("timeout repeat")
-		atimer.repeat();
-		repeat_input.emit(last_input_type);
-		last_action_finished = false;
-
-func _on_repeat_input(input_type:int):
-	if input_type != GV.InputType.UNDO:
+	if not last_action_finished:
 		return;
-	
-	on_undo();
-	if not player_snapshots: #no more history
-		atimer.stop();
-
+	if last_input_type == GV.InputType.UNDO and Input.is_action_pressed("undo"):
+		on_undo();
+		atimer.repeat();
+		
 func _input(event):
 	if event.is_action_pressed("copy"):
 		on_copy();
-		atimer.stop();
 	elif not GV.changing_level:
 		if event.is_action_pressed("home"):
 			on_home();
-			atimer.stop();
 		elif event.is_action_pressed("restart"):
 			on_restart();
-			atimer.stop();
-		elif event.is_action_pressed("move"):
+		elif event.is_action_pressed("slide"):
 			pass;
 		elif event.is_action_pressed("undo"):
-			atimer.start(GV.UNDO_REPEAT_DELAY_F0, GV.UNDO_REPEAT_DELAY_DF, GV.UNDO_REPEAT_DELAY_DDF, GV.UNDO_REPEAT_DELAY_FMIN);
 			last_input_type = GV.InputType.UNDO;
 			on_undo();
+			atimer.start(GV.UNDO_REPEAT_DELAY_F0, GV.UNDO_REPEAT_DELAY_DF, GV.UNDO_REPEAT_DELAY_DDF, GV.UNDO_REPEAT_DELAY_FMIN);
 		elif event.is_action_released("undo"):
 			atimer.stop();
 		elif event.is_action_pressed("revert"):
 			on_revert();
-			atimer.stop();
 
 func on_home():
 	if GV.abilities["home"]:

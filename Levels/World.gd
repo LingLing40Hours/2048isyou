@@ -27,8 +27,7 @@ var premoves:Array[String] = []; #slide, split, shift
 var atimer:AccelTimer = AccelTimer.new();
 var last_input_type:int; #see GV.InputType
 var last_input_modifier:String = "slide";
-var last_input_move:String;
-var last_action_finished:bool = false;
+var last_input_move:String = "left";
 
 
 func _enter_tree():
@@ -71,19 +70,8 @@ func _input(event):
 		last_input_move = "up";
 	elif event.is_action_pressed("move_down"):
 		last_input_move = "down";
-	elif	(event.is_action_released("move_left") and last_input_move == "left") or \
-			(event.is_action_released("move_right") and last_input_move == "right") or \
-			(event.is_action_released("move_up") and last_input_move == "up") or \
-			(event.is_action_released("move_down") and last_input_move == "down"):
-		last_input_move = "";
 	else:
 		nothing_changed = true;
-	
-	var move_changed:bool = not modifier_changed and not nothing_changed;
-	var meaningful:bool = (modifier_changed and last_input_move) or move_changed;
-	
-	if meaningful:
-		atimer.stop();
 		
 	
 

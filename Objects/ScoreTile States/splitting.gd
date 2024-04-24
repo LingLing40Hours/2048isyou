@@ -65,9 +65,8 @@ func inPhysicsProcess(_delta):
 	frame_count += 1;
 
 func handleInput(event):
-	var accelerate:bool = (game.current_level.last_input_move == "");
 	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
-		actor.add_premove(false, accelerate);
+		actor.add_premove();
 
 func changeParentState():
 	if frame_count == GV.SPLITTING_FRAME_COUNT:

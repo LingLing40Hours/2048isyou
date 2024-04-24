@@ -39,9 +39,8 @@ func inPhysicsProcess(delta):
 	actor.move_and_collide(actor.velocity * delta);
 
 func handleInput(event):
-	var accelerate:bool = (game.current_level.last_input_move == "");
 	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
-		actor.add_premove(false, accelerate);
+		actor.add_premove();
 	
 func changeParentState():
 	if slide_distance >= GV.COMBINING_MERGE_RATIO * GV.TILE_WIDTH:

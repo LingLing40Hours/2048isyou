@@ -2,7 +2,6 @@ class_name ScoreTile
 extends CharacterBody2D
 
 signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
-signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
 
 @onready var game:Node2D = $"/root/Game";
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
@@ -35,6 +34,7 @@ var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
 var premove_dirs:Array[Vector2i] = [];
 var premoves:Array[String] = []; #slide, split, shift
+var premove_streak:bool = false; #if slide/split streak, don't restart atimer
 #var func_slide:Callable = Callable(self, "slide");
 #var func_split:Callable = Callable(self, "split");
 #var func_shift:Callable = Callable(self, "shift");
@@ -55,9 +55,6 @@ func _ready():
 	#visibility
 	visibility_notifier.screen_entered.connect(sprites.show);
 	visibility_notifier.screen_exited.connect(sprites.hide);
-	
-	#enter snap
-	enter_snap.connect(game.current_level._on_player_enter_snap);
 	
 	#if tile is a snapshot duplicate, set owner
 	if !owner:
@@ -208,32 +205,42 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 		return null;
 
 #push to premoves and premove_dirs
-func add_premove(is_repeat:bool, accelerate:bool):
+func add_premove():
+	print("ADD")
 	premove_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 	premoves.push_back(game.current_level.last_input_modifier);
-	if premoves.size() == 1 and not is_repeat: #start accel timer
-		if accelerate:
-			game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);	
-		else:
-			game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_FMIN, 0, 0, GV.MOVE_REPEAT_DELAY_FMIN);
 
-func try_premove():
-	assert($FSM.curState == $FSM.states.snap);
+func consume_premove():
+	assert($FSM.curState == $FSM.states.snap);		
 	if premoves and $FSM.curState.next_state == null:
+		print("CONSUME")
 		game.current_level.new_snapshot();
 		var action = Callable(self, premoves.pop_front());
 		var moved = action.call(premove_dirs.pop_front());
-		
+
 		if not moved: #move failed, clear all premoves
 			premoves.clear();
 			premove_dirs.clear();
 			game.current_level.last_action_finished = true;
+			game.current_level.atimer.stop();
+		
+		elif not premoves:
+			#last premove was consumed, start/resume AccelTimer
+			if game.current_level.atimer.is_stopped():
+				game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
+			elif game.current_level.atimer.is_timeouted():
+				game.current_level.atimer.repeat();
+			#else atimer was started from modifier release
+		elif premoves:
+			game.current_level.atimer.stop(); #all premoves must be consumed to start input repeat
 
-func _on_repeat_input(input_type:int):
-	if input_type != GV.InputType.MOVE or premoves or get_state() in ["merging1", "merging2"]:
-		return;
-	assert(game.current_level.last_input_move);
-	add_premove(true, true);
+func _on_atimer_timeout():
+	#if merging1, don't add premove since merge happens before the single-tile slide completes
+	if game.current_level.last_input_type == GV.InputType.MOVE and not premoves and get_state() not in ["merging1", "merging2"] and game.current_level.is_last_action_held():
+		print("TIMEOUT, ADD PREMOVE")
+		add_premove();
+	elif game.current_level.last_input_type == GV.InputType.MOVE:
+		game.current_level.atimer.stop();
 
 func slide(dir:Vector2i) -> bool:
 	if get_state() not in ["tile", "snap"]:
@@ -593,7 +600,7 @@ func set_physics(state):
 #doesn't affect layers or masks or physics
 func player_settings():
 	#connect signal
-	game.current_level.repeat_input.connect(_on_repeat_input);
+	game.current_level.atimer.timeout.connect(_on_atimer_timeout);
 	
 	#add to player list
 	#print("add index: ", game.current_level.players.size());
@@ -614,7 +621,7 @@ func player_settings():
 #doesn't affect layers or masks or physics
 func tile_settings():
 	#disconnect signal
-	game.current_level.repeat_input.disconnect(_on_repeat_input);
+	game.current_level.atimer.timeout.disconnect(_on_atimer_timeout);
 	
 	#remove from player list
 	remove_from_players();

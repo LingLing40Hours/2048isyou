@@ -79,9 +79,8 @@ func update_dist_and_to_area():
 		distance_to_next_snap = GV.RESOLUTION.x;
 
 func handleInput(event):
-	var accelerate:bool = (game.current_level.last_input_move == "");
 	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
-		actor.add_premove(false, accelerate);
+		actor.add_premove();
 
 func changeParentState():
 	if actor.velocity == Vector2.ZERO:
