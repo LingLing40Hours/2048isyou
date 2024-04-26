@@ -229,26 +229,22 @@ func consume_premove():
 	var moved = action.call(premove_dirs.pop_front());
 
 	if not moved: #move failed, clear all premoves
-		print("MOVE FAILED, PREMOVE STREAK ENDED")
+		print("PREMOVE STREAK ENDED (FAIL)")
 		premove_streak = false;
 		premoves.clear();
 		premove_dirs.clear();
 		game.current_level.last_action_finished = true;
 		atimer.stop();
-		premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
 		return;
 	
 	if not premoves:
 		#last premove was consumed, start/resume AccelTimer
 		if premove_streak:
-			print("repeat")
 			atimer.repeat();
 		else:
-			print("restart")
 			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
 		#else atimer was started in update_last_input() from modifier release?
 	else:
-		print("stop1")
 		atimer.stop(); #all premoves must be consumed to start input repeat
 	
 	print("PREMOVE STREAK STARTED")
@@ -261,16 +257,13 @@ func _on_atimer_timeout():
 		if not premoves and game.current_level.is_last_action_held():
 			add_premove();
 		else:
-			print("stop2")
 			atimer.stop();
-			if not game.current_level.is_last_action_held():
-				premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
 
 func _on_enter_snap():
 	pass;
 
 func _on_premove_streak_end():
-	print("TIMEOUT, PREMOVE STREAK ENDED")
+	print("PREMOVE STREAK ENDED (TIMEOUT)")
 	premove_streak = false;
 
 func slide(dir:Vector2i) -> bool:

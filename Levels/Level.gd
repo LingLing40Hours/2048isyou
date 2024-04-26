@@ -215,7 +215,6 @@ func update_last_input(event) -> bool:
 		return true;
 	if is_last_move_released(event):
 		atimer.stop();
-		premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
 	
 	return false; #event is unrelated to modifier/move, don't add premove
 
