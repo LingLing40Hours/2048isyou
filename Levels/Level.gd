@@ -25,6 +25,7 @@ var current_snapshot:PlayerSnapshot; #last in array, might not be meaningful, ba
 
 #for input repeat delay
 var atimer:AccelTimer = AccelTimer.new();
+var premove_streak_end_timer:AccelTimer = AccelTimer.new();
 var last_input_type:int;
 var last_input_modifier:String = "slide"; #one of ["split", "shift", "slide"], always non-empty
 var last_input_move:String = "left"; #one of ["left", "right", "up", "down"]; always non-empty
@@ -53,6 +54,7 @@ func _ready():
 	#init input repeat delay stuff
 	atimer.timeout.connect(_on_atimer_timeout);
 	add_child(atimer);
+	add_child(premove_streak_end_timer);
 
 func on_undo():
 	if not GV.abilities["undo"]:
@@ -161,8 +163,17 @@ func is_move_released(event) -> bool:
 			return true;
 	return false;
 
+func is_move_held() -> bool:
+	for move in ["left", "right", "up", "down"]:
+		if Input.is_action_pressed(move):
+			return true;
+	return false;
+
 func is_last_move_held() -> bool:
 	return Input.is_action_pressed(last_input_move);
+
+func is_last_move_released(event) -> bool:
+	return event.is_action_released(last_input_move);
 
 func is_last_modifier_held() -> bool:
 	return Input.is_action_pressed(last_input_modifier);
@@ -192,7 +203,6 @@ func update_last_input(event) -> bool:
 			return is_last_move_held();
 		if temp_last_input_modifier != "slide" and m == "slide" and is_last_move_held():
 			#shift/split released but slide held, wait for timeout before starting move
-			print("start MODREL timer")
 			last_input_type = GV.InputType.MOVE;
 			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
 			return false;
@@ -203,8 +213,9 @@ func update_last_input(event) -> bool:
 		last_input_move = m;
 		last_input_type = GV.InputType.MOVE;
 		return true;
-	elif is_move_released(event):
+	if is_last_move_released(event):
 		atimer.stop();
+		premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
 	
 	return false; #event is unrelated to modifier/move, don't add premove
 
@@ -275,4 +286,4 @@ func remove_last_snapshot_if_not_meaningful():
 			player_snapshots.pop_back();
 			current_snapshot.remove();
 			current_snapshot = null;
-			print("OVERWRITE LAST SNAPSHOT");
+			#print("OVERWRITE LAST SNAPSHOT");

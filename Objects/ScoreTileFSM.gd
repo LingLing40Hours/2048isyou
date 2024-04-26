@@ -1,7 +1,8 @@
 class_name ScoreTile
 extends CharacterBody2D
 
-signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
+signal action_started; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
+signal premove_added; #signals snap state to consume premove
 
 @onready var game:Node2D = $"/root/Game";
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
@@ -32,6 +33,9 @@ var physics_enabler_count:int; #turn physics off when this reaches 0
 
 var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
+
+var atimer:AccelTimer;
+var premove_streak_end_timer:AccelTimer;
 var premove_dirs:Array[Vector2i] = [];
 var premoves:Array[String] = []; #slide, split, shift
 var premove_streak:bool = false; #if slide/split streak, don't restart atimer
@@ -76,7 +80,7 @@ func _ready():
 			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
 			break;
 
-	#scale shapecasts (bc inspector can't handle precise floats)
+	#scale shapecasts (inspector can't handle precise floats)
 	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
@@ -88,11 +92,15 @@ func _ready():
 		var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
 		timer.timeout.connect(_on_invincibility_timeout);
 	
-	#add img
+	#add stuff
 	sprites.add_child(img);
 	
 	#init pos_t
 	pos_t = GV.world_to_pos_t(position);
+	
+	#timer refs
+	atimer = game.current_level.atimer;
+	premove_streak_end_timer = game.current_level.premove_streak_end_timer;
 	
 	initialize();
 
@@ -133,7 +141,7 @@ func initialize():
 	#set initial state
 	var initial_state = "tile";
 	if color == GV.ColorId.GRAY:
-		initial_state = "snap" if GV.player_snap else "slide";
+		initial_state = "idle" if GV.player_snap else "slide";
 	$FSM.setState($FSM.states[initial_state]);
 	
 func _input(event):
@@ -206,44 +214,67 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 
 #push to premoves and premove_dirs
 func add_premove():
-	print("ADD")
 	premove_dirs.push_back(GV.directions[game.current_level.last_input_move]);
 	premoves.push_back(game.current_level.last_input_modifier);
+	premove_added.emit();
 
 func consume_premove():
-	assert($FSM.curState == $FSM.states.snap);		
-	if premoves and $FSM.curState.next_state == null:
-		print("CONSUME")
-		game.current_level.new_snapshot();
-		var action = Callable(self, premoves.pop_front());
-		var moved = action.call(premove_dirs.pop_front());
+	if $FSM.curState.next_state != null:
+		return;
+	assert(premoves);
+	assert($FSM.curState == $FSM.states.idle);
 
-		if not moved: #move failed, clear all premoves
-			premoves.clear();
-			premove_dirs.clear();
-			game.current_level.last_action_finished = true;
-			game.current_level.atimer.stop();
-		
-		elif not premoves:
-			#last premove was consumed, start/resume AccelTimer
-			if game.current_level.atimer.is_stopped():
-				game.current_level.atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
-			elif game.current_level.atimer.is_timeouted():
-				game.current_level.atimer.repeat();
-			#else atimer was started from modifier release
-		elif premoves:
-			game.current_level.atimer.stop(); #all premoves must be consumed to start input repeat
+	game.current_level.new_snapshot();
+	var action = Callable(self, premoves.pop_front());
+	var moved = action.call(premove_dirs.pop_front());
+
+	if not moved: #move failed, clear all premoves
+		print("MOVE FAILED, PREMOVE STREAK ENDED")
+		premove_streak = false;
+		premoves.clear();
+		premove_dirs.clear();
+		game.current_level.last_action_finished = true;
+		atimer.stop();
+		premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
+		return;
+	
+	if not premoves:
+		#last premove was consumed, start/resume AccelTimer
+		if premove_streak:
+			print("repeat")
+			atimer.repeat();
+		else:
+			print("restart")
+			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
+		#else atimer was started in update_last_input() from modifier release?
+	else:
+		print("stop1")
+		atimer.stop(); #all premoves must be consumed to start input repeat
+	
+	print("PREMOVE STREAK STARTED")
+	premove_streak_end_timer.stop();
+	premove_streak = true;
 
 func _on_atimer_timeout():
-	#if merging1, don't add premove since merge happens before the single-tile slide completes
-	if game.current_level.last_input_type == GV.InputType.MOVE and not premoves and get_state() not in ["merging1", "merging2"] and game.current_level.is_last_action_held():
-		print("TIMEOUT, ADD PREMOVE")
-		add_premove();
-	elif game.current_level.last_input_type == GV.InputType.MOVE:
-		game.current_level.atimer.stop();
+	if game.current_level.last_input_type == GV.InputType.MOVE:
+		assert(get_state() != "merging1"); #since atimer min frame count >> merging1 frame count
+		if not premoves and game.current_level.is_last_action_held():
+			add_premove();
+		else:
+			print("stop2")
+			atimer.stop();
+			if not game.current_level.is_last_action_held():
+				premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
+
+func _on_enter_snap():
+	pass;
+
+func _on_premove_streak_end():
+	print("TIMEOUT, PREMOVE STREAK ENDED")
+	premove_streak = false;
 
 func slide(dir:Vector2i) -> bool:
-	if get_state() not in ["tile", "snap"]:
+	if get_state() not in ["tile", "snap", "idle"]:
 		#print("SLIDE FAILED, state is ", get_state());
 		return false;
 	
@@ -289,12 +320,13 @@ func slide(dir:Vector2i) -> bool:
 		
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
+			assert(collider != self);
 			
 			if collider.is_in_group("wall"): #obstructed
 				return false;
 				
 			if collider is ScoreTile:
-				if collider.get_state() not in ["tile", "snap"]:
+				if collider.get_state() not in ["tile", "snap", "idle"]:
 					#print("SLIDE FAILED, collider state is ", collider.get_state());
 					return false;
 				if not collider.is_xaligned() or not collider.is_yaligned():
@@ -346,7 +378,7 @@ func slide(dir:Vector2i) -> bool:
 		return false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	$FSM.curState.next_state = next_state;
@@ -375,7 +407,7 @@ func pushable_zeros(dir:Vector2i, tile_push_limit:int) -> Array[ScoreTile]:
 				return [];
 			if collider is ScoreTile:
 				if collider.power == -1:
-					if collider.get_state() not in ["tile", "snap"]:
+					if collider.get_state() not in ["tile", "snap", "idle"]:
 						return [];
 					if not collider.is_xaligned() or not collider.is_yaligned():
 						return [];
@@ -392,7 +424,7 @@ func pushable_zeros(dir:Vector2i, tile_push_limit:int) -> Array[ScoreTile]:
 func split(dir:Vector2i) -> bool:
 	if power <= 0: #1, -1, 0 cannot split
 		return false;
-	if get_state() != "snap":
+	if get_state() != "idle":
 		return false;
 	if not GV.abilities["split"]:
 		return false;
@@ -413,7 +445,7 @@ func split(dir:Vector2i) -> bool:
 		if collider is ScoreTile:
 			if not collider.is_xaligned() or not collider.is_yaligned():
 				return false;
-			if collider.get_state() not in ["tile", "snap"]:
+			if collider.get_state() not in ["tile", "snap", "idle"]:
 				return false;
 			
 			if collider.color == GV.ColorId.GRAY and collider.slide(dir): #recede split
@@ -438,7 +470,7 @@ func split(dir:Vector2i) -> bool:
 	shape.enabled = false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	$FSM.curState.next_state = $FSM.states.splitting;
@@ -446,7 +478,7 @@ func split(dir:Vector2i) -> bool:
 
 
 func shift(dir:Vector2i) -> bool:
-	if get_state() != "snap":
+	if get_state() != "idle":
 		return false;
 	if not GV.abilities["shift"]:
 		return false;
@@ -468,7 +500,7 @@ func shift(dir:Vector2i) -> bool:
 		shape.enabled = false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	shift_shape = shape;
@@ -476,7 +508,7 @@ func shift(dir:Vector2i) -> bool:
 	return true;
 
 func levelup():
-	if get_state() not in ["tile", "snap"]:
+	if get_state() not in ["tile", "snap", "idle"]:
 		return;
 	
 	#update value
@@ -599,8 +631,9 @@ func set_physics(state):
 
 #doesn't affect layers or masks or physics
 func player_settings():
-	#connect signal
-	game.current_level.atimer.timeout.connect(_on_atimer_timeout);
+	#connect signals
+	atimer.timeout.connect(_on_atimer_timeout);
+	premove_streak_end_timer.timeout.connect(_on_premove_streak_end);
 	
 	#add to player list
 	#print("add index: ", game.current_level.players.size());
@@ -620,8 +653,9 @@ func player_settings():
 
 #doesn't affect layers or masks or physics
 func tile_settings():
-	#disconnect signal
-	game.current_level.atimer.timeout.disconnect(_on_atimer_timeout);
+	#disconnect signals
+	atimer.timeout.disconnect(_on_atimer_timeout);
+	premove_streak_end_timer.timeout.disconnect(_on_premove_streak_end);
 	
 	#remove from player list
 	remove_from_players();

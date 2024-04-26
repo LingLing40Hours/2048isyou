@@ -53,7 +53,7 @@ func _input(event):
 			if player.get_state() not in ["merging1", "merging2", "combining", "splitting"]:
 				var next_state;
 				if GV.player_snap:
-					next_state = "snap";
+					next_state = "idle";
 					#update player pos_t
 					player.pos_t = GV.world_to_pos_t(player.position);
 				else:

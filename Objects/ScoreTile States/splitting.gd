@@ -52,6 +52,7 @@ func enter():
 	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
 	player.premoves = actor.premoves.duplicate();
 	player.premove_dirs = actor.premove_dirs.duplicate();
+	player.premove_streak = actor.premove_streak;
 	actor.premoves.clear();
 	actor.premove_dirs.clear();
 	

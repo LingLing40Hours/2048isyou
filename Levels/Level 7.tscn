@@ -237,7 +237,7 @@ position = Vector2(60, 180)
 power = -1
 
 [node name="ScoreTile31" parent="ScoreTiles" instance=ExtResource("4_3qn8i")]
-position = Vector2(1220, 580)
+position = Vector2(1180, 660)
 color = 32
 power = 11
 

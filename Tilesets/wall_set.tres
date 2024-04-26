@@ -1,9 +1,9 @@
 [gd_resource type="TileSet" load_steps=10 format=3 uid="uid://doeyofpqxc1ic"]
 
-[ext_resource type="Texture2D" uid="uid://ctvcgvdv1c8uk" path="res://Sprites/Black.png" id="1_cbubu"]
-[ext_resource type="Texture2D" uid="uid://dttuajybf3tjc" path="res://Sprites/Dark Red.png" id="2_4i8su"]
-[ext_resource type="Texture2D" uid="uid://d01s5k5tf8v2y" path="res://Sprites/Border2.png" id="4_wbyq6"]
-[ext_resource type="Texture2D" uid="uid://b60vqhfx0o6a3" path="res://Sprites/Dark Blue.png" id="4_x7feg"]
+[ext_resource type="Texture2D" uid="uid://ctvcgvdv1c8uk" path="res://Sprites/Sprites/Black.png" id="1_cbubu"]
+[ext_resource type="Texture2D" uid="uid://dttuajybf3tjc" path="res://Sprites/Sprites/Dark Red.png" id="2_4i8su"]
+[ext_resource type="Texture2D" uid="uid://d01s5k5tf8v2y" path="res://Sprites/Sprites/Border2.png" id="4_wbyq6"]
+[ext_resource type="Texture2D" uid="uid://b60vqhfx0o6a3" path="res://Sprites/Sprites/Dark Blue.png" id="4_x7feg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iiypt"]
 texture = ExtResource("4_wbyq6")

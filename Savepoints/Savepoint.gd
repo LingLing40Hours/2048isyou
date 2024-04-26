@@ -33,7 +33,7 @@ func _on_body_entered(body):
 		saved = true;
 
 #if player was spawned, don't save until player starts action
-func _on_player_start_action():
+func _on_player_action_started():
 	if not GV.changing_level and not saved and spawned: #save level
 		game.current_level.remove_last_snapshot_if_not_meaningful();
 		save_id_and_player_value(player_spawned);
@@ -54,7 +54,7 @@ func spawn_player(): #spawns player at spawn_point
 	player.position = spawn_point;
 	#player.debug = true;
 	game.current_level.get_node("ScoreTiles").add_child(player); #lv not ready yet, scoretiles not init
-	player.start_action.connect(_on_player_start_action);
+	player.action_started.connect(_on_player_action_started);
 
 func save_id_and_player_value(player):
 	GV.savepoint_id = id;

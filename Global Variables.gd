@@ -91,18 +91,21 @@ const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies be
 const TILE_SLIDE_SPEED:float = 320;
 const COMBINING_MERGE_RATIO:float = 1/2.7;
 
+const SNAP_FRAME_COUNT:int = 1;
 const COMBINING_FRAME_COUNT:int = 6; #9; #1;
 const SPLITTING_FRAME_COUNT:int = 6; #9; #1;
 
-const MOVE_REPEAT_DELAY_F0:int = 16;
-const MOVE_REPEAT_DELAY_DF:int = -3;
-const MOVE_REPEAT_DELAY_DDF:int = 1;
+const MOVE_REPEAT_DELAY_F0:int = 16; #16
+const MOVE_REPEAT_DELAY_DF:int = -3; #-3
+const MOVE_REPEAT_DELAY_DDF:int = 1; #1
 const MOVE_REPEAT_DELAY_FMIN:int = 11;
 
 const UNDO_REPEAT_DELAY_F0:int = 20;
 const UNDO_REPEAT_DELAY_DF:int = -1;
 const UNDO_REPEAT_DELAY_DDF:int = -1;
 const UNDO_REPEAT_DELAY_FMIN:int = 14;
+
+const PREMOVE_STREAK_END_DELAY = 11;
 
 enum InputType {
 	MOVE=0,

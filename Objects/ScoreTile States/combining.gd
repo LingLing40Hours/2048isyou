@@ -17,6 +17,7 @@ func enter():
 	if actor.color == GV.ColorId.GRAY:
 		actor.premoves = actor.partner.premoves;
 		actor.premove_dirs = actor.partner.premove_dirs;
+		actor.premove_streak = actor.partner.premove_streak;
 
 func inPhysicsProcess(_delta):
 	frame_count += 1;
