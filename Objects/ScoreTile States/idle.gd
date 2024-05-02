@@ -5,10 +5,12 @@ var next_state:Node2D;
 
 
 func enter():
+	assert(actor.color == GV.ColorId.GRAY)
 	next_state = null;
-	
-	#end premove streak if a premove doesn't come soon
-	game.current_level.premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
+
+	if not actor.splitted:
+		#end premove streak if a premove doesn't come soon
+		game.current_level.premove_streak_end_timer.start(GV.PREMOVE_STREAK_END_DELAY, 0, 0, -1);
 	
 	#subscribe to premoves
 	actor.premove_added.connect(_on_premove_added);

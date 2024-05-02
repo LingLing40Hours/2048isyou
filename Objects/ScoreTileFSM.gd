@@ -247,7 +247,6 @@ func consume_premove():
 	else:
 		atimer.stop(); #all premoves must be consumed to start input repeat
 	
-	print("PREMOVE STREAK STARTED")
 	premove_streak_end_timer.stop();
 	premove_streak = true;
 

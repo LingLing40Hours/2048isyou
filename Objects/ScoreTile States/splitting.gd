@@ -6,7 +6,6 @@ var player:ScoreTile;
 
 
 func enter():
-	#print("SPLITTING");
 	#add to snapshot
 	if not actor.is_hostile:
 		game.current_level.current_snapshot.add_tile(actor);
@@ -49,7 +48,7 @@ func enter():
 	assert(actor.physics_on);
 	assert(actor.get_process_mode() == PROCESS_MODE_INHERIT);
 	
-	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
+	#player inherits actor's premoves *after* add_child() so enter idle doesn't consume any
 	player.premoves = actor.premoves.duplicate();
 	player.premove_dirs = actor.premove_dirs.duplicate();
 	player.premove_streak = actor.premove_streak;

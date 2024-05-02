@@ -1,20 +1,20 @@
 [gd_scene load_steps=12 format=3]
 
-[ext_resource type="Script" path="res://Levels/Level 7.gd" id="1_k5wg1"]
-[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_86kbr"]
-[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_8fjq1"]
-[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_ra5fk"]
-[ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_hr2rd"]
-[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_n00fm"]
-[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_awlt1"]
-[ext_resource type="PackedScene" path="res://Savepoints/Goal_1x2_Concave.tscn" id="8_r5p4r"]
-[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="9_ecj0u"]
-[ext_resource type="PackedScene" path="res://Enemy/Baddie 1.tscn" id="10_ugtbe"]
-[ext_resource type="Script" path="res://Enemy/Baddie 1.gd" id="11_08dr4"]
+[ext_resource type="Script" path="res://Levels/Level 7.gd" id="1_23pw1"]
+[ext_resource type="Theme" path="res://Themes/main_theme.tres" id="2_84m8s"]
+[ext_resource type="TileSet" path="res://Tilesets/wall_set.tres" id="3_4024b"]
+[ext_resource type="PackedScene" path="res://Objects/Freedom.tscn" id="4_iya8j"]
+[ext_resource type="Script" path="res://Objects/Freedom.gd" id="5_owtco"]
+[ext_resource type="PackedScene" path="res://Objects/ScoreTile.tscn" id="6_5568l"]
+[ext_resource type="Script" path="res://Objects/ScoreTileFSM.gd" id="7_j15b5"]
+[ext_resource type="PackedScene" path="res://Savepoints/Goal_1x2_Concave.tscn" id="8_rsbhk"]
+[ext_resource type="Script" path="res://Savepoints/Goal.gd" id="9_mvrvw"]
+[ext_resource type="PackedScene" path="res://Enemy/Baddie 1.tscn" id="10_s2ku8"]
+[ext_resource type="Script" path="res://Enemy/Baddie 1.gd" id="11_03px4"]
 
-[node name="Level 7" type="Node2D" node_paths=PackedStringArray("player_saved")]
+[node name="@Node2D@86" type="Node2D" node_paths=PackedStringArray("player_saved")]
 process_mode = 1
-script = ExtResource("1_k5wg1")
+script = ExtResource("1_23pw1")
 player_saved = NodePath("ScoreTiles/ScoreTile31")
 resolution_t = Vector2i(40, 30)
 min_pos = Vector2(0, 0)
@@ -34,7 +34,7 @@ offset_right = 1025.0
 offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_86kbr")
+theme = ExtResource("2_84m8s")
 theme_override_font_sizes/font_size = 50
 text = "Wall I Am"
 
@@ -45,21 +45,21 @@ offset_bottom = 1200.0
 color = Color(0.666667, 0.666667, 0.666667, 1)
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
-tile_set = ExtResource("3_8fjq1")
+tile_set = ExtResource("3_4024b")
 format = 2
 layer_0/tile_data = PackedInt32Array(0, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 6, 2, 0, 7, 2, 0, 8, 2, 0, 9, 2, 0, 10, 2, 0, 11, 2, 0, 12, 2, 0, 13, 2, 0, 14, 2, 0, 15, 2, 0, 16, 2, 0, 17, 2, 0, 18, 2, 0, 19, 2, 0, 20, 2, 0, 21, 2, 0, 22, 2, 0, 23, 2, 0, 24, 2, 0, 25, 2, 0, 26, 2, 0, 27, 2, 0, 28, 2, 0, 29, 2, 0, 30, 2, 0, 31, 2, 0, 32, 2, 0, 33, 2, 0, 34, 2, 0, 35, 2, 0, 36, 2, 0, 37, 2, 0, 38, 2, 0, 39, 2, 0, 65575, 2, 0, 131111, 2, 0, 196647, 2, 0, 262183, 2, 0, 327719, 2, 0, 393255, 2, 0, 458791, 2, 0, 524327, 2, 0, 589863, 2, 0, 655399, 2, 0, 720935, 2, 0, 917543, 2, 0, 1114151, 2, 0, 1179687, 2, 0, 1245223, 2, 0, 1310759, 2, 0, 1376295, 2, 0, 1441831, 2, 0, 1507367, 2, 0, 1572903, 2, 0, 1638439, 2, 0, 1703975, 2, 0, 1769511, 2, 0, 1835047, 2, 0, 1900583, 2, 0, 1900582, 2, 0, 1900581, 2, 0, 1900580, 2, 0, 1900579, 2, 0, 1900578, 2, 0, 1900577, 2, 0, 1900576, 2, 0, 1900575, 2, 0, 1900574, 2, 0, 1900573, 2, 0, 1900572, 2, 0, 1900571, 2, 0, 1900570, 2, 0, 1900569, 2, 0, 1900568, 2, 0, 1900567, 2, 0, 1900566, 2, 0, 1900565, 2, 0, 1900564, 2, 0, 1900563, 2, 0, 1900562, 2, 0, 1900561, 2, 0, 1900560, 2, 0, 1900559, 2, 0, 1900558, 2, 0, 1900557, 2, 0, 1900556, 2, 0, 1900555, 2, 0, 1900554, 2, 0, 1900553, 2, 0, 1900552, 2, 0, 1900551, 2, 0, 1900550, 2, 0, 1900549, 2, 0, 1900548, 2, 0, 1900547, 2, 0, 1900546, 2, 0, 1900545, 2, 0, 1900544, 2, 0, 1835008, 2, 0, 1769472, 2, 0, 1703936, 2, 0, 1638400, 2, 0, 1572864, 2, 0, 1507328, 2, 0, 1441792, 2, 0, 1376256, 2, 0, 1310720, 2, 0, 1245184, 2, 0, 1179648, 2, 0, 1114112, 2, 0, 1048576, 2, 0, 983040, 2, 0, 917504, 2, 0, 851968, 2, 0, 786432, 2, 0, 720896, 2, 0, 655360, 2, 0, 589824, 2, 0, 524288, 2, 0, 458752, 2, 0, 393216, 2, 0, 327680, 2, 0, 262144, 2, 0, 196608, 2, 0, 131072, 2, 0, 65536, 2, 0, 1, 2, 0, 2, 2, 0, 786471, 2, 0, 852007, 2, 0, 1310734, 2, 0, 1376270, 2, 0, 1441806, 2, 0, 1310735, 2, 0, 1310736, 2, 0, 1310737, 2, 0, 1245202, 2, 0, 1245203, 2, 0, 1507347, 2, 0, 720915, 2, 0, 720916, 2, 0, 720917, 2, 0, 720918, 2, 0, 720919, 2, 0, 655384, 2, 0, 655385, 2, 0, 655386, 2, 0, 655387, 2, 0, 655388, 2, 0, 655389, 2, 0, 655390, 2, 0, 983078, 1, 0, 1048614, 1, 0, 196610, 2, 0, 196611, 2, 0, 196612, 2, 0, 131076, 2, 0, 65540, 2, 0, 196609, 1, 0, 196613, 2, 0, 196614, 2, 0, 262150, 2, 0, 327686, 2, 0, 393222, 2, 0, 458758, 2, 0, 524294, 2, 0, 524289, 2, 0, 524290, 2, 0, 524291, 2, 0, 524293, 2, 0, 327684, 2, 0, 327683, 2, 0, 524292, 1, 0, 589856, 2, 0)
 
-[node name="Freedom" type="Area2D" parent="." instance=ExtResource("4_ra5fk")]
-script = ExtResource("5_hr2rd")
+[node name="Freedom" type="Area2D" parent="." instance=ExtResource("4_iya8j")]
+script = ExtResource("5_owtco")
 
 [node name="ScoreTiles" type="Node2D" parent="."]
 
-[node name="ScoreTile" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1460, 460)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -67,12 +67,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile11" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile11" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1020, 380)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -80,12 +80,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile2" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile2" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1420, 460)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -93,12 +93,12 @@ power = 4
 ssign = 1
 debug = false
 
-[node name="ScoreTile3" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile3" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1420, 420)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -106,12 +106,12 @@ power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile4" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile4" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -119,12 +119,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile59" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile59" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -132,12 +132,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile60" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile60" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -145,12 +145,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile5" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile5" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -158,12 +158,12 @@ power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile6" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile6" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -171,12 +171,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile61" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile61" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -184,12 +184,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile62" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile62" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1380, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -197,12 +197,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile33" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile33" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 700)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -210,12 +210,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile34" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile34" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 700)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -223,12 +223,12 @@ power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile35" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile35" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 700)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -236,12 +236,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile36" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile36" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 740)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -249,12 +249,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile37" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile37" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 740)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -262,12 +262,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile38" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile38" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 740)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -275,12 +275,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile44" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile44" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 540)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -288,12 +288,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile39" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile39" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 780)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -301,12 +301,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile52" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile52" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 820)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -314,12 +314,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile53" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 820)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -327,12 +327,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile54" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile54" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 820)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -340,12 +340,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile55" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -353,12 +353,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile75" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile75" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 1060)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -366,12 +366,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile77" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile77" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 1100)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -379,12 +379,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile56" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile56" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -392,12 +392,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile57" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -405,12 +405,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile58" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile58" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1380, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -418,12 +418,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile63" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile63" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 900)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -431,12 +431,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile64" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile64" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 940)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -444,12 +444,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile65" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile65" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 940)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -457,12 +457,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile73" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile73" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 1060)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -470,12 +470,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile76" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile76" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 1100)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -483,12 +483,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile78" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile78" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 1100)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -496,12 +496,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile74" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile74" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 1060)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -509,12 +509,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile68" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile68" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 980)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -522,12 +522,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile72" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile72" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1380, 1020)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -535,12 +535,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile66" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile66" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 980)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -548,12 +548,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile67" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile67" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 980)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -561,12 +561,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile69" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile69" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 1020)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -574,12 +574,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile70" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile70" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 1020)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -587,12 +587,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile71" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile71" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 1020)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -600,12 +600,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile40" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile40" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 780)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -613,12 +613,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile41" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile41" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 780)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -626,12 +626,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile32" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile32" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1380, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -639,12 +639,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile42" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile42" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 380)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -652,12 +652,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile45" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile45" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 540)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -665,12 +665,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile46" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile46" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1380, 540)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -678,12 +678,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile43" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile43" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1260, 540)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -691,12 +691,12 @@ power = 4
 ssign = 1
 debug = false
 
-[node name="ScoreTile9" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile9" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1300, 140)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -704,12 +704,12 @@ power = 11
 ssign = 1
 debug = false
 
-[node name="ScoreTile12" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile12" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(860, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -717,12 +717,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile13" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile13" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(60, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -730,12 +730,13 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile31" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
-position = Vector2(420, 660)
+[node name="ScoreTile31" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
+position = Vector2(251.803, 700)
 collision_layer = 4294967287
 collision_mask = 2147483649
 motion_mode = 1
-script = ExtResource("7_awlt1")
+velocity = Vector2(-10091.8, 0)
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -743,12 +744,12 @@ power = 11
 ssign = 1
 debug = false
 
-[node name="ScoreTile47" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile47" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1100, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 31
 is_hostile = false
 is_invincible = false
@@ -756,12 +757,12 @@ power = 12
 ssign = 1
 debug = false
 
-[node name="ScoreTile48" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile48" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1140, 660)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 31
 is_hostile = false
 is_invincible = false
@@ -769,12 +770,12 @@ power = 12
 ssign = -1
 debug = false
 
-[node name="ScoreTile49" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile49" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1100, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -782,12 +783,12 @@ power = 11
 ssign = 1
 debug = false
 
-[node name="ScoreTile50" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile50" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1060, 620)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -795,12 +796,12 @@ power = 11
 ssign = -1
 debug = false
 
-[node name="ScoreTile51" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile51" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1060, 580)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -808,12 +809,12 @@ power = 11
 ssign = -1
 debug = false
 
-[node name="ScoreTile14" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile14" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(60, 220)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -821,12 +822,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile15" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile15" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(60, 260)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -834,12 +835,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile20" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile20" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(60, 300)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -847,12 +848,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile23" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile23" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(100, 260)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -860,12 +861,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile24" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile24" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(140, 260)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -873,12 +874,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile25" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile25" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(180, 260)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -886,12 +887,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile26" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile26" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(220, 260)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -899,12 +900,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile27" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile27" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(220, 220)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -912,12 +913,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile16" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile16" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(100, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -925,12 +926,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile17" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile17" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(140, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -938,12 +939,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile28" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile28" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(100, 220)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -951,12 +952,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile29" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile29" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(100, 300)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -964,12 +965,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile18" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile18" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(180, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -977,12 +978,12 @@ power = 1
 ssign = 1
 debug = false
 
-[node name="ScoreTile21" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile21" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(140, 300)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -990,12 +991,12 @@ power = 2
 ssign = 1
 debug = false
 
-[node name="ScoreTile22" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile22" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(180, 300)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1003,12 +1004,12 @@ power = 3
 ssign = 1
 debug = false
 
-[node name="ScoreTile30" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile30" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(220, 300)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1016,12 +1017,12 @@ power = 4
 ssign = 1
 debug = false
 
-[node name="ScoreTile19" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile19" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(220, 180)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1029,12 +1030,12 @@ power = -1
 ssign = 1
 debug = false
 
-[node name="ScoreTile10" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile10" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(1340, 140)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1042,12 +1043,12 @@ power = 11
 ssign = 1
 debug = false
 
-[node name="ScoreTile7" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile7" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(620, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1055,12 +1056,12 @@ power = 0
 ssign = 1
 debug = false
 
-[node name="ScoreTile8" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_n00fm")]
+[node name="ScoreTile8" type="CharacterBody2D" parent="ScoreTiles" instance=ExtResource("6_5568l")]
 position = Vector2(660, 860)
 collision_layer = 4294967283
 collision_mask = 0
 motion_mode = 1
-script = ExtResource("7_awlt1")
+script = ExtResource("7_j15b5")
 color = 4
 is_hostile = false
 is_invincible = false
@@ -1070,21 +1071,21 @@ debug = false
 
 [node name="SavePoints" type="Node2D" parent="."]
 
-[node name="Goal3" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("8_r5p4r")]
+[node name="Goal3" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("8_rsbhk")]
 z_index = -2
 position = Vector2(1600, 640)
 rotation = -1.5708
-script = ExtResource("9_ecj0u")
+script = ExtResource("9_mvrvw")
 to_level = 0
 saved = false
 id = 0
 spawn_point = Vector2(60, 640)
 
-[node name="Goal4" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("8_r5p4r")]
+[node name="Goal4" type="Area2D" parent="SavePoints" groups=["savepoint"] instance=ExtResource("8_rsbhk")]
 z_index = -2
 position = Vector2(440, 680)
 rotation = -1.5708
-script = ExtResource("9_ecj0u")
+script = ExtResource("9_mvrvw")
 to_level = 0
 saved = false
 id = 0
@@ -1092,10 +1093,10 @@ spawn_point = Vector2(60, 640)
 
 [node name="Baddies" type="Node2D" parent="."]
 
-[node name="Baddie 6" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_ugtbe")]
-position = Vector2(780, 840.067)
+[node name="Baddie 6" type="CharacterBody2D" parent="Baddies" groups=["baddie"] instance=ExtResource("10_s2ku8")]
+position = Vector2(780, 865.067)
 collision_mask = 536870912
 velocity = Vector2(0, 300)
-script = ExtResource("11_08dr4")
+script = ExtResource("11_03px4")
 vx = 0.0
 vy = -300.0

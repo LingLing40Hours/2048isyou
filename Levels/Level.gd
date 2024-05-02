@@ -39,6 +39,9 @@ func set_level_name():
 	else:
 		game.current_level_name = null;
 
+#func _physics_process(delta):
+#	print("frame");
+
 func _ready():
 	print("level player saved: ", player_saved);
 	scoretiles = $ScoreTiles;
@@ -181,7 +184,8 @@ func is_last_modifier_held() -> bool:
 func is_last_action_held() -> bool:
 	if last_input_modifier == "slide":
 		return is_last_move_held();
-	return Input.is_action_pressed(last_input_modifier + "_" + last_input_move);
+	#return Input.is_action_pressed(last_input_modifier + "_" + last_input_move); #doesn't work
+	return is_last_modifier_held() and is_last_move_held();
 
 func is_last_modifier_or_move_held() -> bool:
 	return is_last_modifier_held() or is_last_move_held();
@@ -199,7 +203,6 @@ func update_last_input(event) -> bool:
 		if m != "slide":
 			#shift/split pressed, add premove
 			last_input_type = GV.InputType.MOVE;
-			#return event.is_action_pressed(m + "_" + last_input_move);
 			return is_last_move_held();
 		if temp_last_input_modifier != "slide" and m == "slide" and is_last_move_held():
 			#shift/split released but slide held, wait for timeout before starting move
