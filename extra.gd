@@ -751,3 +751,9 @@ func _on_repeat_input(input_type:int):
 	if not player_snapshots: #no more history
 		atimer.stop();
 '''
+
+'''
+func can_shift(pos_t:Vector2i, dir:Vector2i):
+	var next_pos_t:Vector2i = pos_t + dir;
+	return not is_wall_or_border(next_pos_t) and not is_tile(next_pos_t);
+'''

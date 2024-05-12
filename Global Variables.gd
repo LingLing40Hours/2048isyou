@@ -29,7 +29,7 @@ const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
 const LEVEL_COUNT:int = 15;
-var current_level_index:int = 7;
+var current_level_index:int = 14;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -301,9 +301,9 @@ func tile_val_to_id(power:int, ssign:int) -> int:
 
 func id_to_tile_val(id:int):
 	if id == TileId.ZERO:
-		return [-1, 1];
+		return Vector2i(-1, 1);
 	var signed_incremented_pow:int = id - TileId.ZERO;
-	return [absi(signed_incremented_pow) - 1, signi(signed_incremented_pow)];
+	return Vector2i(absi(signed_incremented_pow) - 1, signi(signed_incremented_pow));
 
 func is_approx_equal(a:float, b:float, tolerance:float) -> bool:
 	if absf(a - b) <= tolerance:

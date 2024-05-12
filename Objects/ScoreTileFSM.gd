@@ -324,16 +324,14 @@ func slide(dir:Vector2i) -> bool:
 				if not collider.is_xaligned() or not collider.is_yaligned():
 					return false;
 				
-				#print("pow: ", power, "  push count: ", push_count);
-				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.abilities["tile_push_limit"] - push_count);
-				
 				#set collider pusher (required to call collider.slide())
 				if collider.color != GV.ColorId.GRAY:
 					if is_instance_valid(pusher):
 						collider.pusher = pusher;
 					else:
 						collider.pusher = self;
-
+		
+				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.abilities["tile_push_limit"] - push_count);
 				if zeros: #bubble (manually)
 					for zero in zeros:
 						zero.slide_dir = dir;
@@ -341,9 +339,8 @@ func slide(dir:Vector2i) -> bool:
 						fsm.curState.next_state = fsm.states.sliding;
 						zero.pusher = collider.pusher;
 						zero.snap_slid = true;
-					#print("bubble");
-				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
-					pass;
+#				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
+#					pass;
 				elif (power == -1 or collider.power == -1 or power == collider.power) and \
 				(power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge
 					partner = collider;
@@ -377,7 +374,7 @@ func slide(dir:Vector2i) -> bool:
 	return true;
 
 #assume self is base pusher, aligned, and in tile/snap mode
-#returns the row of 0s if bubbling possible, else empty array
+#returns the row of 0s if bubbling possible, else an empty array
 func pushable_zeros(dir:Vector2i, tile_push_limit:int) -> Array[ScoreTile]:
 	var ans:Array[ScoreTile];
 	var zero_count:int = 0;

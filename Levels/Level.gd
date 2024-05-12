@@ -32,6 +32,15 @@ var last_input_move:String = "left"; #one of ["left", "right", "up", "down"]; al
 var last_action_finished:bool = true;
 
 
+func _enter_tree():
+	#set resolution (before tracking cam _ready())
+	resolution = Vector2(resolution_t * GV.TILE_WIDTH);
+	half_resolution = resolution / 2;
+
+	#set position bounds (before tracking cam _ready())
+	min_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MIN, GV.INT64_MIN);
+	max_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MAX, GV.INT64_MAX);
+
 func set_level_name():
 	if has_node("LevelName"):
 		game.current_level_name = $LevelName;

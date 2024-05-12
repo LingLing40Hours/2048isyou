@@ -306,12 +306,12 @@ TileId\
 	2^13		30\
 	2^14		31\
 \
-TypeId\
-	player		0 << 5\
-	invincible		1 << 5\
-	hostile		2 << 5\
-	regular		3 << 5\
-	void			4 << 5\
+TypeId						Merge Priority\
+	player		0 << 5		1\
+	invincible		1 << 5		3\
+	hostile		2 << 5		2\
+	regular		3 << 5		0\
+	void			4 << 5		4\
 \
 BackId\
 	empty			0 << 8\
@@ -737,8 +737,9 @@ physicsenabler +shaped (NAH)
 \f0\b what does atimer frame_count represent?\
 
 \f1\b0 	
-\f0\b fix if split pressed when slide held, split does not repeat
-\f1\b0 \
+\f0\b fix if split pressed when slide held, split does not repeat\
+	
+\f1\b0 fix on_copy() for new stuffIDs\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -830,7 +831,11 @@ Variants\
 			regular hostiles die when becoming 0 (cannot change sign); player can use this to \'91kill\'92 them\
 			regular hostiles die when being popped as 0 (requires tpl > 1)?\
 			if player is about to push opposite sign, same abs-value tile to hostile, run away\
-			immortal/invincible hostiles retain hostility when becoming 0\
+		Immortal/Invincible Hostile\
+			retain hostility when becoming 0\
+		Ghost/Void Hostile\
+			invisible except text fades in occasionally\
+			has highest merge priority\
 		Weak Hostile (is_weak = true)\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
