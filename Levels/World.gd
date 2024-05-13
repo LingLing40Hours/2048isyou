@@ -159,6 +159,7 @@ func generate_cell(pos_t:Vector2i):
 	if absf(n_wall) < 0.02:
 		$Cells.set_cell(GV.LayerId.BACK, pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.MEMBRANE, 0));
 		return;
+	$Cells.set_cell(GV.LayerId.BACK, pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.EMPTY, 0)); #to mark cell as generated
 
 	#tile
 	var n_tile:float = clamp(tile_noise.get_noise_2d(pos_t.x, pos_t.y), -1, 1); #[-1, 1]
