@@ -25,6 +25,7 @@ var max_pos:Vector2;
 
 func _ready():
 	active = true;
+	level.action_finished.connect(_on_action_finished);
 	
 	#set zoom
 	zoom.x = minf(GV.RESOLUTION.x / level.resolution.x, GV.RESOLUTION.y / level.resolution.y);
@@ -41,7 +42,7 @@ func _ready():
 func avg_player_pos() -> Vector2:
 	return Vector2.ZERO; #override in child class
 
-func _process(_delta):
+func _on_action_finished():
 	if active:
 		#update track_pos
 		track_pos = avg_player_pos();
