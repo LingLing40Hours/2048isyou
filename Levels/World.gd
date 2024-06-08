@@ -14,6 +14,7 @@ signal action_finished;
 @export var max_pos:Vector2 = GV.RESOLUTION;
 @export var player_pos_t:Vector2i = Vector2i.ZERO;
 @onready var game:Node2D = $"/root/Game";
+var is_player_alive:bool = true;
 
 var tile_noise = FastNoiseLite.new();
 var wall_noise = FastNoiseLite.new();
@@ -45,6 +46,9 @@ func _enter_tree():
 	max_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MAX, GV.INT64_MAX);
 	
 func _ready():
+	#init pathfinder
+	$Pathfinder.set_tilemap($Cells);
+	
 	#signals
 	premove_added.connect(_on_premove_added);
 	action_finished.connect(_on_action_finished);
@@ -167,7 +171,16 @@ func generate_cell(pos_t:Vector2i):
 	n_tile = pow(absf(n_tile), 1); #[0, 1]; use power > 1 to bias towards 0
 	var power:int = GV.TILE_GEN_POW_MAX if (n_tile == 1.0) else int((GV.TILE_GEN_POW_MAX + 2) * n_tile) - 1;
 	var tile_id:int = GV.tile_val_to_id(power, ssign);
-	$Cells.set_cell(GV.LayerId.TILE, pos_t, GV.LayerId.TILE, Vector2i(tile_id-1, GV.TypeId.REGULAR));
+	
+	#type
+	var type:int = GV.TypeId.REGULAR;
+	var n_type:float = randf();
+	if n_type < GV.P_GEN_INVINCIBLE:
+		type = GV.TypeId.INVINCIBLE;
+	elif n_type < GV.P_GEN_HOSTILE:
+		type = GV.TypeId.HOSTILE;
+	
+	$Cells.set_cell(GV.LayerId.TILE, pos_t, GV.LayerId.TILE, Vector2i(tile_id-1, type));
 
 func get_event_modifier(event) -> String:
 	for modifier in ["split", "shift"]:
@@ -218,23 +231,11 @@ func _on_action_finished():
 func get_tile_id(pos_t:Vector2i):
 	return $Cells.get_cell_atlas_coords(GV.LayerId.TILE, pos_t).x + 1;
 
-func is_player(pos_t:Vector2i):
-	return $Cells.get_cell_atlas_coords(GV.LayerId.TILE, pos_t).y == GV.TypeId.PLAYER;
+func get_type_id(pos_t:Vector2i):
+	return $Cells.get_cell_atlas_coords(GV.LayerId.TILE, pos_t).y;
 
-func is_membrane(pos_t:Vector2i):
-	return $Cells.get_cell_atlas_coords(GV.LayerId.BACK, pos_t).x == GV.BackId.MEMBRANE;
-
-func is_wall(pos_t:Vector2i):
-	var atlas_x = $Cells.get_cell_atlas_coords(GV.LayerId.BACK, pos_t).x;
-	return atlas_x in [GV.BackId.BLACK_WALL, GV.BackId.BLUE_WALL, GV.BackId.RED_WALL];
-
-func is_border(pos_t:Vector2i):
-	var atlas_x = $Cells.get_cell_atlas_coords(GV.LayerId.BACK, pos_t).x;
-	return atlas_x in [GV.BackId.BORDER_ROUND, GV.BackId.BORDER_SQUARE];
-
-func is_wall_or_border(pos_t:Vector2i):
-	var atlas_x = $Cells.get_cell_atlas_coords(GV.LayerId.BACK, pos_t).x;
-	return atlas_x in [GV.BackId.BORDER_ROUND, GV.BackId.BORDER_SQUARE, GV.BackId.BLACK_WALL, GV.BackId.BLUE_WALL, GV.BackId.RED_WALL];
+func get_back_id(pos_t:Vector2i):
+	return $Cells.get_cell_atlas_coords(GV.LayerId.BACK, pos_t).x;
 
 func is_tile(pos_t:Vector2i):
 	return get_tile_id(pos_t) != 0;
@@ -261,17 +262,20 @@ func is_pow_splittable(pow:int):
 	return pow > 0;
 
 #-1 if slide not possible
-func get_slide_push_count(pos_t:Vector2i, dir:Vector2i):
-	var curr_tile_id:int = get_tile_id(pos_t);
-	var curr_pos_t:Vector2i = pos_t;
+func get_slide_push_count(src_pos_t:Vector2i, dir:Vector2i):
+	var curr_tile_id:int = get_tile_id(src_pos_t);
+	var curr_pos_t:Vector2i = src_pos_t;
 	var push_count:int = 0;
 	var nearest_merge_push_count:int = -1;
 	
 	while push_count <= GV.abilities["tile_push_limit"]:
 		#check for wall/membrane
 		curr_pos_t += dir;
-		if is_wall_or_border(curr_pos_t) or \
-			((not is_player(pos_t) or push_count > 0) and is_membrane(curr_pos_t)):
+		var curr_back_id:int = get_back_id(curr_pos_t);
+		var src_type_id:int = get_type_id(src_pos_t);
+		if curr_back_id in GV.B_WALL_OR_BORDER or \
+			((src_type_id != GV.TypeId.PLAYER or push_count > 0) and curr_back_id == GV.BackId.MEMBRANE) or \
+			(src_type_id in GV.T_ENEMY and curr_back_id in [GV.BackId.SAVEPOINT, GV.BackId.GOAL]):
 			
 			if nearest_merge_push_count != -1:
 				return nearest_merge_push_count;
@@ -346,16 +350,16 @@ func perform_slide(pos_t:Vector2i, dir:Vector2i, push_count:int):
 	#remove source tile
 	$Cells.set_cell(GV.LayerId.TILE, pos_t, GV.LayerId.TILE, -Vector2i.ONE);
 
-func get_shift_distance(pos_t:Vector2i, dir:Vector2i) -> int:
-	var next_pos_t:Vector2i = pos_t + dir;
+func get_shift_distance(src_pos_t:Vector2i, dir:Vector2i) -> int:
+	var next_pos_t:Vector2i = src_pos_t + dir;
 	var distance:int = 0;
 	
-	if is_player(pos_t):
-		while not (is_wall_or_border(next_pos_t) or is_tile(next_pos_t)):
+	if get_type_id(src_pos_t) == GV.TypeId.PLAYER:
+		while not (get_back_id(next_pos_t) in GV.B_WALL_OR_BORDER or is_tile(next_pos_t)):
 			distance += 1;
 			next_pos_t += dir;
 	else:
-		while not (is_membrane(next_pos_t) or is_wall_or_border(next_pos_t) or is_tile(next_pos_t)):
+		while not (get_back_id(next_pos_t) == GV.BackId.MEMBRANE or get_back_id(next_pos_t) in GV.B_WALL_OR_BORDER or is_tile(next_pos_t)):
 			distance += 1;
 			next_pos_t += dir;
 	return distance;
@@ -366,12 +370,18 @@ func perform_shift(pos_t:Vector2i, dir:Vector2i, distance:int):
 	$Cells.set_cell(GV.LayerId.TILE, dest_pos_t, GV.LayerId.TILE, src_coord);
 	$Cells.set_cell(GV.LayerId.TILE, pos_t, GV.LayerId.TILE, -Vector2i.ONE);
 
+func set_player_pos_t(pos_t:Vector2i):
+	player_pos_t = pos_t;
+	$Pathfinder.set_player_pos_t(pos_t);
+
 #update player_pos_t
 func try_slide(pos_t:Vector2i, dir:Vector2i) -> bool:
 	var push_count:int = get_slide_push_count(pos_t, dir);
 	if push_count != -1:
 		perform_slide(pos_t, dir, push_count);
-		player_pos_t += dir;
+		set_player_pos_t(player_pos_t + dir);
+		if get_type_id(player_pos_t) != GV.TypeId.PLAYER:
+			is_player_alive = false;
 		return true;
 	return false;
 
@@ -399,14 +409,19 @@ func try_shift(pos_t:Vector2i, dir:Vector2i) -> bool:
 	var distance:int = get_shift_distance(pos_t, dir);
 	if distance:
 		perform_shift(pos_t, dir, distance);
-		player_pos_t += distance * dir;
+		set_player_pos_t(player_pos_t + distance * dir);
 		return true;
 	return false;
 
 func consume_premove():
-	print("CONSUME PREMOVE")
+	#check that player is alive
+	if not is_player_alive:
+		premoves.clear();
+		premove_dirs.clear();
+		return;
+	
 	#get first premove
-	var action:String = premoves.pop_front(); print(action)
+	var action:String = premoves.pop_front();
 	var dir:Vector2i = premove_dirs.pop_front();
 	
 	#determine if premove is possible, clear premoves if not
@@ -414,9 +429,12 @@ func consume_premove():
 	if action_func.call(player_pos_t, dir):
 		#start animation
 		#play sound effect
-		#update last_action_finished
+		#update last_action_finished, emit signal
 		#update player_pos_t?
+		#update player_last_dir?
 		#update $Cells?
+		$Pathfinder.set_player_last_dir(dir);
+		action_finished.emit();
 		pass;
 	else:
 		premoves.clear();

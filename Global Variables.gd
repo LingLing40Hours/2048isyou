@@ -42,6 +42,8 @@ const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
 const TILE_LOAD_BUFFER:float = 8 * TILE_WIDTH;
 const TILE_UNLOAD_BUFFER:float = 8 * TILE_WIDTH;
+const P_GEN_INVINCIBLE:float = 0.0005;
+const P_GEN_HOSTILE:float = 0.005;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];
@@ -156,7 +158,7 @@ var abilities = {
 	"split" : true,
 	"shift" : true,
 	"copy" : true,
-	"tile_push_limit" : 3,
+	"tile_push_limit" : 1,
 };
 
 enum TileId { #5 bits
@@ -184,6 +186,9 @@ enum BackId { #8 bits
 	GOAL,
 }
 
+const B_WALL_OR_BORDER:Array = [BackId.BORDER_ROUND, BackId.BORDER_SQUARE, BackId.BLACK_WALL, BackId.BLUE_WALL, BackId.RED_WALL];
+const T_ENEMY:Array = [TypeId.INVINCIBLE, TypeId.HOSTILE, TypeId.VOID];
+
 enum LayerId {
 	BACK,
 	TILE
@@ -195,6 +200,12 @@ enum ColorId {
 	BLUE = 30,
 	BLACK = 31,
 	GRAY = 32,
+};
+
+enum SearchId {
+	DIJKSTRA = 0,
+	ASTAR,
+	IDASTAR,
 };
 
 #const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
