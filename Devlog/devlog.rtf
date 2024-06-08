@@ -740,6 +740,9 @@ physicsenabler +shaped (NAH)
 \f0\b fix if split pressed when slide held, split does not repeat\
 	
 \f1\b0 fix on_copy() for new stuffIDs\
+	ensure hostiles can\'92t trap player at spawns or 
+\f0\b enter savepoints/goals
+\f1\b0 \
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -835,6 +838,7 @@ Variants\
 			retain hostility when becoming 0\
 		Ghost/Void Hostile\
 			invisible except text fades in occasionally\
+			always turns visible when within 3 tiles of player\
 			has highest merge priority\
 		Weak Hostile (is_weak = true)\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
@@ -862,6 +866,8 @@ Variants\
 			dark wall/tentacle monster (see baddie 5)\
 			ram - can break tiles with abs < 128\
 			glitch-like wave/region in which tiles will rearrange themselves\
+				moves slower when there are more holes\
+				naturally acquires holes from internal tile merges and loses holes by stealing tiles from environment\
 				chases player, then tiles rearrange into descending gradient to trap player\
 				requires tiles to propagate, cannot affect empty space\
 				gray-modulate tiles within self (with particle effects and puffy/shifting/dynamic/cloud-like borders) to indicate position\
