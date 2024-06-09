@@ -187,6 +187,7 @@ enum BackId { #8 bits
 }
 
 const B_WALL_OR_BORDER:Array = [BackId.BORDER_ROUND, BackId.BORDER_SQUARE, BackId.BLACK_WALL, BackId.BLUE_WALL, BackId.RED_WALL];
+const B_SAVE_OR_GOAL:Array = [BackId.SAVEPOINT, BackId.GOAL];
 const T_ENEMY:Array = [TypeId.INVINCIBLE, TypeId.HOSTILE, TypeId.VOID];
 
 enum LayerId {

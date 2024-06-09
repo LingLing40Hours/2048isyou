@@ -86,28 +86,21 @@ func is_world_border(pos_t:Vector2i) -> bool:
 	return false;
 
 func on_copy():
-	if GV.abilities["copy"]:
-		#declare and init level array
-		var level_array = [];
-		for row_itr in resolution_t.y:
-			var row = [];
-			row.resize(resolution_t.x);
-			row.fill(GV.TileId.EMPTY);
-			level_array.push_back(row);
-		
-		#store tilemap stuff ids
-		for row_itr in resolution_t.y:
-			for col_itr in resolution_t.x:
-				var id = $Cells.get_cell_source_id(0, Vector2i(col_itr, row_itr));
-				if id == 0:
-					level_array[row_itr][col_itr] = GV.BackId.BORDER_SQUARE;
-				else:
-					level_array[row_itr][col_itr] = id * GV.StuffId.MEMBRANE;
-		
-		#add to clipboard
-		DisplayServer.clipboard_set(str(level_array));
-		
-		return level_array;
+	if not GV.abilities["copy"]:
+		return;
+	
+	#declare and init level array
+	var level_array = [];
+#	for row_itr in resolution_t.y:
+#		var row = [];
+#		row.resize(resolution_t.x);
+#		row.fill(GV.TileId.EMPTY);
+#		level_array.push_back(row);
+	
+	#add to clipboard
+	DisplayServer.clipboard_set(str(level_array));
+	
+	return level_array;
 
 #use tilemap, don't unload manually
 func _on_camera_transition_started(target:Vector2, track_dir:Vector2i):
@@ -261,22 +254,33 @@ func is_id_splittable(tile_id:int):
 func is_pow_splittable(pow:int):
 	return pow > 0;
 
+func is_compatible(type_id:int, back_id:int):
+	if back_id == GV.BackId.EMPTY:
+		return true;
+	if back_id in GV.B_WALL_OR_BORDER:
+		return false;
+	if back_id == GV.BackId.MEMBRANE:
+		return type_id == GV.TypeId.PLAYER;
+	#back_id in GV.B_SAVE_OR_GOAL
+	return type_id == GV.TypeId.PLAYER or type_id == GV.TypeId.REGULAR;
+
 #-1 if slide not possible
 func get_slide_push_count(src_pos_t:Vector2i, dir:Vector2i):
-	var curr_tile_id:int = get_tile_id(src_pos_t);
 	var curr_pos_t:Vector2i = src_pos_t;
+	var curr_tile_id:int = get_tile_id(src_pos_t);
+	var src_type_id:int = get_type_id(src_pos_t);
+	var curr_type_id:int = src_type_id;
 	var push_count:int = 0;
 	var nearest_merge_push_count:int = -1;
 	
 	while push_count <= GV.abilities["tile_push_limit"]:
-		#check for wall/membrane
+		#check for obstruction
+		var temp_type_id:int = curr_type_id;
 		curr_pos_t += dir;
+		curr_type_id = get_type_id(curr_pos_t);
 		var curr_back_id:int = get_back_id(curr_pos_t);
-		var src_type_id:int = get_type_id(src_pos_t);
-		if curr_back_id in GV.B_WALL_OR_BORDER or \
-			((src_type_id != GV.TypeId.PLAYER or push_count > 0) and curr_back_id == GV.BackId.MEMBRANE) or \
-			(src_type_id in GV.T_ENEMY and curr_back_id in [GV.BackId.SAVEPOINT, GV.BackId.GOAL]):
-			
+		if not is_compatible(temp_type_id, curr_back_id) or \
+			(push_count > 0 and src_type_id in GV.T_ENEMY and curr_type_id == GV.TypeId.PLAYER):
 			if nearest_merge_push_count != -1:
 				return nearest_merge_push_count;
 			return -1;
@@ -353,15 +357,11 @@ func perform_slide(pos_t:Vector2i, dir:Vector2i, push_count:int):
 func get_shift_distance(src_pos_t:Vector2i, dir:Vector2i) -> int:
 	var next_pos_t:Vector2i = src_pos_t + dir;
 	var distance:int = 0;
-	
-	if get_type_id(src_pos_t) == GV.TypeId.PLAYER:
-		while not (get_back_id(next_pos_t) in GV.B_WALL_OR_BORDER or is_tile(next_pos_t)):
-			distance += 1;
-			next_pos_t += dir;
-	else:
-		while not (get_back_id(next_pos_t) == GV.BackId.MEMBRANE or get_back_id(next_pos_t) in GV.B_WALL_OR_BORDER or is_tile(next_pos_t)):
-			distance += 1;
-			next_pos_t += dir;
+	var src_type_id:int = get_type_id(src_pos_t);
+
+	while is_compatible(src_type_id, get_back_id(next_pos_t)) and not is_tile(next_pos_t):
+		distance += 1;
+		next_pos_t += dir;
 	return distance;
 
 func perform_shift(pos_t:Vector2i, dir:Vector2i, distance:int):
@@ -372,7 +372,7 @@ func perform_shift(pos_t:Vector2i, dir:Vector2i, distance:int):
 
 func set_player_pos_t(pos_t:Vector2i):
 	player_pos_t = pos_t;
-	$Pathfinder.set_player_pos_t(pos_t);
+	$Pathfinder.set_player_pos(pos_t);
 
 #update player_pos_t
 func try_slide(pos_t:Vector2i, dir:Vector2i) -> bool:
