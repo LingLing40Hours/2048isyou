@@ -170,8 +170,8 @@ enum TypeId { #3 bits
 	PLAYER = 0,
 	INVINCIBLE,
 	HOSTILE,
-	REGULAR,
 	VOID,
+	REGULAR,
 }
 
 enum BackId { #8 bits
@@ -205,6 +205,7 @@ enum ColorId {
 
 enum SearchId {
 	DIJKSTRA = 0,
+	JPD, #jump point dijkstra
 	ASTAR,
 	IDASTAR,
 };
@@ -307,8 +308,6 @@ func xt_to_world(x:int) -> float:
 
 #doesn't do ZERO->EMPTY optimization
 func tile_val_to_id(power:int, ssign:int) -> int:
-	if power == -1: #zero
-		return TileId.ZERO;
 	return (power + 1) * ssign + TileId.ZERO;
 
 func id_to_tile_val(id:int):
