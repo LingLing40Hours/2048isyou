@@ -310,8 +310,8 @@ TypeId						Merge Priority\
 	player		0 << 5		1\
 	invincible		1 << 5		3\
 	hostile		2 << 5		2\
-	regular		3 << 5		0\
-	void			4 << 5		4\
+	void			3 << 5		4\
+	regular		4 << 5		0\
 \
 BackId\
 	empty			0 << 8\
@@ -327,6 +327,16 @@ BackId\
 LayerId (tilemap)\
 	back	0\
 	tile		1\
+\
+ActionId\
+	slide		0\
+	split		1\
+\
+SearchId\
+	dijkstra	0\
+	jpd		1\
+	astar	2\
+	ida		3\
 \
 ColorId (collision)\
 	all		4\
@@ -840,6 +850,7 @@ Variants\
 			invisible except text fades in occasionally\
 			always turns visible when within 3 tiles of player\
 			has highest merge priority\
+			spawns/aggros when enough 0s are popped\
 		Weak Hostile (is_weak = true)\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
@@ -872,6 +883,8 @@ Variants\
 				requires tiles to propagate, cannot affect empty space\
 				gray-modulate tiles within self (with particle effects and puffy/shifting/dynamic/cloud-like borders) to indicate position\
 				die if containing 5+ non-tile cells\
+				put ~ in 4x4 box where it solves sliding tile puzzle indefinitely\
+					make player race sliding tile puzzle against hostiles?\
 			tribe of hostiles that has a 1-generator and tries to fill entire world with 2048s\
 			tribe of hostiles that tries to merge all tiles?\
 		occasional chest\
