@@ -441,8 +441,6 @@ func contains_world_border(pos_c:Vector2i) -> bool:
 	return false;
 
 func _exit_tree():
-	super._exit_tree();
-	
 	#set exit condition
 	exit_mutex.lock();
 	exit_thread = true;

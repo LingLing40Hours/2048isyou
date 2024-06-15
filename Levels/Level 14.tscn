@@ -45,10 +45,6 @@ tile_set = ExtResource("4_34x2b")
 format = 2
 layer_0/name = "back"
 layer_1/name = "tile"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
 layer_1/z_index = 1
 layer_1/tile_data = PackedInt32Array()
 

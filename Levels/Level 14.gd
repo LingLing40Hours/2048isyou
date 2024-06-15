@@ -26,8 +26,8 @@ func _ready():
 	loaded_pos_t_max = GV.world_to_pos_t($TrackingCam.position + half_resolution + Vector2(GV.TILE_LOAD_BUFFER, GV.TILE_LOAD_BUFFER));
 	load_rect(loaded_pos_t_min, loaded_pos_t_max);
 
-	print($Cells.get_cell_source_id(0, Vector2i.ZERO)) #layer, coord; unnecessary since layer is same as source id
-	print($Cells.get_cell_source_id(0, Vector2i(1, 0)))
-	print($Cells.get_cell_atlas_coords(0, Vector2i.ZERO))
-	print($Cells.get_cell_atlas_coords(0, Vector2i(1, 0)))
+	#print($Cells.get_cell_source_id(0, Vector2i.ZERO)) #layer, coord; unnecessary since layer is same as source id
+	#print($Cells.get_cell_source_id(0, Vector2i(1, 0)))
+	#print($Cells.get_cell_atlas_coords(0, Vector2i.ZERO))
+	#print($Cells.get_cell_atlas_coords(0, Vector2i(1, 0)))
 
