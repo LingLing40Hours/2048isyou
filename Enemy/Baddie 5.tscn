@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://bn6hebkuibv6r"]
 
 [ext_resource type="Script" path="res://Enemy/Baddie 5.gd" id="1_s1jta"]
-[ext_resource type="Texture2D" uid="uid://bwk0yn4jrrqtg" path="res://Sprites/Extra/2_12d.png" id="3_482un"]
-[ext_resource type="Texture2D" uid="uid://dd1a3yq88b4vd" path="res://Sprites/Extra/2_0md.png" id="3_cxh0i"]
+[ext_resource type="Texture2D" uid="uid://bd0cg2be4epht" path="res://Sprites/Sprites/2_14k.png" id="2_k0o88"]
+[ext_resource type="Texture2D" uid="uid://djoiugxn4ia7x" path="res://Sprites/Sprites/2_nk.png" id="3_d87il"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n14sa"]
 size = Vector2(40, 40)
@@ -11,7 +11,7 @@ size = Vector2(40, 40)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_482un")
+"texture": ExtResource("2_k0o88")
 }],
 "loop": true,
 "name": &"chase",
@@ -19,7 +19,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_cxh0i")
+"texture": ExtResource("3_d87il")
 }],
 "loop": true,
 "name": &"idle",
