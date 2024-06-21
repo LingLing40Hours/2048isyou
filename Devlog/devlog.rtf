@@ -1,8 +1,8 @@
 {\rtf1\ansi\ansicpg1252\cocoartf2638
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Bold;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset134 PingFangSC-Regular;
 \f3\fnil\fcharset0 HelveticaNeue-Italic;\f4\fnil\fcharset0 HelveticaNeue-BoldItalic;}
-{\colortbl;\red255\green255\blue255;\red220\green161\blue13;}
-{\*\expandedcolortbl;;\cssrgb\c89412\c68627\c3922;}
+{\colortbl;\red255\green255\blue255;\red220\green161\blue13;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c89412\c68627\c3922;\cssrgb\c0\c0\c0;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
@@ -334,7 +334,7 @@ ActionId\
 \
 SearchId\
 	dijkstra	0\
-	jpd		1\
+	hbjpd	1\
 	astar	2\
 	ida		3\
 \
@@ -751,8 +751,9 @@ physicsenabler +shaped (NAH)
 	
 \f1\b0 fix on_copy() for new stuffIDs\
 	ensure hostiles can\'92t trap player at spawns or 
-\f0\b enter savepoints/goals
-\f1\b0 \
+\f0\b enter savepoints/goals\
+	
+\f1\b0 fix player pushing hostile 0 instead of merging with it\
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -876,15 +877,20 @@ Variants\
 		occasional bosses\
 			dark wall/tentacle monster (see baddie 5)\
 			ram - can break tiles with abs < 128\
-			glitch-like wave/region in which tiles will rearrange themselves\
+			glitch-like 4x4 wave/region in which tiles will rearrange themselves\
+				performs internal slides\
 				moves slower when there are more holes\
 				naturally acquires holes from internal tile merges and loses holes by stealing tiles from environment\
 				chases player, then tiles rearrange into descending gradient to trap player\
 				requires tiles to propagate, cannot affect empty space\
 				gray-modulate tiles within self (with particle effects and puffy/shifting/dynamic/cloud-like borders) to indicate position\
-				die if containing 5+ non-tile cells\
+				die if containing 5+ non-tile cells or no internal slides possible\
 				put ~ in 4x4 box where it solves sliding tile puzzle indefinitely\
 					make player race sliding tile puzzle against hostiles?\
+				can break 0s\
+				can\'92t split tiles\
+				\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 in ~ spawn area, tiles are spawned incontinuously and hostiles are more likely to spawn trapped\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
 			tribe of hostiles that has a 1-generator and tries to fill entire world with 2048s\
 			tribe of hostiles that tries to merge all tiles?\
 		occasional chest\
