@@ -10,11 +10,11 @@ vertical
 	dir1
 		empty				jump point if secondary jump
 		zero	
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			jump point if secondary jump
 		slide mergeable
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			jump point
 		split mergeable			same as slide mergeable
@@ -22,11 +22,11 @@ vertical
 	next
 		empty				NAH
 		zero					
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			NAH
 		slide mergeable
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			jump point
 		split mergeable			same as slide mergeable
@@ -34,26 +34,26 @@ horizontal
 	dir1
 		empty				jump point if blocked
 		zero
-			type dominant		jump point if blocked
+			type preserved		jump point if blocked
 			type change		jump point if blocked and allow_type_change
 			regular			jump point if blocked
 		slide mergeable
-			type dominant		jump point if blocked
+			type preserved		jump point if blocked
 			type change		jump point if blocked and allow_type_change
 			regular			jump point if blocked
 		split mergeable
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			jump point
 	dir2					same as dir1
 	next
 		empty				NAH
 		zero
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			NAH
 		slide mergeable
-			type dominant		jump point
+			type preserved		jump point
 			type change		jump point if allow_type_change
 			regular			jump point
 		split mergeable			same as slide mergeable
