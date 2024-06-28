@@ -50,7 +50,7 @@ func _ready():
 	$Pathfinder.set_player_pos(player_pos_t);
 	$Pathfinder.set_player_last_dir(Vector2i.ZERO);
 	$Pathfinder.set_tilemap($Cells);
-	$Pathfinder.set_tile_push_limit(GV.abilities["tile_push_limit"]);
+	$Pathfinder.set_tile_push_limits(GV.tile_push_limits);
 	$Pathfinder.generate_hash_keys();
 	
 	#signals
@@ -151,7 +151,7 @@ func generate_cell(pos_t:Vector2i):
 		return;
 	if pos_t == player_pos_t:
 		$Cells.set_cell(GV.LayerId.TILE, player_pos_t, GV.LayerId.TILE, Vector2i(GV.TileId.ZERO - 1, GV.TypeId.PLAYER));
-		$Cells.set_cell(GV.LayerId.BACK, player_pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.MEMBRANE, 0));
+		#$Cells.set_cell(GV.LayerId.BACK, player_pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.MEMBRANE, 0));
 		return;
 	
 	#back
@@ -202,8 +202,14 @@ func is_last_move_held() -> bool:
 func _input(event):
 	if event.is_action_pressed("debug"): #test pathfinding
 		var dest:Vector2i = player_pos_t + Vector2i(2, 2);
-		var path:Array = $Pathfinder.pathfind(GV.SearchId.DIJKSTRA, 500, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
+		var path:Array = $Pathfinder.pathfind_sa(GV.SearchId.DIJKSTRA, 500, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
 		print(path);
+		return;
+	if event.is_action_pressed("debug2"):
+		var dest:Vector2i = player_pos_t + Vector2i(2, 2);
+		var path:Array = $Pathfinder.pathfind_sa(GV.SearchId.MDA, 500, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
+		print(path);
+		return;
 	
 	var modifier:String = get_event_modifier(event);
 	if modifier:
@@ -284,29 +290,29 @@ func get_slide_push_count(src_pos_t:Vector2i, dir:Vector2i):
 	var push_count:int = 0;
 	var nearest_merge_push_count:int = -1;
 	
-	while push_count <= GV.abilities["tile_push_limit"]:
+	while push_count <= GV.tile_push_limits[src_type_id]:
 		#check for obstruction
-		var temp_type_id:int = curr_type_id;
+		var prev_type_id:int = curr_type_id;
 		curr_pos_t += dir;
 		curr_type_id = get_type_id(curr_pos_t);
 		var curr_back_id:int = get_back_id(curr_pos_t);
-		if not is_compatible(temp_type_id, curr_back_id) or \
+		if not is_compatible(prev_type_id, curr_back_id) or \
 			(push_count > 0 and src_type_id in GV.T_ENEMY and curr_type_id == GV.TypeId.PLAYER):
 			return nearest_merge_push_count;
 		
 		#push/merge logic
-		var temp_tile_id:int = curr_tile_id;
+		var prev_tile_id:int = curr_tile_id;
 		curr_tile_id = get_tile_id(curr_pos_t);
 		
-		if is_ids_mergeable(temp_tile_id, curr_tile_id):
+		if is_ids_mergeable(prev_tile_id, curr_tile_id):
 			if nearest_merge_push_count == -1:
 				nearest_merge_push_count = push_count;
-			if curr_tile_id != GV.TileId.ZERO:
-				if temp_tile_id == GV.TileId.ZERO and curr_tile_id == GV.TileId.EMPTY:
+			if curr_tile_id != GV.TileId.ZERO or curr_type_id != GV.TypeId.REGULAR:
+				if prev_tile_id == GV.TileId.ZERO and curr_tile_id == GV.TileId.EMPTY:
 					return push_count; #bubble
 				return nearest_merge_push_count;
 		
-		if push_count == GV.abilities["tile_push_limit"]:
+		if push_count == GV.tile_push_limits[src_type_id]:
 			return nearest_merge_push_count;
 		push_count += 1;
 	return -1;
@@ -326,7 +332,7 @@ func get_tile_type_merge_priority(type_id:int):
 		GV.TypeId.VOID:
 			return 4;
 
-#assumes tile ids are mergeable
+#assume tile ids are mergeable
 func get_merged_tile_id(tile_id1:int, tile_id2:int):
 	if tile_id1 == GV.TileId.EMPTY:
 		return tile_id2;
@@ -344,6 +350,10 @@ func get_merged_tile_id(tile_id1:int, tile_id2:int):
 func get_merged_atlas_coords(coord1:Vector2i, coord2:Vector2i):
 	var atlas_y:int = coord1.y if get_tile_type_merge_priority(coord1.y) > get_tile_type_merge_priority(coord2.y) else coord2.y;
 	var atlas_x:int = get_merged_tile_id(coord1.x + 1, coord2.x + 1) - 1;
+	#hostile death
+	if atlas_x == GV.TileId.ZERO - 1 and atlas_y == GV.TypeId.HOSTILE:
+		atlas_y = GV.TypeId.REGULAR;
+	assert(atlas_y != -1 && atlas_x != -1);
 	return Vector2i(atlas_x, atlas_y);
 
 #propagate tile type

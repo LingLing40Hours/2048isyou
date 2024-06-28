@@ -158,7 +158,6 @@ var abilities = {
 	"split" : true,
 	"shift" : true,
 	"copy" : true,
-	"tile_push_limit" : 1,
 };
 
 enum TileId { #5 bits
@@ -205,9 +204,18 @@ enum ColorId {
 
 enum SearchId {
 	DIJKSTRA = 0,
-	JPD, #jump point dijkstra
-	ASTAR,
-	IDASTAR,
+	HBJPD, #horizontally biased jump point dijkstra
+	MDA, #manhattan distance astar
+	ADA, #abstract distance astar
+	IDMDA, #iterative deepening *
+};
+
+var tile_push_limits:Dictionary = {
+	TypeId.PLAYER : 1,
+	TypeId.INVINCIBLE : 1,
+	TypeId.HOSTILE : 1,
+	TypeId.VOID : 1,
+	TypeId.REGULAR : 0,
 };
 
 #const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
