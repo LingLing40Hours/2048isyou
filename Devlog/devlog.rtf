@@ -337,8 +337,9 @@ SearchId\
 	dijkstra	0\
 	hbjpd	1\
 	mda		2\
-	ada		3\
-	idmda	4\
+	iada		3\
+	hbjpmda	4\
+	hbjpiada	5\
 \
 ColorId (collision)\
 	all		4\
@@ -771,7 +772,8 @@ Variants\
 \cf0 \expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 	GoL section (gliders, etc.)\
 		GoL-based gameplay logic (player dies if neighbors < 2 or > 3, 0s popping in and out of existence)\
-		use numberphile paper color as background\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+		use numberphile paper color as background\
+		membrane is type filter; add a tileid filter (so only 0s can enter GoL region)\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 	Equilateral Triangles (flipping)\
 	Discount 2048 Is You\
