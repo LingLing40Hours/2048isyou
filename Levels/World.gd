@@ -46,13 +46,6 @@ func _enter_tree():
 	max_pos = GV.TILE_WIDTH * Vector2(GV.INT64_MAX, GV.INT64_MAX);
 	
 func _ready():
-	#init pathfinder
-	$Pathfinder.set_player_pos(player_pos_t);
-	$Pathfinder.set_player_last_dir(Vector2i.ZERO);
-	$Pathfinder.set_tilemap($Cells);
-	$Pathfinder.set_tile_push_limits(GV.tile_push_limits);
-	$Pathfinder.generate_hash_keys();
-	
 	#signals
 	premove_added.connect(_on_premove_added);
 	action_finished.connect(_on_action_finished);
@@ -200,17 +193,6 @@ func is_last_move_held() -> bool:
 	return Input.is_action_pressed(last_input_move);
 
 func _input(event):
-	if event.is_action_pressed("debug"): #test pathfinding
-		var dest:Vector2i = player_pos_t + Vector2i(2, 2);
-		var path:Array = $Pathfinder.pathfind_sa(GV.SearchId.DIJKSTRA, 500, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
-		print(path);
-		return;
-	if event.is_action_pressed("debug2"):
-		var dest:Vector2i = player_pos_t + Vector2i(2, 2);
-		var path:Array = $Pathfinder.pathfind_sa(GV.SearchId.MDA, 500, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
-		print(path);
-		return;
-	
 	var modifier:String = get_event_modifier(event);
 	if modifier:
 		last_input_modifier = modifier;
@@ -450,10 +432,11 @@ func consume_premove():
 		#update player_pos_t?
 		#update player_last_dir?
 		#update $Cells?
+		#clear inconsistent_abstract_dists?
 		$Pathfinder.set_player_last_dir(dir);
 		action_finished.emit();
+		$Pathfinder.rrd_clear_iad();
 		pass;
 	else:
 		premoves.clear();
 		premove_dirs.clear();
-	

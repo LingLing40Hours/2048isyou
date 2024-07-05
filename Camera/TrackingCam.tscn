@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://ck3d8d70jxrvw"]
-
-[ext_resource type="Script" path="res://Camera/TrackingCamLevel.gd" id="1_g5xpd"]
-
-[node name="TrackingCam" type="Camera2D"]
-script = ExtResource("1_g5xpd")

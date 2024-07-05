@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bv6q31jc36kmy"]
+[gd_scene load_steps=5 format=3 uid="uid://bv6q31jc36kmy"]
 
 [ext_resource type="Script" path="res://Levels/Level 14.gd" id="1_40yuo"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_yeoy2"]
-[ext_resource type="PackedScene" uid="uid://ck3d8d70jxrvw" path="res://Camera/TrackingCam.tscn" id="3_kswx5"]
 [ext_resource type="TileSet" uid="uid://bfrmys3k41wsd" path="res://Tilesets/full_set.tres" id="4_34x2b"]
 [ext_resource type="Script" path="res://Camera/TrackingCamWorld.gd" id="4_hn5kj"]
 
@@ -37,7 +36,7 @@ offset_bottom = 1200.0
 color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
-[node name="TrackingCam" parent="." instance=ExtResource("3_kswx5")]
+[node name="TrackingCam" type="Camera2D" parent="."]
 script = ExtResource("4_hn5kj")
 
 [node name="Cells" type="TileMap" parent="." groups=["wall"]]

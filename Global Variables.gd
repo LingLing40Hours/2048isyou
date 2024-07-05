@@ -206,8 +206,9 @@ enum SearchId {
 	DIJKSTRA = 0,
 	HBJPD, #horizontally biased jump point dijkstra
 	MDA, #manhattan distance astar
-	ADA, #abstract distance astar
-	IDMDA, #iterative deepening *
+	IADA, #inconsistent abstract distance astar
+	HBJPMDA,
+	HBJPIADA,
 };
 
 var tile_push_limits:Dictionary = {
