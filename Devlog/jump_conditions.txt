@@ -1,4 +1,5 @@
 Jump Conditions
+	does not perform pruning or discriminate based on g-cost
 
 must_include:
 	allow_type_change (included in try_action)
