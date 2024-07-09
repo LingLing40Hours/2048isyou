@@ -202,7 +202,7 @@ enum ColorId {
 	GRAY = 32,
 };
 
-enum SearchId {
+enum SASearchId {
 	DIJKSTRA = 0,
 	HBJPD, #horizontally biased jump point dijkstra
 	MDA, #manhattan distance astar
