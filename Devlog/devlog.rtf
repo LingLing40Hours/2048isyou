@@ -207,6 +207,8 @@ Dueling Mode\
 Level design\
 	shorten single-choice routes that lead to dead ends\
 	enter lv6 arrow from right not left\
+		\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Offer full refund for beating lv6\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
 	loading bar for dense levels\
 	12s after death, a random 8 starts banter, followed by other 8s\
 	player dies after reaching 4096?\
@@ -351,6 +353,7 @@ ColorId (collision)\
 Todo\
 	\expnd0\expndtw0\kerning0
 difficulty: select from enum SearchId + TUTORIAL\
+		difficulty selection based on player pos\
 		choose settings (mode, difficulty, volume) via player movement (2+ players simultaneously?)\kerning1\expnd0\expndtw0 \
 	learn procedural animation (animation too restrictive)\
 	learn Godot 3D\
@@ -765,11 +768,11 @@ physicsenabler +shaped (NAH)
 		maybe for invincible/void\
 	find a good set of hash keys and stick with it\
 	\expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 add secret ending if four 16384s are arranged in a square\
+add secret ending if four 16384s are arranged in a square\
 	implement slow gravity-induced movement for black tiles\
 		higher absolute value = higher mass\
 		don\'92t implement negative mass (repulsion) bc it doesn\'92t exist\
-	implement energy/stamina for player/hostiles?\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+	implement energy/stamina for player/hostiles?\kerning1\expnd0\expndtw0 \
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
@@ -780,12 +783,12 @@ Variants\
 		GoL-based gameplay logic (player dies if neighbors < 2 or > 3, 0s popping in and out of existence)\
 		use numberphile paper color as background\
 		membrane is type filter; add a tileid filter (so only 0s can enter GoL region)\
-		\outl0\strokewidth0 \strokec2 hostiles that start inside GoL region chill as part of bar/square/other permanent structures while waiting for player\outl0\strokewidth0 \
-	\outl0\strokewidth0 \strokec2 membrane-enclosed region of 2048 gameplay\
+		hostiles that start inside GoL region chill as part of bar/square/other permanent structures while waiting for player\
+	membrane-enclosed region of 2048 gameplay\
 		player tries to avoid merging with the static hostiles\
 		a hostile 1 or 2 spawns after every move\
 		2048 ai plays optimally?\
-		board resets after 2048 is obtained?\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+		board resets after 2048 is obtained?\kerning1\expnd0\expndtw0 \
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 	Equilateral Triangles (flipping)\
 	Discount 2048 Is You\
@@ -907,9 +910,9 @@ Tutorial\
 		procgen (like Minecraft)\
 			2 noise layers, 1 variance layer\
 			\expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 weather - "heals" terrain; very slowly\
+weather - "heals" terrain; very slowly\
 				cause tiles near EMPTY to split to fill the EMPTY (or generate 0s)\
-				maybe smooth large tile_id gradients too?\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+				maybe smooth large tile_id gradients too?\kerning1\expnd0\expndtw0 \
 		occasional bosses\
 			dark wall/tentacle monster (see baddie 5)\
 			ram - can break tiles with abs < 128\
@@ -927,7 +930,7 @@ Tutorial\
 				can\'92t split tiles\
 				\expnd0\expndtw0\kerning0
 in ~ spawn area, tiles are spawned incontinuously and hostiles are more likely to spawn trapped\
-				\outl0\strokewidth0 \strokec2 encounter baby glitch (2x2) before larger ones?\outl0\strokewidth0 \
+				encounter baby glitch (2x2) before larger ones?\
 				surrounding spawn area is a 6-cell wide moat of empty\
 				glitch escapes from corner of 4x4 enclosure after solving tile puzzle\kerning1\expnd0\expndtw0 \
 			tribe of hostiles that has a 1-generator and tries to fill entire world with 2048s\
