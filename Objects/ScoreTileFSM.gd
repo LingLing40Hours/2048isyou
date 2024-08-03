@@ -145,7 +145,7 @@ func initialize():
 	$FSM.setState($FSM.states[initial_state]);
 	
 func _input(event):
-	if event.is_action_pressed("debug"):
+	if event.is_action_pressed("debug1"):
 		if color == GV.ColorId.GRAY:
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
 		
@@ -276,7 +276,7 @@ func slide(dir:Vector2i) -> bool:
 	#increment pusher tile count
 	if is_instance_valid(pusher):
 		pusher.tile_push_count += 1;
-		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
+		if pusher.tile_push_count > GV.tile_push_limits[GV.TypeId.PLAYER]: #exit early
 			#print("SLIDE FAILED, push count");
 			return false;
 		
@@ -286,9 +286,9 @@ func slide(dir:Vector2i) -> bool:
 	#find if at push limit
 	var at_push_limit:bool = false;
 	var push_count:int = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
-	if push_count > GV.abilities["tile_push_limit"]: #exit early
+	if push_count > GV.tile_push_limits[GV.TypeId.PLAYER]: #exit early
 		return false;
-	elif push_count == GV.abilities["tile_push_limit"]:
+	elif push_count == GV.tile_push_limits[GV.TypeId.PLAYER]:
 		at_push_limit = true;
 	
 	#determine whether to slide or merge or, if obstructed, idle
@@ -331,7 +331,7 @@ func slide(dir:Vector2i) -> bool:
 					else:
 						collider.pusher = self;
 		
-				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.abilities["tile_push_limit"] - push_count);
+				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.tile_push_limits[GV.TypeId.PLAYER] - push_count);
 				if zeros: #bubble (manually)
 					for zero in zeros:
 						zero.slide_dir = dir;
@@ -361,7 +361,7 @@ func slide(dir:Vector2i) -> bool:
 	
 	#check pusher tile count
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
-	if push_count > GV.abilities["tile_push_limit"]:
+	if push_count > GV.tile_push_limits[GV.TypeId.PLAYER]:
 		pusheds.clear(); #only necessary if self is pusher (pusher == null)
 		#print("SLIDE FAILED, push limit 2");
 		return false;
