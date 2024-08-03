@@ -144,6 +144,7 @@ func generate_cell(pos_t:Vector2i):
 		return;
 	if pos_t == player_pos_t:
 		$Cells.set_cell(GV.LayerId.TILE, player_pos_t, GV.LayerId.TILE, Vector2i(GV.TileId.ZERO - 1, GV.TypeId.PLAYER));
+		$Cells.set_cell(GV.LayerId.BACK, pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.EMPTY, 0)); #to mark as generated
 		#$Cells.set_cell(GV.LayerId.BACK, player_pos_t, GV.LayerId.BACK, Vector2i(GV.BackId.MEMBRANE, 0));
 		return;
 	
