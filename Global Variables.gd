@@ -28,8 +28,8 @@ const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for
 const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
-const LEVEL_COUNT:int = 15;
-var current_level_index:int = 14;
+const LEVEL_COUNT:int = 16;
+var current_level_index:int = 6;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -209,6 +209,8 @@ enum SASearchId {
 	IADA, #inconsistent abstract distance astar
 	HBJPMDA,
 	HBJPIADA,
+	IWDMDA, #iterative widening diamond *
+	IWDHBJPMDA,
 };
 
 var tile_push_limits:Dictionary = {

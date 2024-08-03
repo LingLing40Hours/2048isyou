@@ -1,6 +1,6 @@
 extends World
 
-var curr_goal_pos:Vector2i; #for rrd testing
+var curr_goal_pos:Vector2i; #for testing
 
 
 func _ready():
@@ -47,6 +47,11 @@ func viewport_to_tile_pos(viewport_pos:Vector2) -> Vector2i:
 func _input(event):
 	super._input(event);
 	
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			curr_goal_pos = viewport_to_tile_pos(event.position);
+			print("set curr_goal_pos to ", curr_goal_pos);
+			return;
 	#if event is InputEventMouseButton and event.is_pressed():
 		#if event.button_index == MOUSE_BUTTON_LEFT:
 			#var click_pos:Vector2i = viewport_to_tile_pos(event.position);
@@ -57,37 +62,44 @@ func _input(event):
 		#elif event.button_index == MOUSE_BUTTON_RIGHT:
 			#var click_pos:Vector2i = viewport_to_tile_pos(event.position);
 			#print("rrd_resume_iad: ", curr_goal_pos, click_pos, $Pathfinder.rrd_resume_iad(curr_goal_pos, click_pos, GV.TypeId.PLAYER));
-	#for search_id in 6:
-		#if event.is_action_pressed("debug"+str(search_id+1)):
-			#var dest:Vector2i = player_pos_t + Vector2i(2, 2);
-			#var path:Array = $Pathfinder.pathfind_sa(search_id, 24, false, player_pos_t - Vector2i(2, 2), dest + Vector2i(2, 2), player_pos_t, dest);
-			#print(path);
-			#return;
-	if event.is_action_pressed("debug1"):
-		for i in 10:
-			print("epoch: ", i);
-			#generate random start pos
-			var start_pos:Vector2i = Vector2i(randi_range(-20, 19), randi_range(-15, 14));
-			while get_tile_id(start_pos) == GV.TileId.EMPTY:
-				start_pos = Vector2i(randi_range(-20, 19), randi_range(-15, 14));
-			
-			#set type at start_pos to PLAYER
-			var start_atlas_coord:Vector2i = $Cells.get_cell_atlas_coords(GV.LayerId.TILE, start_pos);
-			$Cells.set_cell(GV.LayerId.TILE, start_pos, GV.LayerId.TILE, Vector2i(start_atlas_coord.x, GV.TypeId.PLAYER));
-			#generate random end pos
-			var end_pos:Vector2i = start_pos + Vector2i(randi_range(-11, 11), randi_range(-11, 11));
-			while (!is_compatible(GV.TypeId.PLAYER, get_back_id(end_pos)) or end_pos.x < -20 or end_pos.x > 19 or end_pos.y < -15 or end_pos.y > 14):
-				end_pos = start_pos + Vector2i(randi_range(-11, 11), randi_range(-11, 11));
-			
-			#get min, max
-			var min:Vector2i = Vector2i(min(start_pos.x, end_pos.x), min(start_pos.y, end_pos.y)) - Vector2i(2, 2);
-			var max:Vector2i = Vector2i(max(start_pos.x, end_pos.x), max(start_pos.y, end_pos.y)) + Vector2i(3, 3);
-			#pathfind
-			for search_id in range(2, 6):
-				print(GV.SASearchId.keys()[search_id]);
-				$Pathfinder.pathfind_sa(search_id, 24, false, min, max, start_pos, end_pos);
-				$Pathfinder.rrd_clear_iad();
-		
-		#print cumulative times
-		for search_id in range(2, 6):
-			print(GV.SASearchId.keys()[search_id], "\t\t", $Pathfinder.get_sa_cumulative_search_time(search_id));
+	for search_id in GV.SASearchId.IWDMDA+1:
+		if event.is_action_pressed("debug"+str(search_id+1)):
+			#print search_type, time, and path found
+			var min:Vector2i = Vector2i(min(player_pos_t.x, curr_goal_pos.x), min(player_pos_t.y, curr_goal_pos.y)) - Vector2i(2, 2);
+			var max:Vector2i = Vector2i(max(player_pos_t.x, curr_goal_pos.x), max(player_pos_t.y, curr_goal_pos.y)) + Vector2i(3, 3);
+			var path:Array = $Pathfinder.pathfind_sa(search_id, 24, false, min, max, player_pos_t, curr_goal_pos);
+			print(GV.SASearchId.keys()[search_id], "\t", $Pathfinder.get_sa_cumulative_search_time(search_id), "\t", path);
+			$Pathfinder.rrd_clear_iad();
+			$Pathfinder.reset_sa_cumulative_search_times();
+			return;
+	#if event.is_action_pressed("debug1"):
+		#for i in 1000:
+			#print("epoch: ", i);
+			##generate random start pos
+			#var start_pos:Vector2i = Vector2i(randi_range(-20, 19), randi_range(-15, 14));
+			#while get_tile_id(start_pos) == GV.TileId.EMPTY:
+				#start_pos = Vector2i(randi_range(-20, 19), randi_range(-15, 14));
+			#
+			##set type at start_pos to PLAYER
+			#var start_atlas_coord:Vector2i = $Cells.get_cell_atlas_coords(GV.LayerId.TILE, start_pos);
+			#$Cells.set_cell(GV.LayerId.TILE, start_pos, GV.LayerId.TILE, Vector2i(start_atlas_coord.x, GV.TypeId.PLAYER));
+			##generate random end pos
+			#var end_pos:Vector2i = start_pos + Vector2i(randi_range(-5, 5), randi_range(-5, 5));
+			#while (!is_compatible(GV.TypeId.PLAYER, get_back_id(end_pos)) or end_pos.x < -20 or end_pos.x > 19 or end_pos.y < -15 or end_pos.y > 14):
+				#end_pos = start_pos + Vector2i(randi_range(-5, 5), randi_range(-5, 5));
+			#
+			##get min, max
+			#var min:Vector2i = Vector2i(min(start_pos.x, end_pos.x), min(start_pos.y, end_pos.y)) - Vector2i(2, 2);
+			#var max:Vector2i = Vector2i(max(start_pos.x, end_pos.x), max(start_pos.y, end_pos.y)) + Vector2i(3, 3);
+			##pathfind
+			#for search_id in range(2, 7):
+				#print(GV.SASearchId.keys()[search_id]);
+				#$Pathfinder.pathfind_sa(search_id, 24, false, min, max, start_pos, end_pos);
+				#$Pathfinder.rrd_clear_iad();
+		#
+		##print cumulative times
+		#for search_id in range(2, 7):
+			#print(GV.SASearchId.keys()[search_id], "\t\t", $Pathfinder.get_sa_cumulative_search_time(search_id));
+		#
+		##reset cumulative times
+		#$Pathfinder.reset_sa_cumulative_search_times();
