@@ -18,8 +18,8 @@ walls, hostiles (hostile tiles trying to trap and merge with the player), chests
 - [Code Features](#code-features)
 - [Installation](#installation)
 
-# Pathfinding
-For Godot-related reasons, the pathfinding algorithms used in 2048IsYou are located [here](https://github.com/LingLing40Hours/GDExtension/tree/master/Pathfinding_Tilemap).
+### Pathfinding
+For Godot-related reasons, pathfinding algorithms used in *2048IsYou* are located [here](https://github.com/LingLing40Hours/GDExtension/tree/master/Pathfinding_Tilemap).
 
 ## Objects
 
