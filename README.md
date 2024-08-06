@@ -18,6 +18,9 @@ walls, hostiles (hostile tiles trying to trap and merge with the player), chests
 - [Code Features](#code-features)
 - [Installation](#installation)
 
+# Pathfinding
+For Godot-related reasons, the pathfinding algorithms used in 2048IsYou are located [here](https://github.com/LingLing40Hours/GDExtension/tree/master/Pathfinding_Tilemap).
+
 ## Objects
 
 A tile is a rounded square with a value belonging to {-2^12, -2^11, ..., -2^0, 0, 2^0, ..., 2^11, 2^12}.
