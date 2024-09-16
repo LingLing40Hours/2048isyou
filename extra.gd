@@ -757,3 +757,16 @@ func can_shift(pos_t:Vector2i, dir:Vector2i):
 	var next_pos_t:Vector2i = pos_t + dir;
 	return not is_wall_or_border(next_pos_t) and not is_tile(next_pos_t);
 '''
+
+'''
+	#for search_id in GV.SASearchId.CJPD+1:
+		#if event.is_action_pressed("debug"+str(search_id+1)):
+			##print search_type, time, and path found
+			#var min:Vector2i = Vector2i(min(player_pos_t.x, curr_goal_pos.x), min(player_pos_t.y, curr_goal_pos.y)) - Vector2i(2, 2);
+			#var max:Vector2i = Vector2i(max(player_pos_t.x, curr_goal_pos.x), max(player_pos_t.y, curr_goal_pos.y)) + Vector2i(3, 3);
+			#var path:Array = $Pathfinder.pathfind_sa(search_id, 200, false, min, max, player_pos_t, curr_goal_pos);
+			#print(GV.SASearchId.keys()[search_id], "\t", $Pathfinder.get_sa_cumulative_search_time(search_id), "\t", path);
+			#$Pathfinder.rrd_clear_iad();
+			#$Pathfinder.reset_sa_cumulative_search_times();
+			#return;
+'''

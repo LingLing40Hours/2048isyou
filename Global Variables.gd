@@ -29,7 +29,7 @@ const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
 const LEVEL_COUNT:int = 16;
-var current_level_index:int = 6;
+var current_level_index:int = 15;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -203,14 +203,37 @@ enum ColorId {
 };
 
 enum SASearchId {
-	DIJKSTRA = 0,
-	HBJPD, #horizontally biased jump point dijkstra
+	DIJKSTRA,
 	MDA, #manhattan distance astar
 	IADA, #inconsistent abstract distance astar
-	HBJPMDA,
-	HBJPIADA,
+	IADANR, #* no re-expansion
 	IWDMDA, #iterative widening diamond *
-	IWDHBJPMDA,
+	IWSMDA, #iterative widening square *
+	SAIWDMDA, #simulated annealing *
+	SAIWSMDA,
+
+	#jps
+	JPD, #(horizontally biased) jump point dijkstra
+	JPMDA,
+	JPIADA,
+	JPIADANR,
+	IWDJPMDA,
+	IWSJPMDA,
+	SAIWDJPMDA,
+	SAIWSJPMDA,
+
+	#cjps
+	CJPD, #* constrained *
+	CJPMDA,
+	CJPIADA,
+	CJPIADANR,
+	IWDCJPMDA,
+	IWSCJPMDA,
+	SAIWDCJPMDA,
+	SAIWSCJPMDA,
+
+	#IDA/EPEA, QUANT, FMT/RRT
+	SEARCH_END,
 };
 
 var tile_push_limits:Dictionary = {
@@ -222,7 +245,7 @@ var tile_push_limits:Dictionary = {
 };
 
 #const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
-#const PHYSICS_ENABLER_BASE_SIZE:Vector2 = Vector2(144, 144); #px, px; at tile_push_limit = 0
+const PHYSICS_ENABLER_BASE_SIZE:Vector2 = Vector2(144, 144); #px, px; at tile_push_limit = 0
 
 
 func _ready():

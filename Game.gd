@@ -5,6 +5,7 @@ extends Node2D
 @onready var fader:AnimationPlayer = $"Overlay/AnimationPlayer";
 @onready var right_sidebar:VBoxContainer = $"GUI/HBoxContainer/RightSideBar";
 @onready var mode_label:Label = right_sidebar.get_node("MoveMode");
+@onready var sa_search_id_selector:OptionButton = $GUI/Control/SASearchIdSelector;
 
 @onready var combine_sound = $"Audio/Combine";
 @onready var slide_sound = $"Audio/Slide";
@@ -28,6 +29,10 @@ func _ready():
 	
 	#init mode label
 	change_move_mode(GV.player_snap);
+
+	#init dropdown button
+	for search_id in GV.SASearchId.SEARCH_END:
+		sa_search_id_selector.add_item(GV.SASearchId.keys()[search_id]);
 	
 	#generate hash numbers
 	#$Pathfinder.generate_hash_numbers(GV.RESOLUTION_T);

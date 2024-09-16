@@ -634,6 +634,11 @@ func player_settings():
 	#enable PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
 	
+	#scale PhysicsEnablers
+	var size:Vector2 = GV.PHYSICS_ENABLER_BASE_SIZE + GV.tile_push_limits[GV.TypeId.PLAYER] * 2 * GV.TILE_WIDTH * Vector2.ONE;
+	$PhysicsEnabler/CollisionShape2D.shape.set_size(size);
+	$PhysicsEnabler2.shape.set_size(size);
+	
 	#add to unlocker layer
 	set_collision_layer_value(3, true);
 	
