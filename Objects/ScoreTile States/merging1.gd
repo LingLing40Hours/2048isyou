@@ -38,10 +38,9 @@ func inPhysicsProcess(delta):
 	slide_distance += slide_speed * delta;
 	actor.move_and_collide(actor.velocity * delta);
 
-func handleInput(_event):
-	if actor.color == GV.ColorId.GRAY: #get premove
-		await game.current_level.processed_action_input;
-		actor.get_next_action();
+func handleInput(event):
+	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
+		actor.add_premove();
 	
 func changeParentState():
 	if slide_distance >= GV.COMBINING_MERGE_RATIO * GV.TILE_WIDTH:

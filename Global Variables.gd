@@ -21,15 +21,15 @@ var combinations:Array[Array] = [[1]];
 const TILE_WIDTH:float = 40; #px
 const RESOLUTION:Vector2 = Vector2(1600, 1200);
 const RESOLUTION_T:Vector2i = Vector2i(RESOLUTION/TILE_WIDTH);
-const BORDER_DISTANCE_T:int = 128; #2000000000;
+const BORDER_DISTANCE_T:int = 120; #128; #2000000000;
 const BORDER_MIN_POS_T:Vector2i = -Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const BORDER_MAX_POS_T:Vector2i = Vector2i(BORDER_DISTANCE_T, BORDER_DISTANCE_T);
 const WORLD_MIN_POS_T:Vector2i = BORDER_MIN_POS_T + Vector2i.ONE; #leave gap for border cell
 const WORLD_MAX_POS_T:Vector2i = BORDER_MAX_POS_T - Vector2i.ONE;
 
 #level-related stuff
-const LEVEL_COUNT:int = 13;
-var current_level_index:int = 12;
+const LEVEL_COUNT:int = 16;
+var current_level_index:int = 15;
 var current_level_from_save:bool = false;
 var level_scores = [];
 var changing_level:bool = false;
@@ -37,11 +37,13 @@ var reverting:bool = false; #if true, fade faster and don't show lv name
 #var through_goal:bool = false; #changing level via goal
 
 #procgen-related stuff
-const TILE_POW_MAX:int = 12;
+const TILE_POW_MAX:int = 14;
 const TILE_GEN_POW_MAX:int = 11;
 const TILE_VALUE_COUNT:int = 2 * TILE_POW_MAX + 3;
 const TILE_LOAD_BUFFER:float = 8 * TILE_WIDTH;
 const TILE_UNLOAD_BUFFER:float = 8 * TILE_WIDTH;
+const P_GEN_INVINCIBLE:float = 0.0005;
+const P_GEN_HOSTILE:float = 0.005;
 
 #pathfinder-related stuff
 #var level_hash_numbers:Array = [];
@@ -89,20 +91,28 @@ const PLAYER_SLIDE_SPEED:float = 33;
 const PLAYER_SLIDE_SPEED_MIN:float = 8;
 const PLAYER_SPEED_RATIO:float = 0.9; #must be less than 1 so tile solidifies before premove
 const TILE_SLIDE_SPEED:float = 320;
-const COMBINING_MERGE_RATIO:float = 0; #1/2.7;
+const COMBINING_MERGE_RATIO:float = 1/2.7;
 
-const INPUT_REPEAT_DELAY_F0:int = 16; #when movement held down, delay (frames) between action calls
-const INPUT_REPEAT_DELAY_DF:int = -1; #every time input repeats, delay time decreases
-const INPUT_REPEAT_DELAY_DDF:int = -1;
-const INPUT_REPEAT_DELAY_FMIN:int = 10;
+const SNAP_FRAME_COUNT:int = 1;
+const COMBINING_FRAME_COUNT:int = 6; #9; #1;
+const SPLITTING_FRAME_COUNT:int = 6; #9; #1;
+
+const MOVE_REPEAT_DELAY_F0:int = 16; #16
+const MOVE_REPEAT_DELAY_DF:int = -3; #-3
+const MOVE_REPEAT_DELAY_DDF:int = 1; #1
+const MOVE_REPEAT_DELAY_FMIN:int = 10; #10
+
+const UNDO_REPEAT_DELAY_F0:int = 20;
+const UNDO_REPEAT_DELAY_DF:int = -1;
+const UNDO_REPEAT_DELAY_DDF:int = -1;
+const UNDO_REPEAT_DELAY_FMIN:int = 14;
+
+const PREMOVE_STREAK_END_DELAY = 6; #must >= MOVE_REPEAT_DELAY_F0 - slide frame count
 
 enum InputType {
 	MOVE=0,
 	UNDO
 }
-
-const COMBINING_FRAME_COUNT:int = 1; #6; #9;
-const SPLITTING_FRAME_COUNT:int = 1; #6; #9;
 
 enum ScaleAnim {
 	DUANG=0,
@@ -127,7 +137,7 @@ const SHIFT_RAY_LENGTH:float = RESOLUTION.x;
 const SHIFT_TIME:float = 6; #in frames
 const SHIFT_LERP_WEIGHT:float = 0.6;
 var SHIFT_LERP_WEIGHT_TOTAL:float = 0;
-var SHIFT_DISTANCE_TO_SPEED_MAX:float;
+var SHIFT_DISTANCE_TO_MAX_SPEED:float;
 
 var player_snap:bool = true; #move mode
 
@@ -148,31 +158,94 @@ var abilities = {
 	"split" : true,
 	"shift" : true,
 	"copy" : true,
-	"tile_push_limit" : 1,
 };
 
-#stuff ids
-enum StuffId {
-	BORDER = -1,
-	ZERO = 16, #pow offset
-	NEG_ONE = 1,
-	POS_ONE = 31,
+enum TileId { #5 bits
 	EMPTY = 0,
-	MEMBRANE = 32,
-	BLACK_WALL = 64,
-	BLUE_WALL = 96,
-	RED_WALL = 128,
-	SAVEPOINT = 160,
-	GOAL = 192,
+	ZERO = 16,
 };
+
+enum TypeId { #3 bits
+	PLAYER = 0,
+	INVINCIBLE,
+	HOSTILE,
+	VOID,
+	REGULAR,
+}
+
+enum BackId { #8 bits
+	EMPTY = 0,
+	BORDER_ROUND,
+	BORDER_SQUARE,
+	MEMBRANE,
+	BLACK_WALL,
+	BLUE_WALL,
+	RED_WALL,
+	SAVEPOINT,
+	GOAL,
+}
+
+const B_WALL_OR_BORDER:Array = [BackId.BORDER_ROUND, BackId.BORDER_SQUARE, BackId.BLACK_WALL, BackId.BLUE_WALL, BackId.RED_WALL];
+const B_SAVE_OR_GOAL:Array = [BackId.SAVEPOINT, BackId.GOAL];
+const T_ENEMY:Array = [TypeId.INVINCIBLE, TypeId.HOSTILE, TypeId.VOID];
+
+enum LayerId {
+	BACK,
+	TILE
+}
 
 enum ColorId {
-	GRAY = 32,
-	BLACK = 31,
-	BLUE = 30,
-	RED = 29,
 	ALL = 4,
+	RED = 29,
+	BLUE = 30,
+	BLACK = 31,
+	GRAY = 32,
 };
+
+enum SASearchId {
+	DIJKSTRA,
+	MDA, #manhattan distance astar
+	IADA, #inconsistent abstract distance astar
+	IADANR, #* no re-expansion
+	IWDMDA, #iterative widening diamond *
+	IWSMDA, #iterative widening square *
+	SAIWDMDA, #simulated annealing *
+	SAIWSMDA,
+
+	#jps
+	JPD, #(horizontally biased) jump point dijkstra
+	JPMDA,
+	JPIADA,
+	JPIADANR,
+	IWDJPMDA,
+	IWSJPMDA,
+	SAIWDJPMDA,
+	SAIWSJPMDA,
+
+	#cjps
+	CJPD, #* constrained *
+	CJPMDA,
+	CJPIADA,
+	CJPIADANR,
+	IWDCJPMDA,
+	IWSCJPMDA,
+	SAIWDCJPMDA,
+	SAIWSCJPMDA,
+
+	#IDA/EPEA, QUANT, FMT/RRT
+	SEARCH_END,
+};
+
+var tile_push_limits:Dictionary = {
+	TypeId.PLAYER : 1,
+	TypeId.INVINCIBLE : 1,
+	TypeId.HOSTILE : 1,
+	TypeId.VOID : 1,
+	TypeId.REGULAR : 0,
+};
+
+#const PHYSICS_ENABLER_SHAPE:RectangleShape2D = preload("res://Objects/PhysicsEnablerShape.tres");
+const PHYSICS_ENABLER_BASE_SIZE:Vector2 = Vector2(144, 144); #px, px; at tile_push_limit = 0
 
 
 func _ready():
@@ -190,8 +263,16 @@ func _ready():
 		for term in range(1, frame+1):
 			SHIFT_LERP_WEIGHT_TOTAL += term_sign * combinations_dp(frame, term) * pow(SHIFT_LERP_WEIGHT, term);
 			term_sign *= -1;
-	SHIFT_DISTANCE_TO_SPEED_MAX = 60 / SHIFT_LERP_WEIGHT_TOTAL;
-
+	SHIFT_DISTANCE_TO_MAX_SPEED = 60 / SHIFT_LERP_WEIGHT_TOTAL;
+	
+#	#init physics enabler size
+#	set_tile_push_limit(abilities["tile_push_limit"]);
+#
+#	#scale shapecasts (bc inspector can't handle precise floats)
+#	var shape_LR:RectangleShape2D = preload("res://Objects/ShapeCastShapeLR.tres");
+#	var shape_UD:RectangleShape2D = preload("res://Objects/ShapeCastShapeUD.tres");
+#	shape_LR.size.y *= GV.PLAYER_COLLIDER_SCALE;
+#	shape_UD.size.x *= GV.PLAYER_COLLIDER_SCALE;
 
 func same_sign_inclusive(a, b) -> bool:
 	if a == 0:
@@ -261,23 +342,22 @@ func xt_to_world(x:int) -> float:
 
 #doesn't do ZERO->EMPTY optimization
 func tile_val_to_id(power:int, ssign:int) -> int:
-	if power == -1: #zero
-		return StuffId.ZERO;
-	if power == 0: #plus/minus one
-		return StuffId.POS_ONE if ssign == 1 else StuffId.NEG_ONE;
-	return power * ssign + StuffId.ZERO;
+	return (power + 1) * ssign + TileId.ZERO;
 
 func id_to_tile_val(id:int):
-	if id == StuffId.ZERO:
-		return [-1, 1];
-	if id == StuffId.NEG_ONE:
-		return [0, -1];
-	if id == StuffId.POS_ONE:
-		return [0, 1];
-	var signed_pow:int = id - StuffId.ZERO;
-	return [absi(signed_pow), signi(signed_pow)];
+	if id == TileId.ZERO:
+		return Vector2i(-1, 1);
+	var signed_incremented_pow:int = id - TileId.ZERO;
+	return Vector2i(absi(signed_incremented_pow) - 1, signi(signed_incremented_pow));
 
 func is_approx_equal(a:float, b:float, tolerance:float) -> bool:
 	if absf(a - b) <= tolerance:
 		return true;
 	return false;
+
+#func set_tile_push_limit(_tile_push_limit):
+#	abilities["tile_push_limit"] = _tile_push_limit;
+#
+#	#change physicsEnabler size
+#	var size:Vector2 = PHYSICS_ENABLER_BASE_SIZE + abilities["tile_push_limit"] * 2 * GV.TILE_WIDTH * Vector2.ONE;
+#	PHYSICS_ENABLER_SHAPE.set_size(size);

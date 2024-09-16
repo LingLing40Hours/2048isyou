@@ -8,13 +8,13 @@ func inPhysicsProcess(_delta):
 	actor.velocity *= 1 - GV.PLAYER_MU;
 
 	#input
-	var hdir = int(Input.get_axis("move_left", "move_right"));
-	var vdir = int(Input.get_axis("move_up", "move_down"));
+	var hdir = int(Input.get_axis("left", "right"));
+	var vdir = int(Input.get_axis("up", "down"));
 	var dir:Vector2i = Vector2i(hdir, vdir);
 	
 	#signal (before curr snapshot becomes meaningful)
 	if dir != Vector2i.ZERO:
-		actor.start_action.emit();
+		actor.action_started.emit();
 	
 	#accelerate
 	if not GV.changing_level:
@@ -43,6 +43,8 @@ func inPhysicsProcess(_delta):
 			
 			#slide if slide_dir and player_dir agree
 			if (slide_dir.x && slide_dir.x == dir.x) or (slide_dir.y && slide_dir.y == dir.y):
+				actor.tile_push_count = 0;
+				collider.pusher = actor;
 				collider.slide(Vector2i(slide_dir));
 				game.current_level.current_snapshot.add_tile(actor);
 

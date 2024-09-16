@@ -234,7 +234,7 @@ func _physics_process(_delta):
 
 '''
 	if actor.next_move.is_null(): #check for premove
-		actor.get_next_action();
+		actor.add_premove();
 		if actor.next_move.is_valid():
 			duang_speed *= 6;
 			fade_speed *= 6;
@@ -537,8 +537,8 @@ func is_snapshot_valid(snapshot):
 '''
 
 '''
-#if input, pushes to next_moves and next_dirs
-func get_next_action():
+#if input, pushes to premoves and premove_dirs
+func add_premove():
 	var event_name:String = "";
 	var action:Callable;
 	var s_dir:String;
@@ -569,8 +569,8 @@ func get_next_action():
 		#check if movement just pressed
 		event_name += s_dir;
 		if Input.is_action_just_pressed(event_name):
-			next_dirs.push_back(GV.directions[s_dir]);
-			next_moves.push_back(action);
+			premove_dirs.push_back(GV.directions[s_dir]);
+			premoves.push_back(action);
 '''
 
 ''' wall grains
@@ -646,3 +646,127 @@ func get_next_action():
 '''
 
 #mutex.lock(); exit_thread = true; mutex.unlock(); return; #debug
+
+''' in slide(), after get_shape()
+		#if splitted, tile was newly added, shapecast hasn't updated
+		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
+		#if premoves nonempty, premoved, last shapecast update may have caught a tile corner
+		if splitted or (pusher != null and pusher.splitted) or premoves:
+			shape.force_shapecast_update();
+'''
+
+'''
+	#scale physicsEnablers
+	$PhysicsEnabler/CollisionShape2D.shape.set_size($PhysicsEnabler/CollisionShape2D.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
+	$PhysicsEnabler2.shape.set_size($PhysicsEnabler2.shape.get_size() + GV.PHYSICS_ENABLER_DSIZE);
+'''
+
+'''
+func update_last_input(event) -> bool:
+	var modifier_pressed:bool = false;
+	var move_changed:bool = false;
+	
+	#last input modifier
+	if event.is_action_pressed("cc"): #Cmd/Ctrl
+		last_input_modifier = "split";
+		modifier_pressed = true;
+	elif event.is_action_pressed("shift"):
+		last_input_modifier = "shift";
+		modifier_pressed = true;
+	elif event.is_action_released("cc") or event.is_action_released("shift"):
+		last_input_modifier = "slide";
+		#if move is still held, wait for timeout before starting move
+		if Input.is_action_pressed("move_" + last_input_move):
+			last_input_type = GV.InputType.MOVE;
+			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
+			return false;
+	
+	#last input move
+	elif event.is_action_pressed("move_left"):
+		last_input_move = "left";
+		move_changed = true;
+	elif event.is_action_pressed("move_right"):
+		last_input_move = "right";
+		move_changed = true;
+	elif event.is_action_pressed("move_up"):
+		last_input_move = "up";
+		move_changed = true;
+	elif event.is_action_pressed("move_down"):
+		last_input_move = "down";
+		move_changed = true;
+	
+	if modifier_pressed or move_changed: #stop repeat
+		atimer.stop();
+		print("last input move: ", last_input_move)
+		if Input.is_action_pressed("move_"+last_input_move): #add premove
+			last_input_type = GV.InputType.MOVE;
+			print("added premove")
+			return true;
+	
+	return false;
+'''
+
+'''
+	#enter snap
+	enter_snap.connect(game.current_level._on_player_enter_snap);
+	
+func _on_player_enter_snap(prev_state):
+	if prev_state == null: #initial ready doesn't count
+		return;
+	
+	last_action_finished = true;
+	if atimer.is_timeouted(): #input hasn't changed, repeat last action
+		#print("enter snap repeat")
+		atimer.repeat();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
+'''
+
+'''
+signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
+	#emit signal (after slide_dir reset)
+	actor.enter_snap.emit(get_parent().prevState);
+'''
+
+''' in Level.gd:
+	atimer.timeout.connect(_on_atimer_timeout);
+	repeat_input.connect(_on_repeat_input);
+	
+func _on_atimer_timeout():
+	if not last_action_finished:
+		#don't trigger repeat, leave it to the callback function
+		#callback function should check for timeout before triggering repeat
+		return;
+	if (last_input_type == GV.InputType.UNDO and Input.is_action_pressed("undo")) or \
+		(last_input_type == GV.InputType.MOVE and is_last_action_held()):
+		atimer.repeat();
+		repeat_input.emit(last_input_type);
+		last_action_finished = false;
+
+func _on_repeat_input(input_type:int):
+	if input_type != GV.InputType.UNDO:
+		return;
+	
+	on_undo();
+	if not player_snapshots: #no more history
+		atimer.stop();
+'''
+
+'''
+func can_shift(pos_t:Vector2i, dir:Vector2i):
+	var next_pos_t:Vector2i = pos_t + dir;
+	return not is_wall_or_border(next_pos_t) and not is_tile(next_pos_t);
+'''
+
+'''
+	#for search_id in GV.SASearchId.CJPD+1:
+		#if event.is_action_pressed("debug"+str(search_id+1)):
+			##print search_type, time, and path found
+			#var min:Vector2i = Vector2i(min(player_pos_t.x, curr_goal_pos.x), min(player_pos_t.y, curr_goal_pos.y)) - Vector2i(2, 2);
+			#var max:Vector2i = Vector2i(max(player_pos_t.x, curr_goal_pos.x), max(player_pos_t.y, curr_goal_pos.y)) + Vector2i(3, 3);
+			#var path:Array = $Pathfinder.pathfind_sa(search_id, 200, false, min, max, player_pos_t, curr_goal_pos);
+			#print(GV.SASearchId.keys()[search_id], "\t", $Pathfinder.get_sa_cumulative_search_time(search_id), "\t", path);
+			#$Pathfinder.rrd_clear_iad();
+			#$Pathfinder.reset_sa_cumulative_search_times();
+			#return;
+'''

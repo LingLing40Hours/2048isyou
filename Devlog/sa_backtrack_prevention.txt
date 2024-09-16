@@ -1,0 +1,39 @@
+Single Agent backtrack prevention
+
+-dir
+	prev slide
+		prev merged
+			empty				skip slide
+			same sign
+				type dominant		no skip
+				type changed		no skip
+				regular			skip split
+			zero
+				type dominant		no skip
+				type changed		no skip
+				regular			no skip
+			opposite sign
+				type dominant		no skip
+				type changed		no skip
+				regular			no skip
+		prev pushed/bubbled			no skip
+	prev split
+		prev merged
+			empty				skip slide
+			same sign
+				type dominant		no skip
+				type changed		no skip
+				regular			skip split
+			zero
+				type dominant		no skip
+				type changed		no skip
+				regular			no skip
+			opposite sign
+				type dominant		no skip
+				type changed		no skip
+				regular			no skip
+		prev pushed/bubbled			no skip
+
+Conclusions
+	skip slide if -dir and prev slide merged with empty or prev split merged with empty
+	skip split if -dir and prev slide merged with same sign regular or prev split merged with same sign regular

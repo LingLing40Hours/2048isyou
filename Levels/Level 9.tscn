@@ -12,26 +12,18 @@
 process_mode = 1
 script = ExtResource("1_0tdh4")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.666667, 0.666667, 0.666667, 1)
-metadata/_edit_lock_ = true
-
-[node name="UpIsDown" type="Label" parent="Background"]
+[node name="UpIsDown" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 550.0
+offset_top = 573.5
+offset_right = 1050.0
+offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_2qgts")
@@ -39,24 +31,30 @@ theme_override_font_sizes/font_size = 50
 text = "Up Is Down"
 metadata/_edit_lock_ = true
 
-[node name="DownIsUp" type="Label" parent="Background"]
+[node name="DownIsUp" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 550.0
+offset_top = 573.5
+offset_right = 1050.0
+offset_bottom = 626.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_2qgts")
 theme_override_font_sizes/font_size = 50
 text = "Down Is Up"
+metadata/_edit_lock_ = true
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
@@ -79,7 +77,6 @@ position = Vector2(820, 700)
 
 [node name="ScoreTile696" parent="ScoreTiles" instance=ExtResource("5_uxx7o")]
 position = Vector2(800, 660)
-is_player = true
 power = 0
 
 [node name="ScoreTile4" parent="ScoreTiles" instance=ExtResource("5_uxx7o")]

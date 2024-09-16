@@ -1,0 +1,32 @@
+Jump Conditions
+	does not perform pruning or discriminate based on g-cost
+
+must_include:
+	allow_type_change (included in try_action)
+	blocked = !(empty and is_compatible)
+	is_compatible
+	is_dir_out_of_lv_bound
+	pushable
+
+vertical
+	perp_dir
+		empty				jump point if secondary jump=====
+		try_slide			jump point
+		try_split			jump point
+	next
+		empty				NAH=====
+		try_slide			jump point
+		try_split			jump point
+horizontal
+	perp_dir
+							prune all if out_of_bounds/incompatible
+							prune slide if empty or !try_slide
+							prune split if !try_split
+							prune jump if !blocked/!empty
+		empty				jump point if blocked=====
+		try_slide			jump point if blocked or prev_push_count=====
+		try_split			jump point
+	next
+		empty				NAH=====
+		try_slide			jump point
+		try_split			jump point

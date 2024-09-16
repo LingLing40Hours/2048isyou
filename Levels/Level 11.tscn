@@ -12,49 +12,48 @@
 process_mode = 1
 script = ExtResource("1_cc0xk")
 
-[node name="Background" type="ColorRect" parent="."]
-z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.666667, 0.666667, 0.666667, 1)
-metadata/_edit_lock_ = true
-
-[node name="LevelName" type="Label" parent="Background"]
+[node name="LevelName" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
+offset_left = 712.0
+offset_top = 575.0
+offset_right = 888.0
+offset_bottom = 625.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_x0cap")
 theme_override_font_sizes/font_size = 50
 metadata/_edit_lock_ = true
 
-[node name="Copy" type="Label" parent="Background"]
-layout_mode = 1
+[node name="Copy" type="Label" parent="."]
+z_index = -10
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -77.0
-offset_top = 151.0
-offset_right = 251.0
-offset_bottom = 189.0
+offset_left = 1523.0
+offset_top = 751.0
+offset_right = 1851.0
+offset_bottom = 789.0
 grow_horizontal = 0
 grow_vertical = 2
 rotation = -1.5708
 theme = ExtResource("2_x0cap")
 text = "press Cmd/Ctrl+C to 
 copy level as array"
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.666667, 0.666667, 0.666667, 1)
+metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("3_x0mvw")
@@ -70,7 +69,7 @@ position = Vector2(140, 60)
 
 [node name="ScoreTile287" parent="ScoreTiles" instance=ExtResource("7_e26lk")]
 position = Vector2(60, 60)
-is_player = true
+color = 32
 power = 0
 
 [node name="ScoreTile8" parent="ScoreTiles" instance=ExtResource("7_e26lk")]

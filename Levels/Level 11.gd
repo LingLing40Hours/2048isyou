@@ -11,7 +11,7 @@ func _ready():
 	super._ready();
 	
 	#init level name
-	$Background/LevelName.text = LEVEL_NAME + RWORDS[rword_index];
+	$LevelName.text = LEVEL_NAME + RWORDS[rword_index];
 	rword_index += 1;
 	
 	#connect fader signal
@@ -26,12 +26,12 @@ func _on_fader_animation_finished(anim_name):
 
 func change_rword():
 	#delete incorrect rword
-	$Background/LevelName.text = LEVEL_NAME + (" ").repeat(RWORDS[rword_index].length());
+	$LevelName.text = LEVEL_NAME + (" ").repeat(RWORDS[rword_index].length());
 	
 	var delete_timer = get_tree().create_timer(RWORD_DELETE_TIME);
 	await delete_timer.timeout;
 	
-	$Background/LevelName.text = LEVEL_NAME + RWORDS[rword_index];
+	$LevelName.text = LEVEL_NAME + RWORDS[rword_index];
 	rword_index += 1;
 	
 	if rword_index < RWORDS.size():

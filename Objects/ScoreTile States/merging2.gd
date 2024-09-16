@@ -1,3 +1,4 @@
+#tile is considered to be merged at this point, don't handle input
 extends State
 
 @onready var game:Node2D = $"/root/Game";
@@ -8,7 +9,7 @@ var slide_target:Vector2;
 
 
 func enter():
-	#do the thing
+	#levelup partner
 	actor.get_node("PhysicsEnabler").monitoring = false;
 	actor.partner.levelup();
 	

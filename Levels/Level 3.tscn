@@ -15,16 +15,18 @@ size = Vector2(654, 32)
 process_mode = 1
 script = ExtResource("1_wvf4a")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="LevelName" type="Label" parent="."]
 z_index = -10
-offset_right = 1600.0
-offset_bottom = 1200.0
-color = Color(0.286275, 0.509804, 0.647059, 1)
+offset_right = 850.0
+offset_bottom = 53.0
+theme = ExtResource("5_2s88y")
+theme_override_font_sizes/font_size = 50
+text = "Messing In Memory"
 metadata/_edit_lock_ = true
 
-[node name="MoveMode" type="Label" parent="Background"]
+[node name="MoveMode" type="Label" parent="."]
 visible = false
-layout_mode = 1
+z_index = -10
 offset_left = 280.0
 offset_top = 808.0
 offset_right = 920.0
@@ -33,23 +35,21 @@ rotation = -0.785398
 theme = ExtResource("5_2s88y")
 text = "press Cmd/Ctrl+X to change movement mode"
 
-[node name="Unlocker" type="Area2D" parent="Background/MoveMode"]
+[node name="Unlocker" type="Area2D" parent="MoveMode"]
 collision_layer = 0
 collision_mask = 4
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/MoveMode/Unlocker"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MoveMode/Unlocker"]
 position = Vector2(319, 8)
 shape = SubResource("RectangleShape2D_mk0r2")
 
-[node name="LevelName" type="Label" parent="Background"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-theme = ExtResource("5_2s88y")
-theme_override_font_sizes/font_size = 50
-text = "Messing In Memory"
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1600.0
+offset_bottom = 1200.0
+color = Color(0.286275, 0.509804, 0.647059, 1)
 metadata/_edit_lock_ = true
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
@@ -63,6 +63,11 @@ layer_0/tile_data = PackedInt32Array(0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 2, 0
 
 [node name="ScoreTile" parent="ScoreTiles" instance=ExtResource("4_hi00y")]
 position = Vector2(60, 1020)
+
+[node name="ScoreTile1047" parent="ScoreTiles" instance=ExtResource("4_hi00y")]
+position = Vector2(80, 1120)
+color = 32
+power = 0
 
 [node name="ScoreTile822" parent="ScoreTiles" instance=ExtResource("4_hi00y")]
 position = Vector2(100, 940)
@@ -3215,4 +3220,4 @@ rotation = -1.5708
 
 [node name="Baddies" type="Node2D" parent="."]
 
-[connection signal="body_entered" from="Background/MoveMode/Unlocker" to="." method="_on_unlocker_body_entered"]
+[connection signal="body_entered" from="MoveMode/Unlocker" to="." method="_on_unlocker_body_entered"]

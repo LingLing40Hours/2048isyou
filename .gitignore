@@ -4,3 +4,4 @@
 **/*.gdextension
 **/.vscode/*
 **/build/*
+text/

@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://c3aqxnolm8do4"
+path="res://.godot/imported/Start Mask.png-2b12e1025c8a8282f5fe8798496e5a8a.res"
+
+[deps]
+
+source_file="res://Sprites/Sprites/Start Mask.png"
+dest_files=["res://.godot/imported/Start Mask.png-2b12e1025c8a8282f5fe8798496e5a8a.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

@@ -1,8 +1,8 @@
 class_name ScoreTile
 extends CharacterBody2D
 
-signal start_action; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
-signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir has been reset
+signal action_started; #tells spawning savepoint to save; should be emitted before current snapshot becomes meaningful
+signal premove_added; #signals snap state to consume premove
 
 @onready var game:Node2D = $"/root/Game";
 @onready var visibility_notifier := $VisibleOnScreenNotifier2D;
@@ -15,7 +15,7 @@ signal enter_snap(prev_state); #may be connected to action; emit AFTER slide_dir
 @export var ssign:int = 1;
 @export var debug:bool = false;
 
-#ref locations in snapshot arrays, must be copied in custom duplicate
+#ref locations in snapshot arrays, must be copied in a custom duplicate function
 var snapshot_locations:Array[Vector2i] = [];
 var snapshot_locations_new:Array[Vector2i] = [];
 
@@ -33,8 +33,12 @@ var physics_enabler_count:int; #turn physics off when this reaches 0
 
 var pos_t:Vector2i;
 var slide_dir:Vector2i = Vector2i.ZERO;
-var next_dirs:Array[Vector2i] = []; #for premoving
-var next_moves:Array[String] = []; #slide, split, shift
+
+var atimer:AccelTimer;
+var premove_streak_end_timer:AccelTimer;
+var premove_dirs:Array[Vector2i] = [];
+var premoves:Array[String] = []; #slide, split, shift
+var premove_streak:bool = false; #if slide/split streak, don't restart atimer
 #var func_slide:Callable = Callable(self, "slide");
 #var func_split:Callable = Callable(self, "split");
 #var func_shift:Callable = Callable(self, "shift");
@@ -56,9 +60,6 @@ func _ready():
 	visibility_notifier.screen_entered.connect(sprites.show);
 	visibility_notifier.screen_exited.connect(sprites.hide);
 	
-	#enter snap
-	enter_snap.connect(game.current_level._on_player_enter_snap);
-	
 	#if tile is a snapshot duplicate, set owner
 	if !owner:
 		owner = game.current_level;
@@ -78,8 +79,8 @@ func _ready():
 		else:
 			game.current_level.player_snapshots[location_new.x].new_tiles[location_new.y] = self;
 			break;
-	
-	#scale shapecasts (bc inspector can't handle precise floats)
+
+	#scale shapecasts (inspector can't handle precise floats)
 	$Shape1.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape2.shape.size.x *= GV.PLAYER_COLLIDER_SCALE;
 	$Shape3.shape.size.y *= GV.PLAYER_COLLIDER_SCALE;
@@ -91,8 +92,15 @@ func _ready():
 		var timer = get_tree().create_timer(GV.PLAYER_SPAWN_INVINCIBILITY_TIME);
 		timer.timeout.connect(_on_invincibility_timeout);
 	
-	#add img
+	#add stuff
 	sprites.add_child(img);
+	
+	#init pos_t
+	pos_t = GV.world_to_pos_t(position);
+	
+	#timer refs
+	atimer = game.current_level.atimer;
+	premove_streak_end_timer = game.current_level.premove_streak_end_timer;
 	
 	initialize();
 
@@ -133,13 +141,12 @@ func initialize():
 	#set initial state
 	var initial_state = "tile";
 	if color == GV.ColorId.GRAY:
-		initial_state = "snap" if GV.player_snap else "slide";
+		initial_state = "idle" if GV.player_snap else "slide";
 	$FSM.setState($FSM.states[initial_state]);
 	
 func _input(event):
-	if event.is_action_pressed("debug"):
+	if event.is_action_pressed("debug1"):
 		if color == GV.ColorId.GRAY:
-			print("POST: ", pos_t);
 			game.current_level.print_loaded_tiles(pos_t - Vector2i(2, 2), pos_t + Vector2i(2, 2));
 		
 		#test pathfinder
@@ -152,8 +159,8 @@ func _input(event):
 #			print(path);
 #			print("pos_t: ", pos_t);
 #			for action in path:
-#				next_dirs.push_back(Vector2i(action.x, action.y));
-#				next_moves.push_back("split" if action.z else "slide");
+#				premove_dirs.push_back(Vector2i(action.x, action.y));
+#				premoves.push_back("split" if action.z else "slide");
 
 func _physics_process(_delta):
 	debug_frame();
@@ -167,13 +174,13 @@ func debug_frame():
 		#print("value: ", pow(2, power) * ssign);
 		#print("snapshot locs: ", snapshot_locations);
 		#print("pusher: ", pusher);
-		#print(next_dirs);
+		#print(premove_dirs);
 		#print("physics on: ", physics_on);
 		pass;
 
 func update_texture(s:Sprite2D, score_pow, score_sign, _is_player, _is_hostile, _is_invincible):
 	assert(score_pow <= GV.TILE_POW_MAX);
-	var texture_path:String = "res://Sprites/2_";
+	var texture_path:String = "res://Sprites/Sprites/2_";
 	
 	#power
 	if score_pow == -1:
@@ -205,35 +212,61 @@ func get_shape(dir:Vector2i) -> ShapeCast2D:
 	else:
 		return null;
 
-#if input, pushes to next_moves and next_dirs
-func get_next_action():
-	#check if movement held
-	if game.current_level.last_input_move:
-		#get event name
-		var prefix = game.current_level.last_input_modifier;
-		if prefix == "slide":
-			prefix = "move";
-		var event_name = prefix + "_" + game.current_level.last_input_move;
-		
-		#check if just pressed
-		if Input.is_action_just_pressed(event_name):
-			#print("PREMOVE ADDED");
-			next_dirs.push_back(GV.directions[game.current_level.last_input_move]);
-			next_moves.push_back(game.current_level.last_input_modifier);
+#push to premoves and premove_dirs
+func add_premove():
+	premove_dirs.push_back(GV.directions[game.current_level.last_input_move]);
+	premoves.push_back(game.current_level.last_input_modifier);
+	premove_added.emit();
 
-#assume level.last_input is valid
-func _on_repeat_input(input_type:int):
-	#don't repeat input if undo or there are unconsumed premoves
-	if input_type != GV.InputType.MOVE or get_state() != "snap" or next_moves:
+func consume_premove():
+	if $FSM.curState.next_state != null:
+		return;
+	assert(premoves);
+	assert($FSM.curState == $FSM.states.idle);
+
+	game.current_level.new_snapshot();
+	var action = Callable(self, premoves.pop_front());
+	var moved = action.call(premove_dirs.pop_front());
+
+	if not moved: #move failed, clear all premoves
+		print("PREMOVE STREAK ENDED (FAIL)")
+		premove_streak = false;
+		premoves.clear();
+		premove_dirs.clear();
+		game.current_level.last_action_finished = true;
+		atimer.stop();
 		return;
 	
-	#var action:Callable = get("func_" + game.current_level.last_input_modifier);
-	var action:Callable = Callable(self, game.current_level.last_input_modifier);
-	action.call(GV.directions[game.current_level.last_input_move]);
-		
+	if not premoves:
+		#last premove was consumed, start/resume AccelTimer
+		if premove_streak:
+			atimer.repeat();
+		else:
+			atimer.start(GV.MOVE_REPEAT_DELAY_F0, GV.MOVE_REPEAT_DELAY_DF, GV.MOVE_REPEAT_DELAY_DDF, GV.MOVE_REPEAT_DELAY_FMIN);
+		#else atimer was started in update_last_input() from modifier release?
+	else:
+		atimer.stop(); #all premoves must be consumed to start input repeat
+	
+	premove_streak_end_timer.stop();
+	premove_streak = true;
+
+func _on_atimer_timeout():
+	if game.current_level.last_input_type == GV.InputType.MOVE:
+		assert(get_state() != "merging1"); #since atimer min frame count >> merging1 frame count
+		if not premoves and game.current_level.is_last_action_held():
+			add_premove();
+		else:
+			atimer.stop();
+
+func _on_enter_snap():
+	pass;
+
+func _on_premove_streak_end():
+	print("PREMOVE STREAK ENDED (TIMEOUT)")
+	premove_streak = false;
 
 func slide(dir:Vector2i) -> bool:
-	if get_state() not in ["tile", "snap"]:
+	if get_state() not in ["tile", "snap", "idle"]:
 		#print("SLIDE FAILED, state is ", get_state());
 		return false;
 	
@@ -243,7 +276,7 @@ func slide(dir:Vector2i) -> bool:
 	#increment pusher tile count
 	if is_instance_valid(pusher):
 		pusher.tile_push_count += 1;
-		if pusher.tile_push_count > GV.abilities["tile_push_limit"]: #exit early
+		if pusher.tile_push_count > GV.tile_push_limits[GV.TypeId.PLAYER]: #exit early
 			#print("SLIDE FAILED, push count");
 			return false;
 		
@@ -253,41 +286,42 @@ func slide(dir:Vector2i) -> bool:
 	#find if at push limit
 	var at_push_limit:bool = false;
 	var push_count:int = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
-	if push_count == GV.abilities["tile_push_limit"]:
+	if push_count > GV.tile_push_limits[GV.TypeId.PLAYER]: #exit early
+		return false;
+	elif push_count == GV.tile_push_limits[GV.TypeId.PLAYER]:
 		at_push_limit = true;
 	
 	#determine whether to slide or merge or, if obstructed, idle
 	var next_state:Node2D;
 	var xaligned = is_xaligned();
 	var yaligned = is_yaligned();
-	if color == GV.ColorId.GRAY: #ignore ray if not aligned with tile grid
-		if (dir.x and not xaligned) or (dir.y and not yaligned):
-			next_state = $FSM.states.sliding;
 	
-	if next_state == null:
+	if color == GV.ColorId.GRAY and ((dir.x and not xaligned) or (dir.y and not yaligned)): #ignore shape if not aligned with tile grid
+		next_state = $FSM.states.sliding;
+	else:
 		next_state = $FSM.states.sliding;
 		
-		#find shapecast in slide direction
+		#get collision info in slide direction
 		var shape = get_shape(dir);
-		#if splitted, tile was newly added, shapecast hasn't updated
-		#if pusher splitted, physics was just toggled off then on, shapecast hasn't updated
-		#if next_moves nonempty, premoved, last shapecast update may have caught a tile corner
-		if splitted or (pusher != null and pusher.splitted) or next_moves:
-			shape.force_shapecast_update();
+		shape.enabled = true;
+		shape.force_shapecast_update();
+		shape.enabled = false;
+		
+		if shape.get_collision_count() and (not xaligned or not yaligned): #must be aligned to push/merge
+			return false;
 		
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
+			assert(collider != self);
 			
 			if collider.is_in_group("wall"): #obstructed
-				#print("SLIDE FAILED, wall");
 				return false;
 				
 			if collider is ScoreTile:
-				if not xaligned or not yaligned: #in snap mode, must be aligned to do stuff
-					#print("SLIDE FAILED, alignment");
-					return false;
-				if collider.get_state() not in ["tile", "snap"]:
+				if collider.get_state() not in ["tile", "snap", "idle"]:
 					#print("SLIDE FAILED, collider state is ", collider.get_state());
+					return false;
+				if not collider.is_xaligned() or not collider.is_yaligned():
 					return false;
 				
 				#set collider pusher (required to call collider.slide())
@@ -296,54 +330,90 @@ func slide(dir:Vector2i) -> bool:
 						collider.pusher = pusher;
 					else:
 						collider.pusher = self;
-				
-				if collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
-					next_state = $FSM.states.sliding;
-				elif power in [-1, collider.power] and (power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge as 0 or equal power
+		
+				var zeros:Array[ScoreTile] = pushable_zeros(dir, GV.tile_push_limits[GV.TypeId.PLAYER] - push_count);
+				if zeros: #bubble (manually)
+					for zero in zeros:
+						zero.slide_dir = dir;
+						var fsm = zero.get_node("FSM");
+						fsm.curState.next_state = fsm.states.sliding;
+						zero.pusher = collider.pusher;
+						zero.snap_slid = true;
+#				elif collider.color == GV.ColorId.GRAY and collider.slide(dir): #receding player
+#					pass;
+				elif (power == -1 or collider.power == -1 or power == collider.power) and \
+				(power < GV.TILE_POW_MAX or ssign != collider.ssign): #merge
 					partner = collider;
 					collider.pusher = null;
 					collider.partner = self;
 					next_state = $FSM.states.merging1;
-				elif at_push_limit and collider.power == -1: #merge with 0
-					partner = collider;
-					collider.pusher = null;
-					collider.partner = self;
-					next_state = $FSM.states.merging1;
-				elif collider.slide(dir): #try to slide collider
+					#print("merge");
+				elif not at_push_limit and collider.slide(dir): #push
 					collider.snap_slid = true;
 					next_state = $FSM.states.sliding;
-				elif collider.power == -1: #merge with 0
-					partner = collider;
-					collider.pusher = null;
-					collider.partner = self;
-					next_state = $FSM.states.merging1;
-				else:
+					print("push");
+				else: #fail
 					collider.pusher = null;
 					pusheds.clear(); #only necessary if self is pusher (pusher == null)
-					#print("SLIDE FAILED, nan");
+					print("SLIDE FAILED, nan");
 					return false;
-			else: #collider not wall or scoretile, proceed with slide
-				next_state = $FSM.states.sliding;
+			#else collider not wall or scoretile, proceed with slide
 	
 	#check pusher tile count
 	push_count = pusher.tile_push_count if is_instance_valid(pusher) else tile_push_count;
-	if push_count > GV.abilities["tile_push_limit"]:
+	if push_count > GV.tile_push_limits[GV.TypeId.PLAYER]:
 		pusheds.clear(); #only necessary if self is pusher (pusher == null)
 		#print("SLIDE FAILED, push limit 2");
 		return false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	$FSM.curState.next_state = next_state;
 	return true;
 
+#assume self is base pusher, aligned, and in tile/snap mode
+#returns the row of 0s if bubbling possible, else an empty array
+func pushable_zeros(dir:Vector2i, tile_push_limit:int) -> Array[ScoreTile]:
+	var ans:Array[ScoreTile];
+	var zero_count:int = 0;
+	var curr_tile:ScoreTile = self;
+	
+	while zero_count <= tile_push_limit:
+		#find shapecast in slide direction
+		var shape = curr_tile.get_shape(dir);
+		shape.enabled = true;
+		shape.force_shapecast_update();
+		shape.enabled = false;
+		
+		var collid:bool = false;
+		for i in shape.get_collision_count():
+			var collider := shape.get_collider(i);
+			if zero_count == tile_push_limit and collider is ScoreTile:
+				return [];
+			if collider.is_in_group("wall"):
+				return [];
+			if collider is ScoreTile:
+				if collider.power == -1:
+					if collider.get_state() not in ["tile", "snap", "idle"]:
+						return [];
+					if not collider.is_xaligned() or not collider.is_yaligned():
+						return [];
+					ans.push_back(collider);
+					zero_count += 1;
+					curr_tile = collider;
+					collid = true;
+				else:
+					return [];
+		if not collid:
+			return ans;
+	return [];
 
 func split(dir:Vector2i) -> bool:
 	if power <= 0: #1, -1, 0 cannot split
 		return false;
-	if get_state() != "snap":
+	if get_state() != "idle":
 		return false;
 	if not GV.abilities["split"]:
 		return false;
@@ -352,8 +422,8 @@ func split(dir:Vector2i) -> bool:
 	
 	#get shapecast in direction
 	var shape = get_shape(dir);
-	if next_moves:
-		shape.force_shapecast_update();
+	shape.enabled = true;
+	shape.force_shapecast_update();
 	
 	for i in shape.get_collision_count():
 		var collider := shape.get_collider(i);
@@ -364,7 +434,7 @@ func split(dir:Vector2i) -> bool:
 		if collider is ScoreTile:
 			if not collider.is_xaligned() or not collider.is_yaligned():
 				return false;
-			if collider.get_state() not in ["tile", "snap"]:
+			if collider.get_state() not in ["tile", "snap", "idle"]:
 				return false;
 			
 			if collider.color == GV.ColorId.GRAY and collider.slide(dir): #recede split
@@ -386,9 +456,10 @@ func split(dir:Vector2i) -> bool:
 					pass;
 				else: #obstructed
 					return false;
+	shape.enabled = false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	$FSM.curState.next_state = $FSM.states.splitting;
@@ -396,42 +467,37 @@ func split(dir:Vector2i) -> bool:
 
 
 func shift(dir:Vector2i) -> bool:
-	if get_state() != "snap":
+	if get_state() != "idle":
 		return false;
 	if not GV.abilities["shift"]:
 		return false;
-	
+
 	#get shape
 	var shape = get_shape(dir);
-	if next_moves:
-		shape.force_shapecast_update();
-
+	
 	#consult shape if aligned with tile grid
 	if (dir.x and is_xaligned()) or (dir.y and is_yaligned()):
+		#enable shape
+		shape.enabled = true;
+		shape.force_shapecast_update();
+	
 		#check for obstruction
 		for i in shape.get_collision_count():
 			var collider := shape.get_collider(i);
 			if collider is ScoreTile or collider.is_in_group("wall"):
 				return false;
+		shape.enabled = false;
 	
 	#signal
-	start_action.emit();
+	action_started.emit();
 	
 	slide_dir = dir;
 	shift_shape = shape;
 	$FSM.curState.next_state = $FSM.states.shifting;
 	return true;
 
-func shift_settings(shape:ShapeCast2D, dir:Vector2i):
-	shape.target_position = GV.SHIFT_RAY_LENGTH * dir;
-	shape.force_shapecast_update();
-
-func slide_settings(shape:ShapeCast2D):
-	shape.target_position = Vector2.ZERO;
-	shape.force_shapecast_update();
-
 func levelup():
-	if get_state() not in ["tile", "snap"]:
+	if get_state() not in ["tile", "snap", "idle"]:
 		return;
 	
 	#update value
@@ -462,7 +528,6 @@ func levelup():
 		enable_physics_immediately();
 	
 	$FSM.curState.next_state = $FSM.states.combining;
-
 	
 func get_state() -> String:
 	return $FSM.curState.name;
@@ -550,13 +615,14 @@ func set_physics(state):
 	set_physics_process(state);
 	$FSM.set_process(state);
 	$FSM.set_physics_process(state);
-	for i in range(1, 5):
-		get_node("Shape"+str(i)).enabled = state;
+#	for i in range(1, 5):
+#		get_node("Shape"+str(i)).enabled = state;
 
 #doesn't affect layers or masks or physics
 func player_settings():
-	#connect signal
-	game.current_level.repeat_input.connect(_on_repeat_input);
+	#connect signals
+	atimer.timeout.connect(_on_atimer_timeout);
+	premove_streak_end_timer.timeout.connect(_on_premove_streak_end);
 	
 	#add to player list
 	#print("add index: ", game.current_level.players.size());
@@ -568,6 +634,11 @@ func player_settings():
 	#enable PhysicsEnabler
 	$PhysicsEnabler.monitoring = true;
 	
+	#scale PhysicsEnablers
+	var size:Vector2 = GV.PHYSICS_ENABLER_BASE_SIZE + GV.tile_push_limits[GV.TypeId.PLAYER] * 2 * GV.TILE_WIDTH * Vector2.ONE;
+	$PhysicsEnabler/CollisionShape2D.shape.set_size(size);
+	$PhysicsEnabler2.shape.set_size(size);
+	
 	#add to unlocker layer
 	set_collision_layer_value(3, true);
 	
@@ -576,8 +647,9 @@ func player_settings():
 
 #doesn't affect layers or masks or physics
 func tile_settings():
-	#disconnect signal
-	game.current_level.repeat_input.disconnect(_on_repeat_input);
+	#disconnect signals
+	atimer.timeout.disconnect(_on_atimer_timeout);
+	premove_streak_end_timer.timeout.disconnect(_on_premove_streak_end);
 	
 	#remove from player list
 	remove_from_players();

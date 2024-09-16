@@ -5,6 +5,7 @@ extends Node2D
 @onready var fader:AnimationPlayer = $"Overlay/AnimationPlayer";
 @onready var right_sidebar:VBoxContainer = $"GUI/HBoxContainer/RightSideBar";
 @onready var mode_label:Label = right_sidebar.get_node("MoveMode");
+@onready var sa_search_id_selector:OptionButton = $GUI/Control/SASearchIdSelector;
 
 @onready var combine_sound = $"Audio/Combine";
 @onready var slide_sound = $"Audio/Slide";
@@ -28,6 +29,10 @@ func _ready():
 	
 	#init mode label
 	change_move_mode(GV.player_snap);
+
+	#init dropdown button
+	for search_id in GV.SASearchId.SEARCH_END:
+		sa_search_id_selector.add_item(GV.SASearchId.keys()[search_id]);
 	
 	#generate hash numbers
 	#$Pathfinder.generate_hash_numbers(GV.RESOLUTION_T);
@@ -50,9 +55,14 @@ func _input(event):
 		
 		#update player(s) state
 		for player in current_level.players:
-			var state = player.get_state();
-			if state not in ["merging1", "merging2", "combining", "splitting"]:
-				var next_state = "snap" if GV.player_snap else "slide";
+			if player.get_state() not in ["merging1", "merging2", "combining", "splitting"]:
+				var next_state;
+				if GV.player_snap:
+					next_state = "idle";
+					#update player pos_t
+					player.pos_t = GV.world_to_pos_t(player.position);
+				else:
+					next_state = "slide";
 				player.change_state(next_state);
 	elif event.is_action_pressed("ui_cancel"):
 		game_paused = !game_paused;
@@ -101,10 +111,11 @@ func add_level(n):
 	current_level = level;
 	
 	#remove and free saved player
-	var player_saved = current_level.player_saved;
-	if is_instance_valid(player_saved):
-		current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
-		player_saved.free();
+	if current_level is Level:
+		var player_saved = current_level.player_saved;
+		if is_instance_valid(player_saved):
+			current_level.get_node("ScoreTiles").remove_child(current_level.player_saved);
+			player_saved.free();
 	
 	#migrate old snapshot locations
 	if GV.reverting and GV.current_level_from_save:
@@ -138,7 +149,7 @@ func change_level(n):
 	
 	if GV.reverting: #save player snapshots
 		GV.temp_player_snapshots = current_level.player_snapshots.duplicate();
-	else: #clear saves for old level
+	elif current_level is Level: #clear saves for old level
 		current_level.player_snapshots.clear();
 		GV.current_savepoint_ids.clear();
 		GV.current_savepoint_saves.clear();

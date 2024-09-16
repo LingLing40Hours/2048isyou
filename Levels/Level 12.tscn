@@ -2,14 +2,32 @@
 
 [ext_resource type="Script" path="res://Levels/Level 12.gd" id="1_qjfa5"]
 [ext_resource type="Theme" uid="uid://cq8prl3lt5y1y" path="res://Themes/main_theme.tres" id="2_mvoie"]
+[ext_resource type="Script" path="res://Camera/TrackingCamLevel.gd" id="3_yelvu"]
 [ext_resource type="TileSet" uid="uid://doeyofpqxc1ic" path="res://Tilesets/wall_set.tres" id="4_5jc0c"]
-[ext_resource type="PackedScene" uid="uid://ck3d8d70jxrvw" path="res://Camera/TrackingCam.tscn" id="5_cl1ic"]
 
 [node name="Level 12" type="Node2D"]
 process_mode = 1
 script = ExtResource("1_qjfa5")
-resolution_t = Vector2i(32, 24)
 max_pos = Vector2(0, 0)
+
+[node name="LevelName" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+z_index = 10
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 275.0
+offset_top = 573.5
+offset_right = 1325.0
+offset_bottom = 626.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_mvoie")
+theme_override_font_sizes/font_size = 50
+text = "The Deep Dereferenced"
+metadata/_edit_lock_ = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
@@ -20,27 +38,8 @@ offset_bottom = 1200.0
 color = Color(0.666667, 0.666667, 0.666667, 1)
 metadata/_edit_lock_ = true
 
-[node name="LevelName" type="Label" parent="ParallaxBackground/Background"]
-modulate = Color(1, 1, 1, 0)
-z_index = 20
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = -11.5
-offset_right = 88.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("2_mvoie")
-theme_override_font_sizes/font_size = 50
-text = "The Deep Dereferenced"
-metadata/_edit_lock_ = true
-
-[node name="TrackingCam" parent="." instance=ExtResource("5_cl1ic")]
+[node name="TrackingCam" type="Camera2D" parent="."]
+script = ExtResource("3_yelvu")
 
 [node name="Walls" type="TileMap" parent="." groups=["wall"]]
 tile_set = ExtResource("4_5jc0c")

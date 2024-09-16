@@ -1,13 +1,13 @@
 {\rtf1\ansi\ansicpg1252\cocoartf2638
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Bold;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Italic;
-\f3\fnil\fcharset0 HelveticaNeue-BoldItalic;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red220\green161\blue13;}
-{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c89412\c68627\c3922;}
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Bold;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset134 PingFangSC-Regular;
+\f3\fnil\fcharset0 HelveticaNeue-Italic;\f4\fnil\fcharset0 HelveticaNeue-BoldItalic;}
+{\colortbl;\red255\green255\blue255;\red220\green161\blue13;}
+{\*\expandedcolortbl;;\cssrgb\c89412\c68627\c3922;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat29\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
 {\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\margl1440\margr1440\vieww17700\viewh15080\viewkind0
+\margl1440\margr1440\vieww16240\viewh12060\viewkind0
 \deftab560
 \pard\pardeftab560\partightenfactor0
 
@@ -23,15 +23,16 @@ Titles\
 		2148\
 		1024\
 		0x800\
-	One\
-		The One To Rule Them All\
-		The Chosen One\
-		Not One To Admit Defeat\
+	Not One To\
 	Baba is 2048\
 	2048 Is You\
 	2048 But You\'92re A Tile\
 	2048 But You Play As Tile\
 	#minecraftvania\
+	2048
+\f2 \'b5\'ab\'c4\'e3\'d6\'bb\'bf\'d8\'d6\'c6\'d2\'bb\'b8\'f6\'b7\'bd\'bf\'e9\
+	#TERMES
+\f1 \
 \
 Dedication\
 Wrong idea is better than no idea\
@@ -124,10 +125,28 @@ No collisions between same color objects\
 	animate tile scaling after fusion\
 	combine before pushing to save effort\
 	combine and take advantage of baddie to transport 2048 block\
-\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
-\cf0 \
-\pard\pardeftab560\slleading20\partightenfactor0
-\cf0 ScoreTile stuff:\
+\
+Push Merge Behavior\
+	At tile push limit\
+		not 0, equal pow, won\'92t exceed tile_pow_max: merge\
+		0, n != 0: merge\
+		n != 0, 0: merge\
+		0, 0: merge\
+		a != 0, b != 0, a != b: fail\
+	else\
+		not 0, equal pow, won\'92t exceed tile_pow_max: merge\
+		0, n != 0: merge\
+		n != 0, 0: push if possible else merge\
+		0, 0: push if possible else merge\
+		a != 0, b != 0, a != b: push\
+	0h, 0p: merge\
+	0p, 0h: merge\
+	if there\'92s a pushable row of 0s (all 0s are regular, within tpl): push\
+		*p, 0, 0, \'85, 0\
+		*h, 0, 0, \'85, 0\
+	else do the first merge possible\
+\
+ScoreTile stuff:\
 \pard\pardeftab560\slleading20\partightenfactor0
 
 \f0\b \cf0 	when merging:\
@@ -188,6 +207,8 @@ Dueling Mode\
 Level design\
 	shorten single-choice routes that lead to dead ends\
 	enter lv6 arrow from right not left\
+		\expnd0\expndtw0\kerning0
+Offer full refund for beating lv6\kerning1\expnd0\expndtw0 \
 	loading bar for dense levels\
 	12s after death, a random 8 starts banter, followed by other 8s\
 	player dies after reaching 4096?\
@@ -201,13 +222,13 @@ Mobile Controls\
 \
 Instructions\
 	
-\f2\i 2048 Is You
+\f3\i 2048 Is You
 \f1\i0  says hello.\
 	
-\f2\i 2048 Is You
+\f3\i 2048 Is You
 \f1\i0  says he is a difficult game.\
 	To prove his point, 
-\f2\i 2048 Is You
+\f3\i 2048 Is You
 \f1\i0  has not provided instructions here.\
 \
 	press Cmd+E to return home\
@@ -271,30 +292,69 @@ New Layers?\
 29. Red wall, baddie aggro\
 \pard\pardeftab560\slleading20\partightenfactor0
 \cf0 \
-Stuff IDs\
-	border		-1\
+Stuff IDs (uint16_t)\
+5 tileID bits, 3 typeID bits, 8 backID bits\
 \
-	-1			1\
-	-2^14		2\
-	\'85			\'85\
-	-4			14\
-	-2			15\
-	0			16\
-	2			17\
-	4			18\
-	\'85			\'85\
-	2^14		30\
-	1			31\
-\
+TileId\
 	empty		0\
-	membrane	32\
-	black wall	64\
-	blue wall		96\
-	red wall		128\
-	savepoint	160\
-	goal			192\
+	-2^14		1\
+	-2^13		2\
+	\'85			\'85\
+	-2			14\
+	-1			15\
+	0			16\
+	1			17\
+	2			18\
+	\'85			\'85\
+	2^13		30\
+	2^14		31\
+\
+TypeId						Merge Priority\
+	player		0 << 5		1\
+	invincible		1 << 5		3\
+	hostile		2 << 5		2\
+	void			3 << 5		4\
+	regular		4 << 5		0\
+\
+BackId\
+	empty			0 << 8\
+	border_round		1 << 8\
+	border_square	2 << 8\
+	membrane		3 << 8\
+	black wall		4 << 8\
+	blue wall			5 << 8\
+	red wall			6 << 8\
+	savepoint		7 << 8\
+	goal				8 << 8\
+\
+LayerId (tilemap)\
+	back	0\
+	tile		1\
+\
+ActionId\
+	slide		0\
+	split		1\
+\
+SASearchId\
+	dijkstra	0\
+	hbjpd	1\
+	mda		2\
+	iada		3\
+	hbjpmda	4\
+	hbjpiada	5\
+\
+ColorId (collision)\
+	all		4\
+	red		29\
+	blue		30\
+	black	31\
+	gray		32\
 \
 Todo\
+	\expnd0\expndtw0\kerning0
+difficulty: select from enum SearchId + TUTORIAL\
+		difficulty selection based on player pos\
+		choose settings (mode, difficulty, volume) via player movement (2+ players simultaneously?)\kerning1\expnd0\expndtw0 \
 	learn procedural animation (animation too restrictive)\
 	learn Godot 3D\
 	learn particle effects\
@@ -532,7 +592,7 @@ Todo\
 			turning into wall\
 		\
 	to win game, enter 
-\f2\i 2048 Is You
+\f3\i 2048 Is You
 \f1\i0  logo\
 		at which point player will be 2048\
 	section in lv0 for variants\
@@ -642,7 +702,6 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b remove raycasts (use shapcasts for shifting)?
 \f1\b0 \
 	pool before CM get_tile()\
-	time frame with and without visibleOnScreenNotifier\
 	
 \f0\b use trackingCam.target_pos instead of checking every frame
 \f1\b0 \
@@ -650,15 +709,88 @@ set_cell in loop will kill you on function call overhead, use set(\'93tile_data\
 \f0\b assume bounding rect doesn\'92t change size? (NAH)\
 \pard\pardeftab560\slleading20\partightenfactor0
 
-\f1\b0 \cf0 	\expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 physicsenabler needs to be +shaped, and size based on tile_push_limit\
-	keep shapecasts disabled until use\
-		remove physicsEnabler altogether? time it\kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\f1\b0 \cf0 	
+\f0\b make \expnd0\expndtw0\kerning0
+physicsenabler +shaped (NAH)
+\f1\b0 \
+		scale based on tile_push_limit\
+	
+\f0\b keep shapecasts disabled until use
+\f1\b0 \
+		remove physicsEnabler altogether? time it\
+		fix occasional incomplete slide bug (followed by move_tile() error)\
+	\kerning1\expnd0\expndtw0 remove visibleOnScreenNotifier? time it\
+	
+\f0\b fix 0 getting popped when multiple 0s at end of line, even though push limit not exceeded
+\f1\b0 \
+	fix shift alignment (after shift, a move is wasted to re-align player)\
+	add \'93slide mode not available in current map\'94 msg to open world\
+		remove tile colliders in lv12, maybe also FSM\
+	In Pathfinder.cpp, replace within_bound() check at each iteration with dist_to_border variable\
+	
+\f0\b if undo when there are unfinished premoves, clear premoves and return\
+	fix undoing multiple moves if they were done in quick succession (current snapshot getting overwritten)
+\f1\b0 \
+	
+\f0\b only create new snapshot for valid moves\
+
+\f1\b0 	
+\f0\b fix repeated merge too quick
+\f1\b0 \
+	
+\f0\b fix no repeat after releasing Cmd
+\f1\b0 \
+	
+\f0\b fix random stopping during repeat
+\f1\b0 \
+	
+\f0\b fix input repeating even though move released
+\f1\b0 \
+	
+\f0\b fix re-accelerating when changing direction
+\f1\b0 \
+	
+\f0\b add premove_added signal, remove busy checking
+\f1\b0 \
+	
+\f0\b what does atimer frame_count represent?\
+
+\f1\b0 	
+\f0\b fix if split pressed when slide held, split does not repeat\
+	
+\f1\b0 fix on_copy() for new stuffIDs\
+	ensure hostiles can\'92t trap player at spawns or 
+\f0\b enter savepoints/goals\
+	
+\f1\b0 fix player pushing hostile 0 instead of merging with it\
+	implement shift that can pop zeros?\
+		NAH for player\
+		maybe for invincible/void\
+	find a good set of hash keys and stick with it\
+	\expnd0\expndtw0\kerning0
+add secret ending if four 16384s are arranged in a square\
+	implement slow gravity-induced movement for black tiles\
+		higher absolute value = higher mass\
+		don\'92t implement negative mass (repulsion) bc it doesn\'92t exist\
+	implement energy/stamina for player/hostiles?\kerning1\expnd0\expndtw0 \
 \
 the core gameplay could be focused around exploration (clearing a path through the tiles), slow basebuilding or territory expansion, dodging/outmaneuvering hostile tiles, encountering an occasional boss, and earning points/currency by finding randomly spawned 1x1 tile chests (which disappear when reaching a max point limit) and pushing tiles into them\
 \
 Variants\
-	Equilateral Triangles (flipping)\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+	GoL section (gliders, etc.)\
+		GoL-based gameplay logic (player dies if neighbors < 2 or > 3, 0s popping in and out of existence)\
+		use numberphile paper color as background\
+		membrane is type filter; add a tileid filter (so only 0s can enter GoL region)\
+		hostiles that start inside GoL region chill as part of bar/square/other permanent structures while waiting for player\
+	membrane-enclosed region of 2048 gameplay\
+		player tries to avoid merging with the static hostiles\
+		a hostile 1 or 2 spawns after every move\
+		2048 ai plays optimally?\
+		board resets after 2048 is obtained?\kerning1\expnd0\expndtw0 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 	Equilateral Triangles (flipping)\
 	Discount 2048 Is You\
 		player can change some tile locations in level as they see fit before playing\
 	Hi, Bot - design lv to defeat bot (but player must beat it)\
@@ -674,19 +806,63 @@ Variants\
 	I, Bot - write bot(s) to compete in weekly bot tournaments (like micro-mouse)\
 		use server to store user bots\
 		game on local\
-		game on website {\field{\*\fldinst{HYPERLINK "http://2048isyou.com"}}{\fldrslt \cf3 2048isyou.com}}\
+		game on website {\field{\*\fldinst{HYPERLINK "http://2048isyou.com"}}{\fldrslt \cf2 2048isyou.com}}\
 	Tile Run\
 		Large snake\
 		Wall of glitchy tiles\
+		Tentacle Monster\
+			looks identical to black wall, occasional tentacle movement reveals its nature\
+				if recent disturbance (change to adjacent tile), avg tentacle every 12s\
+				gradually reduce to avg tentacle every 120s\
+			tentacle monster used to be a player/hostile, then it got infected by tentacle virus\
+			lure hostiles to adjacent cell and make them stay there for 2s to kill hostile via tentacle monster\
+			if adjacent black tile (4096+/-4096-), fade in regular-tile-colored text to indicate merge possible (don\'92t round corners yet)\
+				kill tentacle monster by performing merge, resulting in regular tile\
+				tentacle monster value is same as tile for 4096, 8192, -4096, -8192, and 0 for +-16384\
 		Hostiles - hostile tiles\
-			cannot slide (else overpowered)\
-			if in empty space for too long, turns to wall\
-			if negative-valued, chase player to merge with it\
-			upon merge, player becomes non-player 0\
-			(if player absolute value is larger than hostile or hostile positive-valued, it cannot kill player)\
+			Roguelike\
+				turn-based puzzles\
+				player loses if stalemated/eaten\
+				a stalemated hostile can pass its turn\
+				player wins upon\
+					entering portal\
+					surviving n moves\
+					stalemating hostiles (NAH)\
+				hostiles can pass if not stalemated\
+				
+\f2 can player pass if not stalemated?
+\f1 \
+			Pathfinding implementation\
+				func is_player_trapped()\
+				calculate path when player enters range\
+				follow path until no more moves or next move invalid, then recalculate path\
+				after each hostile tick, check if player is dead/trapped\
+				prioritize blocking direction in which player last moved\
+					but don\'92t get juked by player oscillating back and forth\
+				Roguelike (minimax-optimal)\
+				Optimal (player static)\
+				Approx\
+					1h\
+						\
+			Rules\
+				a pow=-1 tile can't merge with wall/membrane, so pow=-1 player/hostiles can\'92t commit suicide\
+				cannot slide (else overpowered)\
+				if in empty space for too long, turns to wall\
+				if opposite-signed, chase player to merge with it\
+				if same-signed, (merge results in player?) also chase player to merge with it\
+				after merge, player becomes regular tile\
+				cannot push player\
+			\expnd0\expndtw0\kerning0
+Tutorial\
+				menacing hostile trapped in rectangular enclosure with single membrane opening that follows player around\kerning1\expnd0\expndtw0 \
+			if player absolute value is larger than hostile (or hostile positive-valued?), it cannot kill player\
 			but it can still obstruct/interfere player path\
 			multiple small abs valued hostiles will merge in order to kill player\
-			If stuck, create a 4096 tile and continue onward\
+			Behavior\
+				1. immediate merge\
+				2. trap (with comb/split) or comb and merge with player; calculate both\
+				account for comb-induced player value changes\
+			If stuck, player can create a 4096 tile to pass through walls\
 			if a change in lv affects computed path or endpoint (player) moves, redo pathfind\
 			increase tile push limit\
 				as power increases\
@@ -701,8 +877,16 @@ Variants\
 				merge if path doesn\'92t require splitting and resulting value matches player\
 				one of the hostiles waits\
 			any-valued hostile can kill player if player is 0\
-			regular hostiles die when becoming 0; player can use this to \'91kill\'92 them\
-			immortal hostiles retain hostility when becoming 0\
+			regular hostiles die when becoming 0 (cannot change sign); player can use this to \'91kill\'92 them\
+			regular hostiles die when being popped as 0 (requires tpl > 1)?\
+			if player is about to push opposite sign, same abs-value tile to hostile, run away\
+		Immortal/Invincible Hostile\
+			retain hostility when becoming 0\
+		Ghost/Void Hostile\
+			invisible except text fades in occasionally\
+			always turns visible when within 3 tiles of player\
+			has highest merge priority\
+			spawns/aggros when enough 0s are popped\
 		Weak Hostile (is_weak = true)\
 			hostile but can\'92t break 0s (pushing 0s allowed)\
 		Strong Hostile (tile_push_limit = 2+)\
@@ -711,6 +895,8 @@ Variants\
 			build traps, cooperate with each other to trap player\
 		Fission Hostile\
 			produces two hostiles upon splitting\
+		\expnd0\expndtw0\kerning0
+add hostile that can split as 0? (create 0s to obstruct weak enemies)\kerning1\expnd0\expndtw0 \
 	Open World\
 		names\
 			The Grated/Grid Unknown\
@@ -725,14 +911,30 @@ Variants\
 		exploration, rpg stuff\
 		procgen (like Minecraft)\
 			2 noise layers, 1 variance layer\
+			\expnd0\expndtw0\kerning0
+weather - "heals" terrain; very slowly\
+				cause tiles near EMPTY to split to fill the EMPTY (or generate 0s)\
+				maybe smooth large tile_id gradients too?\kerning1\expnd0\expndtw0 \
 		occasional bosses\
 			dark wall/tentacle monster (see baddie 5)\
 			ram - can break tiles with abs < 128\
-			glitch-like wave/region in which tiles will rearrange themselves\
+			glitch-like 4x4 wave/region in which tiles will rearrange themselves\
+				performs internal slides\
+				moves slower when there are more holes\
+				naturally acquires holes from internal tile merges and loses holes by stealing tiles from environment\
 				chases player, then tiles rearrange into descending gradient to trap player\
 				requires tiles to propagate, cannot affect empty space\
 				gray-modulate tiles within self (with particle effects and puffy/shifting/dynamic/cloud-like borders) to indicate position\
-				die if containing 5+ non-tile cells\
+				die if containing 5+ non-tile cells or no internal slides possible\
+				put ~ in 4x4 box where it solves sliding tile puzzle indefinitely\
+					make player race sliding tile puzzle against hostiles?\
+				can break 0s\
+				can\'92t split tiles\
+				\expnd0\expndtw0\kerning0
+in ~ spawn area, tiles are spawned incontinuously and hostiles are more likely to spawn trapped\
+				encounter baby glitch (2x2) before larger ones?\
+				surrounding spawn area is a 6-cell wide moat of empty\
+				glitch escapes from corner of 4x4 enclosure after solving tile puzzle\kerning1\expnd0\expndtw0 \
 			tribe of hostiles that has a 1-generator and tries to fill entire world with 2048s\
 			tribe of hostiles that tries to merge all tiles?\
 		occasional chest\
@@ -744,6 +946,7 @@ Variants\
 			sudden death when hostile touches?\
 			merge as if player were on grid position\
 			limit slide mode time\
+		to give hostiles a chance, ban player shifting or limit shift distance or add a cooldown\
 		triangle region (grid slowly becomes triangular)\
 	Puzzle\
 		hourly server-wide, points awarded by finishing rank\
@@ -753,7 +956,7 @@ Variants\
 		in lv6, use both 3-channels - one path pushes away 32 from the other\'92s <64, 32, 32, 32> path\
 	Complex 2048\
 		naturally occurring 
-\f3\i\b i
+\f4\i\b i
 \f1\i0\b0 s\
 		square root operator tile\
 		multiplication upon merging\
@@ -838,7 +1041,7 @@ Fixing Scene Parse Error Bug\
 \
 Sources\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://github.com/mphe/GDNative-Ropesim"}}{\fldrslt \cf3 https://github.com/mphe/GDNative-Ropesim}}\
+{\field{\*\fldinst{HYPERLINK "https://github.com/mphe/GDNative-Ropesim"}}{\fldrslt \cf2 https://github.com/mphe/GDNative-Ropesim}}\
 \
 \
 \pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
@@ -849,72 +1052,72 @@ Sources\
 \f1\b0  \
 Art tools:\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://colorhunt.co/"}}{\fldrslt \cf3 https://colorhunt.co/}} Palette suggestions \
+{\field{\*\fldinst{HYPERLINK "https://colorhunt.co/"}}{\fldrslt \cf2 https://colorhunt.co/}} Palette suggestions \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://lospec.com/palette-list"}}{\fldrslt \cf3 https://lospec.com/palette-list}} Lo-bit palettes \
+{\field{\*\fldinst{HYPERLINK "https://lospec.com/palette-list"}}{\fldrslt \cf2 https://lospec.com/palette-list}} Lo-bit palettes \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://kenney.nl/assets"}}{\fldrslt \cf3 https://kenney.nl/assets}} Free ccby0 Assets 2D and 3D plus isometric\
+{\field{\*\fldinst{HYPERLINK "https://kenney.nl/assets"}}{\fldrslt \cf2 https://kenney.nl/assets}} Free ccby0 Assets 2D and 3D plus isometric\
 2D Art Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf3 https://opengameart.org/}} Free, licensed art assets \
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Free, licensed art assets \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://pixabay.com/"}}{\fldrslt \cf3 https://pixabay.com/}} 2D images \
+{\field{\*\fldinst{HYPERLINK "https://pixabay.com/"}}{\fldrslt \cf2 https://pixabay.com/}} 2D images \
 2D Art Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://krita.org/"}}{\fldrslt \cf3 https://krita.org/}} Drawing program, also works for image manipulation \
+{\field{\*\fldinst{HYPERLINK "https://krita.org/"}}{\fldrslt \cf2 https://krita.org/}} Drawing program, also works for image manipulation \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://libresprite.github.io/"}}{\fldrslt \cf3 https://libresprite.github.io/}} (Old version of Aseprite, free) \
+{\field{\*\fldinst{HYPERLINK "https://libresprite.github.io/"}}{\fldrslt \cf2 https://libresprite.github.io/}} (Old version of Aseprite, free) \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.gimp.org/"}}{\fldrslt \cf3 https://www.gimp.org/}} Free, open source image editor \
+{\field{\*\fldinst{HYPERLINK "https://www.gimp.org/"}}{\fldrslt \cf2 https://www.gimp.org/}} Free, open source image editor \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.aseprite.org/"}}{\fldrslt \cf3 https://www.aseprite.org/}} Pixel art program (not free) \
+{\field{\*\fldinst{HYPERLINK "https://www.aseprite.org/"}}{\fldrslt \cf2 https://www.aseprite.org/}} Pixel art program (not free) \
 3D Art Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.poliigon.com/search?credit=0"}}{\fldrslt \cf3 https://www.poliigon.com/search?credit=0}} Free textures (priced textures available) \
+{\field{\*\fldinst{HYPERLINK "https://www.poliigon.com/search?credit=0"}}{\fldrslt \cf2 https://www.poliigon.com/search?credit=0}} Free textures (priced textures available) \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://polyhaven.com/"}}{\fldrslt \cf3 https://polyhaven.com/}} Free, license cc0 textures \
+{\field{\*\fldinst{HYPERLINK "https://polyhaven.com/"}}{\fldrslt \cf2 https://polyhaven.com/}} Free, license cc0 textures \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.openfootage.net/textures/"}}{\fldrslt \cf3 https://www.openfootage.net/textures/}} Free, licensed images and textures \
+{\field{\*\fldinst{HYPERLINK "https://www.openfootage.net/textures/"}}{\fldrslt \cf2 https://www.openfootage.net/textures/}} Free, licensed images and textures \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.mixamo.com/#/"}}{\fldrslt \cf3 https://www.mixamo.com/#/}} 3D animations \
+{\field{\*\fldinst{HYPERLINK "https://www.mixamo.com/#/"}}{\fldrslt \cf2 https://www.mixamo.com/#/}} 3D animations \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.turbosquid.com/"}}{\fldrslt \cf3 https://www.turbosquid.com/}} 3D models (not free)\
+{\field{\*\fldinst{HYPERLINK "https://www.turbosquid.com/"}}{\fldrslt \cf2 https://www.turbosquid.com/}} 3D models (not free)\
 3D Art Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.blender.org/"}}{\fldrslt \cf3 https://www.blender.org/}} Free, open source, 3D modelling software \
+{\field{\*\fldinst{HYPERLINK "https://www.blender.org/"}}{\fldrslt \cf2 https://www.blender.org/}} Free, open source, 3D modelling software \
 Sound Assets: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://incompetech.com/music/royalty-free/music.html"}}{\fldrslt \cf3 https://incompetech.com/music/royalty-free/music.html}} Royalty free music \
+{\field{\*\fldinst{HYPERLINK "https://incompetech.com/music/royalty-free/music.html"}}{\fldrslt \cf2 https://incompetech.com/music/royalty-free/music.html}} Royalty free music \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://freesound.org/"}}{\fldrslt \cf3 https://freesound.org/}} Free, licensed sound effects\
+{\field{\*\fldinst{HYPERLINK "https://freesound.org/"}}{\fldrslt \cf2 https://freesound.org/}} Free, licensed sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://freemusicarchive.org/"}}{\fldrslt \cf3 https://freemusicarchive.org/}} Music\
+{\field{\*\fldinst{HYPERLINK "https://freemusicarchive.org/"}}{\fldrslt \cf2 https://freemusicarchive.org/}} Music\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf3 https://opengameart.org/}} Sound effects\
+{\field{\*\fldinst{HYPERLINK "https://opengameart.org/"}}{\fldrslt \cf2 https://opengameart.org/}} Sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.kenney.nl/assets?q=audio"}}{\fldrslt \cf3 https://www.kenney.nl/assets?q=audio}} Music, sound effects\
+{\field{\*\fldinst{HYPERLINK "https://www.kenney.nl/assets?q=audio"}}{\fldrslt \cf2 https://www.kenney.nl/assets?q=audio}} Music, sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://sonniss.com/gameaudiogdc"}}{\fldrslt \cf3 https://sonniss.com/gameaudiogdc}} Sound effects\
+{\field{\*\fldinst{HYPERLINK "https://sonniss.com/gameaudiogdc"}}{\fldrslt \cf2 https://sonniss.com/gameaudiogdc}} Sound effects\
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.shockwave-sound.com/"}}{\fldrslt \cf3 https://www.shockwave-sound.com/}}\
+{\field{\*\fldinst{HYPERLINK "https://www.shockwave-sound.com/"}}{\fldrslt \cf2 https://www.shockwave-sound.com/}}\
 Sound Creation: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://www.audacityteam.org/"}}{\fldrslt \cf3 https://www.audacityteam.org/}} Free, open source DAW \
+{\field{\*\fldinst{HYPERLINK "https://www.audacityteam.org/"}}{\fldrslt \cf2 https://www.audacityteam.org/}} Free, open source DAW \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://lmms.io/"}}{\fldrslt \cf3 https://lmms.io/}} DAW \
+{\field{\*\fldinst{HYPERLINK "https://lmms.io/"}}{\fldrslt \cf2 https://lmms.io/}} DAW \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://sfxr.me/"}}{\fldrslt \cf3 https://sfxr.me/}} 8-bit sound and effects \
+{\field{\*\fldinst{HYPERLINK "https://sfxr.me/"}}{\fldrslt \cf2 https://sfxr.me/}} 8-bit sound and effects \
 Other: \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://github.com/"}}{\fldrslt \cf3 https://github.com/}} Source/version control \
+{\field{\*\fldinst{HYPERLINK "https://github.com/"}}{\fldrslt \cf2 https://github.com/}} Source/version control \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://code.visualstudio.com/"}}{\fldrslt \cf3 https://code.visualstudio.com/}} IDE \
+{\field{\*\fldinst{HYPERLINK "https://code.visualstudio.com/"}}{\fldrslt \cf2 https://code.visualstudio.com/}} IDE \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://trello.com/home"}}{\fldrslt \cf3 https://trello.com/home}} Project management tool \
+{\field{\*\fldinst{HYPERLINK "https://trello.com/home"}}{\fldrslt \cf2 https://trello.com/home}} Project management tool \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://thebookofshaders.com/"}}{\fldrslt \cf3 https://thebookofshaders.com/}} Shader maths and info \
+{\field{\*\fldinst{HYPERLINK "https://thebookofshaders.com/"}}{\fldrslt \cf2 https://thebookofshaders.com/}} Shader maths and info \
 \pard\pardeftab560\slleading20\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://jannikboysen.itch.io/easy-releasy"}}{\fldrslt \cf3 https://jannikboysen.itch.io/easy-releasy}} itch.io page decoration templates\
+{\field{\*\fldinst{HYPERLINK "https://jannikboysen.itch.io/easy-releasy"}}{\fldrslt \cf2 https://jannikboysen.itch.io/easy-releasy}} itch.io page decoration templates\
 \
 Remember ALWAYS check the license of any tools or assets you use as you may have to include that in the game information. Free does not mean you can use it without consequence.\uc0\u8232 \u8232 \
 \

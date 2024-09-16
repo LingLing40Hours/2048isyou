@@ -74,10 +74,9 @@ func inPhysicsProcess(delta):
 		actor.position = slide_target;
 		slide_done = true;
 
-func handleInput(_event):
-	if actor.color == GV.ColorId.GRAY: #allow early input
-		await game.current_level.processed_action_input;
-		actor.get_next_action();
+func handleInput(event):
+	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
+		actor.add_premove();
 
 func changeParentState():
 	if slide_done:
@@ -87,7 +86,7 @@ func changeParentState():
 	return null;
 
 func exit():
-	var new_pos_t:Vector2i = actor.pos_t + actor.slide_dir;
+	var new_pos_t:Vector2i = GV.world_to_pos_t(actor.position);
 	if game.current_level.pooled:
 		if actor.splitted: #add to loaded_tiles
 			game.current_level.loaded_tiles[new_pos_t] = actor;

@@ -95,6 +95,7 @@ theme = ExtResource("2_jtwee")
 [node name="Control" type="Control" parent="GUI/HBoxContainer/RightSideBar"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="MoveMode" type="Label" parent="GUI/HBoxContainer/RightSideBar"]
 layout_mode = 2
@@ -102,6 +103,22 @@ theme = ExtResource("2_jtwee")
 
 [node name="PauseMenu" parent="GUI" instance=ExtResource("3_s88ok")]
 layout_direction = 2
+
+[node name="Control" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SASearchIdSelector" type="OptionButton" parent="GUI/Control"]
+layout_mode = 1
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 480.0
+offset_bottom = 80.0
 
 [node name="Audio" type="Node2D" parent="."]
 

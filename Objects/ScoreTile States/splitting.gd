@@ -6,7 +6,6 @@ var player:ScoreTile;
 
 
 func enter():
-	#print("SPLITTING");
 	#add to snapshot
 	if not actor.is_hostile:
 		game.current_level.current_snapshot.add_tile(actor);
@@ -49,11 +48,12 @@ func enter():
 	assert(actor.physics_on);
 	assert(actor.get_process_mode() == PROCESS_MODE_INHERIT);
 	
-	#player inherits actor's premoves *after* add_child() so enter snap doesn't consume any
-	player.next_moves = actor.next_moves.duplicate();
-	player.next_dirs = actor.next_dirs.duplicate();
-	actor.next_moves.clear();
-	actor.next_dirs.clear();
+	#player inherits actor's premoves *after* add_child() so enter idle doesn't consume any
+	player.premoves = actor.premoves.duplicate();
+	player.premove_dirs = actor.premove_dirs.duplicate();
+	player.premove_streak = actor.premove_streak;
+	actor.premoves.clear();
+	actor.premove_dirs.clear();
 	
 	player.enable_physics_immediately();
 	player.slide(actor.slide_dir); #guaranteed to return true
@@ -63,6 +63,10 @@ func enter():
 
 func inPhysicsProcess(_delta):
 	frame_count += 1;
+
+func handleInput(event):
+	if actor.color == GV.ColorId.GRAY and game.current_level.update_last_input(event):
+		actor.add_premove();
 
 func changeParentState():
 	if frame_count == GV.SPLITTING_FRAME_COUNT:
